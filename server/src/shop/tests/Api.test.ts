@@ -1,9 +1,9 @@
 import { jest } from "@jest/globals";
-import { createApp } from "../app.js";
-import InMemoryStorage from "../storages/InMemoryStorage.js";
+import { createApp } from "../../route.js";
+import InMemoryStorage from "../../storages/InMemoryStorage.js";
 import Product from "../models/Product.js";
-import request from "supertest";
 import Cart from "../models/Cart.js";
+import request from "supertest";
 import {
   createCartController,
   createProductController,
