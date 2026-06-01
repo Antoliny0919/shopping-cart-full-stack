@@ -1,27 +1,28 @@
 import { jest } from "@jest/globals";
 import { createApp } from "../../route.js";
-import InMemoryStorage from "../../storages/InMemoryStorage.js";
+import {
+  InMemoryCartRepository,
+  InMemoryProductRepository,
+} from "../repositories/InMemoryRepositories.js";
 import Product from "../models/Product.js";
-import Cart from "../models/Cart.js";
 import request from "supertest";
 import {
   createCartController,
   createProductController,
 } from "../controllers.js";
 import { ProductType } from "../models/Product.js";
-import { MY_CART_ID } from "../constanst.js";
-
-function initialData() {
-  return {
-    products: new Map(),
-    cart: new Map([[MY_CART_ID, new Cart()]]),
-  };
-}
 
 describe("프로덕트 API 테스트", () => {
-  const storage = new InMemoryStorage(initialData);
-  const cartController = createCartController(storage);
-  const productController = createProductController(storage);
+  const cartRepository = new InMemoryCartRepository();
+  const productRepository = new InMemoryProductRepository();
+
+  const cartController = createCartController({
+    cartRepository,
+  });
+  const productController = createProductController({
+    cartRepository,
+    productRepository,
+  });
   const product1 = new Product({
     name: "피자",
     price: 30000,
@@ -36,12 +37,12 @@ describe("프로덕트 API 테스트", () => {
   const app = createApp({ productController, cartController });
 
   beforeEach(() => {
-    storage.addItemById("products", product1.getId(), product1);
-    storage.addItemById("products", product2.getId(), product2);
+    productRepository.save(product1.getId(), product1);
+    productRepository.save(product2.getId(), product2);
   });
 
   afterEach(() => {
-    storage.clearAllItems("products");
+    productRepository.clearAll();
   });
 
   test("프로덕트 목록을 반환한다.", async () => {
@@ -62,7 +63,7 @@ describe("프로덕트 API 테스트", () => {
     res.body.id = "fixed id";
     expect(res.status).toBe(201);
     expect(res.body).toEqual({ id: "fixed id" });
-    const products = storage.allItems("products");
+    const products = productRepository.findAll();
     expect(products.length).toBe(3);
   });
 
@@ -70,7 +71,7 @@ describe("프로덕트 API 테스트", () => {
     const id = product1.getId();
     const res = await request(app).del(`/api/products/${id}/`);
     expect(res.status).toBe(204);
-    const products = storage.allItems("products");
+    const products = productRepository.findAll();
     expect(products.length).toBe(1);
   });
 
@@ -143,8 +144,8 @@ describe("프로덕트 API 테스트", () => {
   });
 
   test("스토리지 에러가 발생하면 500 에러가 반환된다.", async () => {
-    jest.spyOn(storage, "allItems").mockImplementationOnce(() => {
-      throw new Error("Storage error");
+    jest.spyOn(productRepository, "findAll").mockImplementationOnce(() => {
+      throw new Error("Repository error");
     });
     const res = await request(app).get("/api/products/");
     expect(res.status).toBe(500);
@@ -156,11 +157,15 @@ describe("프로덕트 API 테스트", () => {
 });
 
 describe("카트 API 테스트", () => {
-  const storage = new InMemoryStorage(initialData);
-  const productController = createProductController(storage);
-  const cartController = createCartController(storage);
+  const productRepository = new InMemoryProductRepository();
+  const cartRepository = new InMemoryCartRepository();
+  const productController = createProductController({
+    productRepository,
+    cartRepository,
+  });
+  const cartController = createCartController({ cartRepository });
   const app = createApp({ productController, cartController });
-  const cart = storage.getItemById("cart", MY_CART_ID) as Cart;
+  const cart = cartRepository.get();
 
   beforeEach(() => {
     cart.updateItemByProductId("123", 10);
@@ -183,14 +188,14 @@ describe("카트 API 테스트", () => {
       .set("Accept", "application/json");
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ product_id: "123", quantity: 40 });
-    const cart = storage.getItemById("cart", MY_CART_ID);
+    const cart = cartRepository.get();
     expect(cart.getItemById("123")).toBe(40);
   });
 
   test("장바구니 내 아이템을 삭제한다.", async () => {
     const res = await request(app).delete("/api/cart/items/123");
     expect(res.status).toBe(204);
-    const cart = storage.getItemById("cart", MY_CART_ID);
+    const cart = cartRepository.get();
     expect(cart.getAllItems().length).toBe(1);
   });
 
