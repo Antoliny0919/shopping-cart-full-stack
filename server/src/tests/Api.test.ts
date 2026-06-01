@@ -170,12 +170,10 @@ describe("카트 API 테스트", () => {
   test("장바구니 내 아이템목록을 반환한다.", async () => {
     const res = await request(app).get("/api/cart/");
     expect(res.status).toBe(200);
-    expect(res.body).toEqual({
-      items: [
-        { product_id: "123", quantity: 10 },
-        { product_id: "456", quantity: 20 },
-      ],
-    });
+    expect(res.body).toEqual([
+      { product_id: "123", quantity: 10 },
+      { product_id: "456", quantity: 20 },
+    ]);
   });
 
   test("장바구니 내 아이템 수량을 수정한다.", async () => {

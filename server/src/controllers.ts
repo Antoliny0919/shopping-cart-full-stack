@@ -64,7 +64,7 @@ export function createCartController(storage: Storage): CartController {
     get: (_req, res, next) => {
       try {
         const cart = storage.getItemById<Cart>("cart", MY_CART_ID) as Cart;
-        res.send({ items: cart.getAllItems() });
+        res.send(cart.getAllItems());
       } catch (err) {
         next(err);
       }
