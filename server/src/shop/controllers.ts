@@ -1,8 +1,8 @@
 import express from "express";
 import { MY_CART_ID } from "./constanst.js";
 import Cart from "./models/Cart.js";
-import { Storage } from "./storages/Storage.js";
-import { NotFoundError } from "./errors.js";
+import { Storage } from "../storages/Storage.js";
+import { NotFoundError } from "../errors.js";
 import Product from "./models/Product.js";
 
 export interface ProductController {

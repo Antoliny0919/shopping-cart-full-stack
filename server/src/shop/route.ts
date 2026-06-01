@@ -1,24 +1,18 @@
-import express from "express";
-import cors from "cors";
+import { Router } from "express";
 import {
   productBodyValidateMiddelware,
   cartBodyValidateMiddelware,
 } from "./middlewares/BodyValiadateMiddleware.js";
 import { ProductController, CartController } from "./controllers.js";
-import { handleErrors } from "./errors.js";
 
-export function createApp({
+export function createShopRouter({
   productController,
   cartController,
 }: {
   productController: ProductController;
   cartController: CartController;
 }) {
-  const app = express();
-  const router = app.router;
-
-  router.use(express.json());
-  router.use(cors());
+  const router = Router();
 
   router
     .route("/api/products/")
@@ -34,16 +28,5 @@ export function createApp({
     .patch(cartBodyValidateMiddelware, cartController.update)
     .delete(cartController.delete);
 
-  router.use(
-    (
-      err: Error,
-      _req: express.Request,
-      res: express.Response,
-      _next: express.NextFunction,
-    ) => {
-      handleErrors(res, err);
-    },
-  );
-
-  return app;
+  return router;
 }

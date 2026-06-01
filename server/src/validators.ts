@@ -1,14 +1,4 @@
-import { ValidatorMap } from "./utils.js";
 import { FieldError } from "./errors.js";
-
-export const ProductFieldValidators: ValidatorMap = {
-  name: [validateIsNotEmpty("상품명"), validateLengthRange("상품명", 0, 100)],
-  price: [validateIsNotEmpty("가격"), validateMinNumber("가격", 0)],
-};
-
-export const CartFieldValidators: ValidatorMap = {
-  quantity: [validateNumberRange("수량", 1, 99)],
-};
 
 export function validateIsNotEmpty(label: string) {
   return function validate(value: string) {

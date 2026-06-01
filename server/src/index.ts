@@ -1,10 +1,10 @@
 import InMemoryStorage from "./storages/InMemoryStorage.js";
-import { createApp } from "./app.js";
+import { createApp } from "./route.js";
 import { createInitialData } from "./data.js";
 import {
   createCartController,
   createProductController,
-} from "./controllers.js";
+} from "./shop/controllers.js";
 
 const PORT = process.env.PORT ?? 3000;
 
