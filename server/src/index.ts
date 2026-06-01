@@ -1,16 +1,22 @@
-import InMemoryStorage from "./storages/InMemoryStorage.js";
 import { createApp } from "./route.js";
-import { createInitialData } from "./data.js";
 import {
   createCartController,
   createProductController,
 } from "./shop/controllers.js";
+import {
+  InMemoryCartRepository,
+  InMemoryProductRepository,
+} from "./shop/repositories/InMemoryRepositories.js";
 
 const PORT = process.env.PORT ?? 3000;
 
-const storage = new InMemoryStorage(createInitialData);
-const productController = createProductController(storage);
-const cartController = createCartController(storage);
+const productRepository = new InMemoryProductRepository();
+const cartRepository = new InMemoryCartRepository();
+const productController = createProductController({
+  productRepository,
+  cartRepository,
+});
+const cartController = createCartController({ cartRepository });
 const app = createApp({ productController, cartController });
 
 app.listen(PORT, () => {
