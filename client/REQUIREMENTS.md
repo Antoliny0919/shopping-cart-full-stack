@@ -25,7 +25,7 @@
 
 - [] 라이브러리
   - [x] Storybook
-  - [] MSW
+  - [x] MSW
   - [] RTL
   - [x] Jest -> Vitest
   - [x] React-Router
