@@ -27,8 +27,8 @@
   - [] ShoppingCartPage
     - [x] ShoppingCartNavigation
     - [x] ShoppingCartSection
-    - [] CartItemList
-    - [] CartItem
+    - [x] CartItemList
+    - [x] CartItem
     - [] OrderCheckButton
   - [] OrderCheckPage
     - [] OrderCheckNavigation
