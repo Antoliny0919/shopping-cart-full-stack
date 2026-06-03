@@ -1,10 +1,12 @@
 import styled from "@emotion/styled";
 import ShoppingCartNavigation from "./components/ShoppingCartNavigation";
+import ShoppingCartSection from "./components/ShoppingCartSection";
 
 export default function ShoppingCartPage() {
   return (
     <MobileAppView>
       <ShoppingCartNavigation />
+      <ShoppingCartSection />
     </MobileAppView>
   );
 }

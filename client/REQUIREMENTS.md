@@ -25,8 +25,8 @@
 
 - [] 컴포넌트
   - [] ShoppingCartPage
-    - [] ShoppingCartNavigation
-    - [] ShoppingCartSection
+    - [x] ShoppingCartNavigation
+    - [x] ShoppingCartSection
     - [] CartItemList
     - [] CartItem
     - [] OrderCheckButton
