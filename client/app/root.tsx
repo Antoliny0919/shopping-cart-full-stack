@@ -15,9 +15,10 @@ const GlobalStyle = css`
 
 export default function App() {
   return (
-    <html>
+    <html lang="ko">
       <head>
         <link rel="icon" href="data:image/x-icon;base64,AA" />
+        <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
       <body>
