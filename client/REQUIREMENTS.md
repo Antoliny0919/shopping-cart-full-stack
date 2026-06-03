@@ -27,6 +27,6 @@
   - [x] Storybook
   - [] MSW
   - [] RTL
-  - [] Jest
+  - [x] Jest -> Vitest
   - [x] React-Router
   - [x] Emotion

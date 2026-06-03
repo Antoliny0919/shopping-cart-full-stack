@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test-unit": "vitest --run --project=unit",
+    "test-storybook": "vitest --run --project=storybook",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
