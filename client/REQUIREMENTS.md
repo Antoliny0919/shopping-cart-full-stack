@@ -13,7 +13,7 @@
   - [] 배송비(파생 -> 선택된 상품)
 
 - [] API 상태
-  - [] idle | loading | success | error
+  - [x] idle | loading | success | error
   - [] 에러시 사용자에게 보여준다
   - [] 스켈레톤 UI
 

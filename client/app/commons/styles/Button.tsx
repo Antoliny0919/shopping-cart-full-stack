@@ -17,5 +17,6 @@ export const Button = styled.button`
   :disabled {
     background-color: #bebebe;
     border: none;
+    cursor: default;
   }
 `;

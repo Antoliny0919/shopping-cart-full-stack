@@ -7,10 +7,12 @@ import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
 import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
 import OrderCheckButton from "./OrderCheckButton";
 import { CartItem } from "../types";
+import { FetchStatus } from "../../../commons/types";
 
 export default function ShoppingCartSection() {
   const navigate = useNavigate();
 
+  const [fetchStatus, setFetchStatus] = useState<FetchStatus>("idle");
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const goToOrderCheckPage = () => {
@@ -24,8 +26,14 @@ export default function ShoppingCartSection() {
   };
 
   const fetchCartItems = async () => {
-    const items = await getCartItems();
-    setCartItems(items);
+    setFetchStatus("loading");
+    try {
+      const items = await getCartItems();
+      setCartItems(items);
+      setFetchStatus("success");
+    } catch {
+      setFetchStatus("error");
+    }
   };
 
   useEffect(function initialCartItems() {
@@ -35,22 +43,72 @@ export default function ShoppingCartSection() {
 
   return (
     <ShoppingCartSectionContainer>
-      <div className="heading">
-        <h2 className="title">장바구니</h2>
-        <p className="sub-text">현재 2종류의 상품이 담겨있습니다.</p>
-      </div>
-      <ShoppingCartItemGroup cartItems={cartItems} />
-      <p className="sub-text icon-text">
-        <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
-        배송됩니다.
-      </p>
-      <ShoppingCartOrderSummary />
-      <OrderCheckButton onClick={goToOrderCheckPage} />
+      {fetchStatus === "loading" && <div>loading ...</div>}
+      {fetchStatus === "success" && (
+        <>
+          <ShoppingCartSectionHeader itemCount={cartItems.length} />
+          <ShoppingCartSectionContent
+            cartItems={cartItems}
+            goToOrderCheck={goToOrderCheckPage}
+          />
+        </>
+      )}
+      {fetchStatus === "success" && cartItems.length === 0 && <div></div>}
+      {fetchStatus === "error" && <div>error..</div>}
     </ShoppingCartSectionContainer>
   );
 }
 
+export function ShoppingCartSectionHeader({
+  itemCount,
+}: {
+  itemCount: number;
+}) {
+  return (
+    <div className="heading">
+      <h2 className="title">장바구니</h2>
+      {itemCount > 0 && (
+        <p className="sub-text">현재 {itemCount}종류의 상품이 담겨있습니다.</p>
+      )}
+    </div>
+  );
+}
+
+export function ShoppingCartSectionContent({
+  cartItems,
+  goToOrderCheck,
+}: {
+  cartItems: CartItem[];
+  goToOrderCheck: () => void;
+}) {
+  return (
+    <>
+      {cartItems.length ? (
+        <>
+          <ShoppingCartItemGroup cartItems={cartItems} />
+          <p className="sub-text icon-text">
+            <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
+            배송됩니다.
+          </p>
+          <ShoppingCartOrderSummary />
+        </>
+      ) : (
+        <ShoppingCartNoItemsContent>
+          <p>장바구니에 담은 상품이 없습니다.</p>
+        </ShoppingCartNoItemsContent>
+      )}
+      <OrderCheckButton
+        disabled={!Boolean(cartItems.length)}
+        onClick={goToOrderCheck}
+      />
+    </>
+  );
+}
+
 const ShoppingCartSectionContainer = styled.section`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   padding: 1.5rem;
   margin-bottom: 4rem;
 
@@ -74,4 +132,11 @@ const ShoppingCartSectionContainer = styled.section`
     align-items: center;
     gap: 4px;
   }
+`;
+
+const ShoppingCartNoItemsContent = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
