@@ -5,8 +5,10 @@ import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
 export default function ShoppingCartSection() {
   return (
     <ShoppingCartSectionContainer>
-      <h2 className="title">장바구니</h2>
-      <p className="sub-text">현재 2종류의 상품이 담겨있습니다.</p>
+      <div className="heading">
+        <h2 className="title">장바구니</h2>
+        <p className="sub-text">현재 2종류의 상품이 담겨있습니다.</p>
+      </div>
       <ShoppingCartItemGroup />
       <p className="sub-text icon-text">
         <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
@@ -18,9 +20,15 @@ export default function ShoppingCartSection() {
 
 const ShoppingCartSectionContainer = styled.section`
   padding: 1.5rem;
+
+  .heading {
+    margin: 2rem 0;
+  }
+
   .title {
-    font-size: 24px
-    font-weight: 700
+    font-size: 24px;
+    font-weight: 700;
+    margin: 12px 0;
   }
 
   .sub-text {
