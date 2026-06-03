@@ -5,6 +5,11 @@ const GlobalStyle = css`
   body {
     margin: 0;
   }
+
+  button {
+    cursor: pointer;
+    outline: none;
+  }
 `;
 
 export default function App() {

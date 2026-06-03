@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import UnChecked from "../images/un-checked.svg?react";
 import Checked from "../images/checked.svg?react";
 
-export default function Checkbox({ labelText }: { labelText: string }) {
+export default function Checkbox({ labelText }: { labelText?: string }) {
   const [checked, setChecked] = useState(false);
 
   return (
@@ -14,7 +14,7 @@ export default function Checkbox({ labelText }: { labelText: string }) {
         onChange={() => setChecked(!checked)}
       />
       {checked ? <Checked /> : <UnChecked />}
-      <span>{labelText}</span>
+      {labelText && <span>{labelText}</span>}
     </CheckboxLabel>
   );
 }
