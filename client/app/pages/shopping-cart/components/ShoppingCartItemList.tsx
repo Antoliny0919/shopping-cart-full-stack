@@ -1,11 +1,24 @@
 import styled from "@emotion/styled";
 import ShoppingCartItem from "./ShoppingCartItem";
+import { CartItem } from "../types";
 
-export default function ShoppingCartItemList() {
+export default function ShoppingCartItemList({
+  cartItems,
+}: {
+  cartItems: CartItem[];
+}) {
   return (
     <ShoppingCartItemListContainer>
-      <ShoppingCartItem name={"상품이름A"} price={35000} quantity={2} />
-      <ShoppingCartItem name={"상품이름B"} price={25000} quantity={2} />
+      {cartItems.map(({ product_id, quantity, product }) => {
+        return (
+          <ShoppingCartItem
+            key={product_id}
+            name={product.name}
+            price={product.price}
+            quantity={quantity}
+          />
+        );
+      })}
     </ShoppingCartItemListContainer>
   );
 }

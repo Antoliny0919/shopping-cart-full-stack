@@ -6,16 +6,7 @@ import Info from "../../../commons/images/info.svg?react";
 import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
 import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
 import OrderCheckButton from "./OrderCheckButton";
-
-interface CartItem {
-  product_id: string;
-  quantity: number;
-  product: {
-    name: string;
-    thumbnail: string;
-    price: number;
-  };
-}
+import { CartItem } from "../types";
 
 export default function ShoppingCartSection() {
   const navigate = useNavigate();
@@ -48,7 +39,7 @@ export default function ShoppingCartSection() {
         <h2 className="title">장바구니</h2>
         <p className="sub-text">현재 2종류의 상품이 담겨있습니다.</p>
       </div>
-      <ShoppingCartItemGroup />
+      <ShoppingCartItemGroup cartItems={cartItems} />
       <p className="sub-text icon-text">
         <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
         배송됩니다.
