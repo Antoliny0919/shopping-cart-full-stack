@@ -28,5 +28,5 @@
   - [] MSW
   - [] RTL
   - [] Jest
-  - [] React-Router
+  - [x] React-Router
   - [] Emotion
