@@ -23,6 +23,18 @@
 - [] 새로고침
   - [] 새로고침 시에도 선택된 상품은 유지되어야 한다. (useEffect of useSyncExternalStore, 부모/자식 컴포넌트 렌더링, 초기값 localStorage로부터)
 
+- [] 컴포넌트
+  - [] ShoppingCartPage
+    - [] ShoppingCartNavigation
+    - [] ShoppingCartSection
+    - [] CartItemList
+    - [] CartItem
+    - [] OrderCheckButton
+  - [] OrderCheckPage
+    - [] OrderCheckNavigation
+    - [] OrderCheckSection
+    - [] OrderSubmitButton
+
 - [x] 라이브러리
   - [x] Storybook
   - [x] MSW
