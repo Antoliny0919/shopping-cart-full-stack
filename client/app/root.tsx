@@ -7,7 +7,6 @@ export default function App() {
         <link rel="icon" href="data:image/x-icon;base64,AA" />
       </head>
       <body>
-        <h1>Hello world!</h1>
         <Outlet />
         <Scripts />
       </body>
