@@ -1,11 +1,13 @@
 import styled from "@emotion/styled";
-import Info from "../images/info.svg?react";
+import Info from "../../../commons/images/info.svg?react";
+import ShoppingCartItemList from "./ShoppingCartItemList";
 
 export default function ShoppingCartSection() {
   return (
     <ShoppingCartSectionContainer>
       <h2 className="title">장바구니</h2>
       <p className="sub-text">현재 2종류의 상품이 담겨있습니다.</p>
+      <ShoppingCartItemList />
       <p className="sub-text icon-text">
         <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
         배송됩니다.
