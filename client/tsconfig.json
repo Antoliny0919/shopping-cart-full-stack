@@ -1,0 +1,24 @@
+{
+  "include": [
+    "app/**/*",
+    ".react-router/types/**/*",
+    "vite-env.d.ts",
+    "vite.config.js",
+    "rtl-setup.ts",
+    "vitest.setup.ts"
+  ],
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "target": "ES2022",
+    "strict": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "rootDirs": [".", "./.react-router/types"]
+  }
+}
