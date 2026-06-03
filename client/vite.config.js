@@ -18,8 +18,8 @@ export default defineConfig({
   // Vitest나 Storybook처럼 Vite 설정 파일을 활용하는 다른 Vite 기반 도구들이 있지만,
   // Remix Vite 플러그인은 이러한 도구들과 함께 사용하도록 설계되지 않았다.
   plugins: [
-    !process.env.VITEST && !process.env.STORYBOOK && reactRouter(),
     svgr(),
+    !process.env.VITEST && !process.env.STORYBOOK && reactRouter(),
   ].filter(Boolean),
   test: {
     projects: [
