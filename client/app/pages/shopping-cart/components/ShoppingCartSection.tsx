@@ -7,6 +7,7 @@ import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
 import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
 import OrderCheckButton from "./OrderCheckButton";
 import { CartItem } from "../types";
+import CartAggregate from "../CartAggregate";
 import { CartPricing } from "../CartPricing";
 import { FetchStatus } from "../../../commons/types";
 import ShoppingCartSectionSkeleton from "./ShoppingCartSectionSkeleton";
@@ -18,12 +19,12 @@ export default function ShoppingCartSection() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const goToOrderCheckPage = () => {
-    const pricing = new CartPricing(cartItems);
+    const aggregate = new CartAggregate(cartItems, CartPricing);
     navigate("/cart/check/", {
       state: {
-        totalItems: cartItems.length,
-        totalQuantity: cartItems.reduce((acc, item) => acc + item.quantity, 0),
-        totalPrice: pricing.total,
+        totalItems: aggregate.totalItems,
+        totalQuantity: aggregate.totalQuantity,
+        totalPrice: aggregate.grandTotal,
       },
     });
   };
@@ -83,11 +84,11 @@ export function ShoppingCartSectionContent({
   cartItems: CartItem[];
   goToOrderCheck: () => void;
 }) {
-  const pricing = new CartPricing(cartItems);
+  const aggregate = new CartAggregate(cartItems, CartPricing);
 
   return (
     <>
-      {cartItems.length ? (
+      {aggregate.totalItems ? (
         <>
           <ShoppingCartItemGroup cartItems={cartItems} />
           <p className="sub-text icon-text">
@@ -95,9 +96,9 @@ export function ShoppingCartSectionContent({
             배송됩니다.
           </p>
           <ShoppingCartOrderSummary
-            total={pricing.total}
-            delivery={pricing.delivery}
-            grandTotal={pricing.grandTotal}
+            total={aggregate.total}
+            delivery={aggregate.delivery}
+            grandTotal={aggregate.grandTotal}
           />
         </>
       ) : (
@@ -106,7 +107,7 @@ export function ShoppingCartSectionContent({
         </ShoppingCartNoItemsContent>
       )}
       <OrderCheckButton
-        disabled={!Boolean(cartItems.length)}
+        disabled={!Boolean(aggregate.totalItems)}
         onClick={goToOrderCheck}
       />
     </>

@@ -1,9 +1,10 @@
 import { CartItem } from "./types";
+import { PricingStrategy } from "./CartAggregate";
 
 const FREE_DELIVERY_THRESHOLD = 100_000;
 const DELIVERY_FEE = 3_000;
 
-export class CartPricing {
+export class CartPricing implements PricingStrategy {
   constructor(private items: CartItem[]) {}
 
   get total() {

@@ -1,0 +1,40 @@
+import { CartItem } from "./types";
+
+export interface PricingStrategy {
+  total: number;
+  delivery: number;
+  grandTotal: number;
+}
+
+class CartAggregate {
+  private pricing: PricingStrategy;
+
+  constructor(
+    private items: CartItem[],
+    PricingClass: new (items: CartItem[]) => PricingStrategy,
+  ) {
+    this.pricing = new PricingClass(items);
+  }
+
+  get totalItems() {
+    return this.items.length;
+  }
+
+  get totalQuantity() {
+    return this.items.reduce((acc, item) => acc + item.quantity, 0);
+  }
+
+  get total() {
+    return this.pricing.total;
+  }
+
+  get delivery() {
+    return this.pricing.delivery;
+  }
+
+  get grandTotal() {
+    return this.pricing.grandTotal;
+  }
+}
+
+export default CartAggregate;
