@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import Info from "../../../commons/images/info.svg?react";
 import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
 import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
+import OrderCheckButton from "./OrderCheckButton";
 
 export default function ShoppingCartSection() {
   return (
@@ -16,12 +17,14 @@ export default function ShoppingCartSection() {
         배송됩니다.
       </p>
       <ShoppingCartOrderSummary />
+      <OrderCheckButton />
     </ShoppingCartSectionContainer>
   );
 }
 
 const ShoppingCartSectionContainer = styled.section`
   padding: 1.5rem;
+  margin-bottom: 4rem;
 
   .heading {
     margin: 2rem 0;

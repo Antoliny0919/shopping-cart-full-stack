@@ -24,12 +24,12 @@
   - [] 새로고침 시에도 선택된 상품은 유지되어야 한다. (useEffect of useSyncExternalStore, 부모/자식 컴포넌트 렌더링, 초기값 localStorage로부터)
 
 - [] 컴포넌트
-  - [] ShoppingCartPage
+  - [x] ShoppingCartPage
     - [x] ShoppingCartNavigation
     - [x] ShoppingCartSection
     - [x] CartItemList
     - [x] CartItem
-    - [] OrderCheckButton
+    - [x] OrderCheckButton
   - [] OrderCheckPage
     - [] OrderCheckNavigation
     - [] OrderCheckSection
