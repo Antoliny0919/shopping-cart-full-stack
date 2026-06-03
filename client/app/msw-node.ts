@@ -1,4 +1,4 @@
 import { setupServer } from "msw/node";
-import { handlers } from "../mocks/handlers/some";
+import { handlers as shoppingCartHandlers } from "./pages/shopping-cart/mocks/handlers";
 
-export const server = setupServer(...handlers);
+export const server = setupServer(...shoppingCartHandlers);
