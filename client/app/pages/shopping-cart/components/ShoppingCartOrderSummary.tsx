@@ -1,22 +1,32 @@
 import styled from "@emotion/styled";
 
-export default function ShoppingCartOrderSummary() {
+const formatPrice = (price: number) => `${price.toLocaleString("ko-KR")}원`;
+
+export default function ShoppingCartOrderSummary({
+  total,
+  delivery,
+  grandTotal,
+}: {
+  total: number;
+  delivery: number;
+  grandTotal: number;
+}) {
   return (
     <ShoppingCartOrderSummaryContainer>
       <ShoppingCartOrderSummaryList>
         <div className="receipt-item">
           <dt>주문 금액</dt>
-          <dd>70,000원</dd>
+          <dd>{formatPrice(total)}</dd>
         </div>
         <div className="receipt-item">
           <dt>배송비</dt>
-          <dd>3,000원</dd>
+          <dd>{formatPrice(delivery)}</dd>
         </div>
       </ShoppingCartOrderSummaryList>
       <ShoppingCartOrderSummaryResult>
         <div className="receipt-item">
           <dt>총 결제 금액</dt>
-          <dd>73,000원</dd>
+          <dd>{formatPrice(grandTotal)}</dd>
         </div>
       </ShoppingCartOrderSummaryResult>
     </ShoppingCartOrderSummaryContainer>

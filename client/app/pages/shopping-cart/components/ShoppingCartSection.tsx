@@ -7,6 +7,7 @@ import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
 import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
 import OrderCheckButton from "./OrderCheckButton";
 import { CartItem } from "../types";
+import { CartPricing } from "../CartPricing";
 import { FetchStatus } from "../../../commons/types";
 
 export default function ShoppingCartSection() {
@@ -16,11 +17,12 @@ export default function ShoppingCartSection() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const goToOrderCheckPage = () => {
+    const pricing = new CartPricing(cartItems);
     navigate("/cart/check/", {
       state: {
-        totalItems: 2,
-        totalQuntity: 4,
-        totalPrice: 120000,
+        totalItems: cartItems.length,
+        totalQuantity: cartItems.reduce((acc, item) => acc + item.quantity, 0),
+        totalPrice: pricing.total,
       },
     });
   };
@@ -81,6 +83,8 @@ export function ShoppingCartSectionContent({
   cartItems: CartItem[];
   goToOrderCheck: () => void;
 }) {
+  const pricing = new CartPricing(cartItems);
+
   return (
     <>
       {cartItems.length ? (
@@ -90,7 +94,11 @@ export function ShoppingCartSectionContent({
             <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
             배송됩니다.
           </p>
-          <ShoppingCartOrderSummary />
+          <ShoppingCartOrderSummary
+            total={pricing.total}
+            delivery={pricing.delivery}
+            grandTotal={pricing.grandTotal}
+          />
         </>
       ) : (
         <ShoppingCartNoItemsContent>
