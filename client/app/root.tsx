@@ -1,4 +1,5 @@
 import { Global, css } from "@emotion/react";
+import styled from "@emotion/styled";
 import { Outlet, Scripts } from "react-router";
 
 const GlobalStyle = css`
@@ -21,9 +22,17 @@ export default function App() {
       </head>
       <body>
         <Global styles={GlobalStyle}></Global>
-        <Outlet />
-        <Scripts />
+        <MobileAppView>
+          <Outlet />
+          <Scripts />
+        </MobileAppView>
       </body>
     </html>
   );
 }
+
+const MobileAppView = styled.div`
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
+`;

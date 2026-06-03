@@ -31,7 +31,7 @@
     - [x] CartItem
     - [x] OrderCheckButton
   - [] OrderCheckPage
-    - [] OrderCheckNavigation
+    - [x] OrderCheckNavigation
     - [] OrderCheckSection
     - [] OrderSubmitButton
 
