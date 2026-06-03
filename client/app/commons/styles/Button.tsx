@@ -13,4 +13,9 @@ export const Button = styled.button`
   color: #ffffff;
   width: 100%;
   max-width: 768px;
+
+  :disabled {
+    background-color: #bebebe;
+    border: none;
+  }
 `;

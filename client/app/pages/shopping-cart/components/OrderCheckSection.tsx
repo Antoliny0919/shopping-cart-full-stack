@@ -1,5 +1,6 @@
 import { useLocation } from "react-router";
 import styled from "@emotion/styled";
+import OrderSubmitButton from "./OrderSubmitButton";
 
 export default function OrderCheckSection() {
   const { totalItems, totalQuantity, totalPrice } = useLocation().state;
@@ -12,6 +13,7 @@ export default function OrderCheckSection() {
       <p className="order-summary-sub-text">최종 결제 금액을 확인해 주세요.</p>
       <p className="total-price-title">총 결제 금액</p>
       <p className="total-price">{totalPrice.toLocaleString("ko-KR")}원</p>
+      <OrderSubmitButton />
     </OrderCheckSectionContainer>
   );
 }
