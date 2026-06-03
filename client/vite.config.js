@@ -1,6 +1,8 @@
 /// <reference types="vitest/config" />
+/// <reference types="vite-plugin-svgr/client" />
 import { reactRouter } from "@react-router/dev/vite";
 import { defineConfig } from "vite";
+import svgr from "vite-plugin-svgr";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
@@ -17,6 +19,7 @@ export default defineConfig({
   // Remix Vite 플러그인은 이러한 도구들과 함께 사용하도록 설계되지 않았다.
   plugins: [
     !process.env.VITEST && !process.env.STORYBOOK && reactRouter(),
+    svgr(),
   ].filter(Boolean),
   test: {
     projects: [
