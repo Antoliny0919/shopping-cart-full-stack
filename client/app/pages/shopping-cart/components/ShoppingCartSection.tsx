@@ -1,12 +1,26 @@
 import styled from "@emotion/styled";
+import { getCartItems } from "../api";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Info from "../../../commons/images/info.svg?react";
 import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
 import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
 import OrderCheckButton from "./OrderCheckButton";
 
+interface CartItem {
+  product_id: string;
+  quantity: number;
+  product: {
+    name: string;
+    thumbnail: string;
+    price: number;
+  };
+}
+
 export default function ShoppingCartSection() {
   const navigate = useNavigate();
+
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const goToOrderCheckPage = () => {
     navigate("/cart/check/", {
@@ -17,6 +31,16 @@ export default function ShoppingCartSection() {
       },
     });
   };
+
+  const fetchCartItems = async () => {
+    const items = await getCartItems();
+    setCartItems(items);
+  };
+
+  useEffect(function initialCartItems() {
+    fetchCartItems();
+    return;
+  }, []);
 
   return (
     <ShoppingCartSectionContainer>
