@@ -56,7 +56,6 @@ export default function ShoppingCartSection() {
           />
         </>
       )}
-      {fetchStatus === "success" && cartItems.length === 0 && <div></div>}
       {fetchStatus === "error" && <div>error..</div>}
     </ShoppingCartSectionContainer>
   );
