@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import Info from "../../../commons/images/info.svg?react";
 import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
+import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
 
 export default function ShoppingCartSection() {
   return (
@@ -14,6 +15,7 @@ export default function ShoppingCartSection() {
         <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
         배송됩니다.
       </p>
+      <ShoppingCartOrderSummary />
     </ShoppingCartSectionContainer>
   );
 }
