@@ -32,7 +32,7 @@
     - [x] OrderCheckButton
   - [] OrderCheckPage
     - [x] OrderCheckNavigation
-    - [] OrderCheckSection
+    - [x] OrderCheckSection
     - [] OrderSubmitButton
 
 - [x] 라이브러리

@@ -1,10 +1,23 @@
 import styled from "@emotion/styled";
+import { useNavigate } from "react-router";
 import Info from "../../../commons/images/info.svg?react";
 import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
 import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
 import OrderCheckButton from "./OrderCheckButton";
 
 export default function ShoppingCartSection() {
+  const navigate = useNavigate();
+
+  const goToOrderCheckPage = () => {
+    navigate("/cart/check/", {
+      state: {
+        totalItems: 2,
+        totalQuntity: 4,
+        totalPrice: 120000,
+      },
+    });
+  };
+
   return (
     <ShoppingCartSectionContainer>
       <div className="heading">
@@ -17,7 +30,7 @@ export default function ShoppingCartSection() {
         배송됩니다.
       </p>
       <ShoppingCartOrderSummary />
-      <OrderCheckButton />
+      <OrderCheckButton onClick={goToOrderCheckPage} />
     </ShoppingCartSectionContainer>
   );
 }
