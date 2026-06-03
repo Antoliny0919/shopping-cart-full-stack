@@ -9,6 +9,7 @@ import OrderCheckButton from "./OrderCheckButton";
 import { CartItem } from "../types";
 import { CartPricing } from "../CartPricing";
 import { FetchStatus } from "../../../commons/types";
+import ShoppingCartSectionSkeleton from "./ShoppingCartSectionSkeleton";
 
 export default function ShoppingCartSection() {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ export default function ShoppingCartSection() {
 
   return (
     <ShoppingCartSectionContainer>
-      {fetchStatus === "loading" && <div>loading ...</div>}
+      {fetchStatus === "loading" && <ShoppingCartSectionSkeleton />}
       {fetchStatus === "success" && (
         <>
           <ShoppingCartSectionHeader itemCount={cartItems.length} />
