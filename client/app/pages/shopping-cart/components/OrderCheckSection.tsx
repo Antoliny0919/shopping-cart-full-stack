@@ -23,7 +23,7 @@ const OrderCheckSectionContainer = styled.section`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  flex: 1;
 
   p {
     margin: 0;
