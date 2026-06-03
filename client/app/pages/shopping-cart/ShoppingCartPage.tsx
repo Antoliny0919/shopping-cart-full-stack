@@ -1,3 +1,9 @@
+import styled from "@emotion/styled";
+
 export default function ShoppingCartPage() {
-  return <div>hello antoliny</div>
+  return <ShoppingCartPageContainer>hello antoliny</ShoppingCartPageContainer>;
 }
+
+const ShoppingCartPageContainer = styled.div`
+  color: green;
+`;

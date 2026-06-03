@@ -29,4 +29,4 @@
   - [] RTL
   - [] Jest
   - [x] React-Router
-  - [] Emotion
+  - [x] Emotion
