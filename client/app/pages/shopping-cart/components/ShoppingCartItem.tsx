@@ -3,6 +3,7 @@ import Checkbox from "../../../commons/components/Checkbox";
 import NikeWhiteShoes from "../images/nike-white-shoes.png";
 import Minus from "../../../commons/images/minus.svg?react";
 import Plus from "../../../commons/images/plus.svg?react";
+import { formatToKoreanPrice } from "../../../commons/utils";
 import { CartItemsProps } from "../types";
 import { useState } from "react";
 
@@ -73,7 +74,7 @@ export default function ShoppingCartItem({
           <img className="thumbnail" src={NikeWhiteShoes} />
           <ShoppingCartItemInfo>
             <p className="name">{name}</p>
-            <p className="price">{price.toLocaleString("ko-KR")}원</p>
+            <p className="price">{formatToKoreanPrice(price)}</p>
             <ShoppingCartItemQuantity>
               <button type="button" onClick={decrease}>
                 <Minus />
