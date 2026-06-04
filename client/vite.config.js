@@ -34,7 +34,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: "integration",
-          include: ["app/tests/**/*.test.tsx"],
+          include: ["app/**/*.test.tsx"],
           setupFiles: ["./rtl-setup.ts"],
           environment: "jsdom",
         },

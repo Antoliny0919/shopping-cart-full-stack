@@ -48,6 +48,7 @@ export default function ShoppingCartItem({
             <ShoppingCartItemQuantity>
               <button
                 type="button"
+                aria-label="수량 감소"
                 onClick={decrease}
                 disabled={!canDecrease}
               >
@@ -56,6 +57,7 @@ export default function ShoppingCartItem({
               <p className="quantity">{quantity}</p>
               <button
                 type="button"
+                aria-label="수량 증가"
                 onClick={increase}
                 disabled={!canIncrease}
               >

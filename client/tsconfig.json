@@ -19,6 +19,7 @@
     "strict": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "rootDirs": [".", "./.react-router/types"]
+    "rootDirs": [".", "./.react-router/types"],
+    "types": ["@testing-library/jest-dom"]
   }
 }
