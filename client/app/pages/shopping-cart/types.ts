@@ -10,7 +10,14 @@ export interface Product {
   price: number;
 }
 
-export type handleUpdateCartItemType = (
+export type RemoveCartItem = (itemId: string) => void;
+export type UpdateCartItem = (
   itemId: string,
   body: { quantity: number },
 ) => void;
+
+export interface CartItemsProps {
+  cartItems: CartItem[];
+  updateItem: UpdateCartItem;
+  removeItem: RemoveCartItem;
+}

@@ -1,16 +1,12 @@
 import styled from "@emotion/styled";
 import ShoppingCartItem from "./ShoppingCartItem";
-import { CartItem, handleUpdateCartItemType } from "../types";
+import { CartItemsProps } from "../types";
 
 export default function ShoppingCartItemList({
   cartItems,
-  handleDeleteCartItem,
-  handleUpdateCartItem,
-}: {
-  cartItems: CartItem[];
-  handleDeleteCartItem: (itemId: string) => void;
-  handleUpdateCartItem: handleUpdateCartItemType;
-}) {
+  updateItem,
+  removeItem,
+}: CartItemsProps) {
   return (
     <ShoppingCartItemListContainer>
       {cartItems.map(({ product_id, quantity, product }) => {
@@ -21,8 +17,8 @@ export default function ShoppingCartItemList({
             name={product.name}
             price={product.price}
             initialQuantity={quantity}
-            handleDeleteCartItem={handleDeleteCartItem}
-            handleUpdateCartItem={handleUpdateCartItem}
+            updateItem={updateItem}
+            removeItem={removeItem}
           />
         );
       })}

@@ -1,22 +1,25 @@
 import styled from "@emotion/styled";
-import { getCartItems, deleteCartItem, updateCartItem } from "../api";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Info from "../../../commons/images/info.svg?react";
 import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
 import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
 import OrderCheckButton from "./OrderCheckButton";
-import { CartItem, handleUpdateCartItemType } from "../types";
+import { CartItem } from "../types";
+import { CartItemsProps } from "../types";
 import CartAggregate from "../CartAggregate";
 import { CartPricing } from "../CartPricing";
-import { FetchStatus } from "../../../commons/types";
+import useCartItems from "../hooks/useCartItems";
 import ShoppingCartSectionSkeleton from "./ShoppingCartSectionSkeleton";
 
 export default function ShoppingCartSection() {
   const navigate = useNavigate();
 
-  const [fetchStatus, setFetchStatus] = useState<FetchStatus>("idle");
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const {
+    items: cartItems,
+    fetchStatus,
+    removeItem,
+    updateItem,
+  } = useCartItems();
 
   const goToOrderCheckPage = () => {
     const aggregate = new CartAggregate(cartItems, CartPricing);
@@ -29,36 +32,6 @@ export default function ShoppingCartSection() {
     });
   };
 
-  const handleDeleteCartItem = async (itemId: string) => {
-    await deleteCartItem(itemId);
-    fetchCartItems();
-  };
-
-  const handleUpdateCartItem: handleUpdateCartItemType = async (
-    itemId,
-    body,
-  ) => {
-    const data = await updateCartItem(itemId, body);
-    return data;
-  };
-
-  const fetchCartItems = async () => {
-    setFetchStatus("loading");
-    try {
-      const items = await getCartItems();
-      console.log(items);
-      setCartItems(items);
-      setFetchStatus("success");
-    } catch {
-      setFetchStatus("error");
-    }
-  };
-
-  useEffect(function initialCartItems() {
-    fetchCartItems();
-    return;
-  }, []);
-
   return (
     <ShoppingCartSectionContainer>
       {fetchStatus === "loading" && <ShoppingCartSectionSkeleton />}
@@ -68,8 +41,8 @@ export default function ShoppingCartSection() {
           <ShoppingCartSectionContent
             cartItems={cartItems}
             goToOrderCheck={goToOrderCheckPage}
-            handleDeleteCartItem={handleDeleteCartItem}
-            handleUpdateCartItem={handleUpdateCartItem}
+            updateItem={updateItem}
+            removeItem={removeItem}
           />
         </>
       )}
@@ -96,14 +69,9 @@ export function ShoppingCartSectionHeader({
 export function ShoppingCartSectionContent({
   cartItems,
   goToOrderCheck,
-  handleDeleteCartItem,
-  handleUpdateCartItem,
-}: {
-  cartItems: CartItem[];
-  goToOrderCheck: () => void;
-  handleDeleteCartItem: (itemId: string) => void;
-  handleUpdateCartItem: handleUpdateCartItemType;
-}) {
+  updateItem,
+  removeItem,
+}: CartItemsProps & { goToOrderCheck: () => void }) {
   const aggregate = new CartAggregate(cartItems, CartPricing);
 
   return (
@@ -112,8 +80,8 @@ export function ShoppingCartSectionContent({
         <>
           <ShoppingCartItemGroup
             cartItems={cartItems}
-            handleDeleteCartItem={handleDeleteCartItem}
-            handleUpdateCartItem={handleUpdateCartItem}
+            updateItem={updateItem}
+            removeItem={removeItem}
           />
           <p className="sub-text icon-text">
             <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료

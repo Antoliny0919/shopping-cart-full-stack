@@ -3,16 +3,17 @@ import Checkbox from "../../../commons/components/Checkbox";
 import NikeWhiteShoes from "../images/nike-white-shoes.png";
 import Minus from "../../../commons/images/minus.svg?react";
 import Plus from "../../../commons/images/plus.svg?react";
-import { handleUpdateCartItemType } from "../types";
+import { CartItemsProps } from "../types";
 import { useState } from "react";
 
-interface ShoppingCartItemProps {
+interface ShoppingCartItemProps extends Pick<
+  CartItemsProps,
+  "updateItem" | "removeItem"
+> {
   itemId: string;
   name: string;
   price: number;
   initialQuantity: number;
-  handleDeleteCartItem: (itemId: string) => void;
-  handleUpdateCartItem: handleUpdateCartItemType;
 }
 
 export default function ShoppingCartItem({
@@ -20,20 +21,20 @@ export default function ShoppingCartItem({
   name,
   price,
   initialQuantity,
-  handleDeleteCartItem,
-  handleUpdateCartItem,
+  updateItem,
+  removeItem,
 }: ShoppingCartItemProps) {
   const [quantity, setQuantity] = useState(initialQuantity);
 
   const upQuantity = () => {
     const newQuantity = quantity + 1;
-    handleUpdateCartItem(itemId, { quantity: newQuantity });
+    updateItem(itemId, { quantity: newQuantity });
     setQuantity(newQuantity);
   };
 
   const downQuantity = () => {
     const newQuantity = quantity - 1;
-    handleUpdateCartItem(itemId, { quantity: newQuantity });
+    updateItem(itemId, { quantity: newQuantity });
     setQuantity(newQuantity);
   };
 
@@ -42,10 +43,7 @@ export default function ShoppingCartItem({
       <div className="wrapper">
         <ShoppingCartItemHeader>
           <Checkbox />
-          <button
-            className="item-delete"
-            onClick={() => handleDeleteCartItem(itemId)}
-          >
+          <button className="item-delete" onClick={() => removeItem(itemId)}>
             삭제
           </button>
         </ShoppingCartItemHeader>
