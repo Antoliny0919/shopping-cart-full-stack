@@ -5,7 +5,7 @@ import Minus from "../../../commons/images/minus.svg?react";
 import Plus from "../../../commons/images/plus.svg?react";
 import { formatToKoreanPrice } from "../../../commons/utils";
 import { CartItemsProps } from "../types";
-import { useState } from "react";
+import useCartItemQuantity from "../hooks/useCartItemQuantity";
 
 interface ShoppingCartItemProps extends Pick<
   CartItemsProps,
@@ -17,36 +17,6 @@ interface ShoppingCartItemProps extends Pick<
   initialQuantity: number;
 }
 
-const CART_ITEM_QUANTITY_RULE = {
-  MAX: 99,
-  MIN: 1,
-  STEP: 1,
-};
-
-function useCartItemQuantity(
-  initialQuantity: number,
-  itemId: string,
-  updateItem: CartItemsProps["updateItem"],
-) {
-  const [quantity, setQuantity] = useState(initialQuantity);
-
-  function increase() {
-    if (quantity >= CART_ITEM_QUANTITY_RULE.MAX) return;
-    const newQuantity = quantity + CART_ITEM_QUANTITY_RULE.STEP;
-    updateItem(itemId, { quantity: newQuantity });
-    setQuantity((prev) => prev + CART_ITEM_QUANTITY_RULE.STEP);
-  }
-
-  function decrease() {
-    if (quantity <= CART_ITEM_QUANTITY_RULE.MIN) return;
-    const newQuantity = quantity - CART_ITEM_QUANTITY_RULE.STEP;
-    updateItem(itemId, { quantity: newQuantity });
-    setQuantity((prev) => prev - CART_ITEM_QUANTITY_RULE.STEP);
-  }
-
-  return { quantity, increase, decrease };
-}
-
 export default function ShoppingCartItem({
   itemId,
   name,
@@ -55,7 +25,7 @@ export default function ShoppingCartItem({
   updateItem,
   removeItem,
 }: ShoppingCartItemProps) {
-  const { quantity, increase, decrease } = useCartItemQuantity(
+  const { quantity, increase, decrease, canIncrease, canDecrease } = useCartItemQuantity(
     initialQuantity,
     itemId,
     updateItem,
@@ -76,11 +46,19 @@ export default function ShoppingCartItem({
             <p className="name">{name}</p>
             <p className="price">{formatToKoreanPrice(price)}</p>
             <ShoppingCartItemQuantity>
-              <button type="button" onClick={decrease}>
+              <button
+                type="button"
+                onClick={decrease}
+                disabled={!canDecrease}
+              >
                 <Minus />
               </button>
               <p className="quantity">{quantity}</p>
-              <button type="button" onClick={increase}>
+              <button
+                type="button"
+                onClick={increase}
+                disabled={!canIncrease}
+              >
                 <Plus />
               </button>
             </ShoppingCartItemQuantity>
