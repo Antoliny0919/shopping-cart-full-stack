@@ -25,7 +25,8 @@ type Story = StoryObj<typeof meta>;
 const defaultArgs = {
   cartItems: [],
   goToOrderCheck: () => {},
-  handleDeleteCartItem: () => {},
+  removeItem: () => {},
+  updateItem: () => {},
 };
 
 export const ManyItems: Story = {

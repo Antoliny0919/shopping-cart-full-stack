@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
-
-const formatPrice = (price: number) => `${price.toLocaleString("ko-KR")}원`;
+import { formatToKoreanPrice } from "../../../commons/utils";
 
 export default function ShoppingCartOrderSummary({
   total,
@@ -16,17 +15,17 @@ export default function ShoppingCartOrderSummary({
       <ShoppingCartOrderSummaryList>
         <div className="receipt-item">
           <dt>주문 금액</dt>
-          <dd>{formatPrice(total)}</dd>
+          <dd>{formatToKoreanPrice(total)}</dd>
         </div>
         <div className="receipt-item">
           <dt>배송비</dt>
-          <dd>{formatPrice(delivery)}</dd>
+          <dd>{formatToKoreanPrice(delivery)}</dd>
         </div>
       </ShoppingCartOrderSummaryList>
       <ShoppingCartOrderSummaryResult>
         <div className="receipt-item">
           <dt>총 결제 금액</dt>
-          <dd>{formatPrice(grandTotal)}</dd>
+          <dd>{formatToKoreanPrice(grandTotal)}</dd>
         </div>
       </ShoppingCartOrderSummaryResult>
     </ShoppingCartOrderSummaryContainer>
