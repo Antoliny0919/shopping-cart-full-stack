@@ -1,11 +1,11 @@
 import styled from "@emotion/styled";
-import Checkbox from "../../../commons/components/Checkbox";
 import NikeWhiteShoes from "../images/nike-white-shoes.png";
 import Minus from "../../../commons/images/minus.svg?react";
 import Plus from "../../../commons/images/plus.svg?react";
 import { formatToKoreanPrice } from "../../../commons/utils";
 import { CartItemsProps } from "../types";
 import useCartItemQuantity from "../hooks/useCartItemQuantity";
+import ItemCheckbox from "./ItemCheckbox";
 
 interface ShoppingCartItemProps extends Pick<
   CartItemsProps,
@@ -33,7 +33,7 @@ export default function ShoppingCartItem({
     <ShoppingCartItemContainer>
       <div className="wrapper">
         <ShoppingCartItemHeader>
-          <Checkbox itemId={itemId} onChangeSelected={onChangeSelected} />
+          <ItemCheckbox itemId={itemId} onChangeSelected={onChangeSelected} />
           <button className="item-delete" onClick={() => removeItem(itemId)}>
             삭제
           </button>

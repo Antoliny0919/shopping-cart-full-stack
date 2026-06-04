@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import Checkbox from "../../../commons/components/Checkbox";
+import ItemCheckbox from "./ItemCheckbox";
 import ShoppingCartItemList from "./ShoppingCartItemList";
 import { CartItemsProps } from "../types";
 
@@ -11,7 +11,7 @@ export default function ShoppingCartItemGroup({
 }: CartItemsProps) {
   return (
     <ShoppingCartItemGroupContainer>
-      <Checkbox
+      <ItemCheckbox
         itemId={"null"}
         labelText={"전체선택"}
         onChangeSelected={onChangeSelected}

@@ -1,29 +1,15 @@
-import { useState } from "react";
 import styled from "@emotion/styled";
 import UnChecked from "../images/un-checked.svg?react";
 import Checked from "../images/checked.svg?react";
 
-export default function Checkbox({
-  itemId,
-  labelText,
-  onChangeSelected,
-}: {
-  itemId: string;
+type CheckboxProps = React.ComponentPropsWithoutRef<"input"> & {
   labelText?: string;
-  onChangeSelected: (checked: boolean, id: string) => void;
-}) {
-  const [checked, setChecked] = useState(
-    localStorage.getItem("selectedItems")?.includes(itemId),
-  );
+};
 
-  const onChange = () => {
-    onChangeSelected(!checked, itemId);
-    setChecked(!checked);
-  };
-
+export default function Checkbox({ labelText, checked, ...props }: CheckboxProps) {
   return (
     <CheckboxLabel>
-      <input type="checkbox" checked={checked} onChange={onChange} />
+      <input type="checkbox" {...props} checked={checked} />
       {checked ? <Checked /> : <UnChecked />}
       {labelText && <span>{labelText}</span>}
     </CheckboxLabel>
