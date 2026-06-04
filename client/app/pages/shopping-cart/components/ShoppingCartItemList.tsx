@@ -4,8 +4,10 @@ import { CartItem } from "../types";
 
 export default function ShoppingCartItemList({
   cartItems,
+  handleDeleteCartItem,
 }: {
   cartItems: CartItem[];
+  handleDeleteCartItem: (itemId: string) => void;
 }) {
   return (
     <ShoppingCartItemListContainer>
@@ -13,9 +15,11 @@ export default function ShoppingCartItemList({
         return (
           <ShoppingCartItem
             key={product_id}
+            itemId={product_id}
             name={product.name}
             price={product.price}
             quantity={quantity}
+            handleDeleteCartItem={handleDeleteCartItem}
           />
         );
       })}

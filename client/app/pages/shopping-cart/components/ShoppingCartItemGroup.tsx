@@ -5,13 +5,18 @@ import { CartItem } from "../types";
 
 export default function ShoppingCartItemGroup({
   cartItems,
+  handleDeleteCartItem,
 }: {
   cartItems: CartItem[];
+  handleDeleteCartItem: (itemId: string) => void;
 }) {
   return (
     <ShoppingCartItemGroupContainer>
       <Checkbox labelText={"전체선택"} />
-      <ShoppingCartItemList cartItems={cartItems} />
+      <ShoppingCartItemList
+        cartItems={cartItems}
+        handleDeleteCartItem={handleDeleteCartItem}
+      />
     </ShoppingCartItemGroupContainer>
   );
 }

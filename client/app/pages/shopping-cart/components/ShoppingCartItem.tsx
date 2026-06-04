@@ -5,22 +5,31 @@ import Minus from "../../../commons/images/minus.svg?react";
 import Plus from "../../../commons/images/plus.svg?react";
 
 interface ShoppingCartItemProps {
+  itemId: string;
   name: string;
   price: number;
   quantity: number;
+  handleDeleteCartItem: (itemId: string) => void;
 }
 
 export default function ShoppingCartItem({
+  itemId,
   name,
   price,
   quantity,
+  handleDeleteCartItem,
 }: ShoppingCartItemProps) {
   return (
     <ShoppingCartItemContainer>
       <div className="wrapper">
         <ShoppingCartItemHeader>
           <Checkbox />
-          <button className="item-delete">삭제</button>
+          <button
+            className="item-delete"
+            onClick={() => handleDeleteCartItem(itemId)}
+          >
+            삭제
+          </button>
         </ShoppingCartItemHeader>
         <ShoppingCartItemBody>
           <img className="thumbnail" src={NikeWhiteShoes} />

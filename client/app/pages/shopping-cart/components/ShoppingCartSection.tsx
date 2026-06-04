@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { getCartItems } from "../api";
+import { getCartItems, deleteCartItem } from "../api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Info from "../../../commons/images/info.svg?react";
@@ -29,10 +29,16 @@ export default function ShoppingCartSection() {
     });
   };
 
+  const handleDeleteCartItem = async (itemId: string) => {
+    await deleteCartItem(itemId);
+    fetchCartItems();
+  };
+
   const fetchCartItems = async () => {
     setFetchStatus("loading");
     try {
       const items = await getCartItems();
+      console.log(items);
       setCartItems(items);
       setFetchStatus("success");
     } catch {
@@ -54,6 +60,7 @@ export default function ShoppingCartSection() {
           <ShoppingCartSectionContent
             cartItems={cartItems}
             goToOrderCheck={goToOrderCheckPage}
+            handleDeleteCartItem={handleDeleteCartItem}
           />
         </>
       )}
@@ -80,9 +87,11 @@ export function ShoppingCartSectionHeader({
 export function ShoppingCartSectionContent({
   cartItems,
   goToOrderCheck,
+  handleDeleteCartItem,
 }: {
   cartItems: CartItem[];
   goToOrderCheck: () => void;
+  handleDeleteCartItem: (itemId: string) => void;
 }) {
   const aggregate = new CartAggregate(cartItems, CartPricing);
 
@@ -90,7 +99,10 @@ export function ShoppingCartSectionContent({
     <>
       {aggregate.totalItems ? (
         <>
-          <ShoppingCartItemGroup cartItems={cartItems} />
+          <ShoppingCartItemGroup
+            cartItems={cartItems}
+            handleDeleteCartItem={handleDeleteCartItem}
+          />
           <p className="sub-text icon-text">
             <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
             배송됩니다.
