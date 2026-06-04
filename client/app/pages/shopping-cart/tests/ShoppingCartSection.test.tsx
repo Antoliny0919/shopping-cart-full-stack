@@ -162,6 +162,66 @@ describe("ShoppingCartSection", () => {
     expect(selectedItems).toEqual(existingItems);
   });
 
+  test("상품이 체크되었을때 localStorage에 상품 id가 추가된다.", async () => {
+    localStorage.setItem("selectedItems", JSON.stringify([]));
+    server.use(
+      http.get(`${BASE_URL}/api/cart/`, () =>
+        HttpResponse.json([
+          {
+            product_id: "123-123",
+            quantity: 1,
+            product: { name: "하겐다즈 말차", price: 10000, thumbnail: "" },
+          },
+        ]),
+      ),
+    );
+    render(
+      <MemoryRouter>
+        <ShoppingCartSection />
+      </MemoryRouter>,
+    );
+    const productText = await screen.findByText("하겐다즈 말차");
+    const listItem = productText.closest("li")!;
+    const checkbox = listItem.querySelector(
+      "input[type='checkbox']",
+    ) as HTMLInputElement;
+    fireEvent.click(checkbox);
+    const selectedItems = JSON.parse(
+      localStorage.getItem("selectedItems") ?? "[]",
+    );
+    expect(selectedItems).toEqual(["123-123"]);
+  });
+
+  test("상품이 체크 해제 되었을때 localStorage에 상품 id가 제거된다.", async () => {
+    localStorage.setItem("selectedItems", JSON.stringify(["456-456"]));
+    server.use(
+      http.get(`${BASE_URL}/api/cart/`, () =>
+        HttpResponse.json([
+          {
+            product_id: "456-456",
+            quantity: 1,
+            product: { name: "하겐다즈 초코", price: 10000, thumbnail: "" },
+          },
+        ]),
+      ),
+    );
+    render(
+      <MemoryRouter>
+        <ShoppingCartSection />
+      </MemoryRouter>,
+    );
+    const productText = await screen.findByText("하겐다즈 초코");
+    const listItem = productText.closest("li")!;
+    const checkbox = listItem.querySelector(
+      "input[type='checkbox']",
+    ) as HTMLInputElement;
+    fireEvent.click(checkbox);
+    const selectedItems = JSON.parse(
+      localStorage.getItem("selectedItems") ?? "[]",
+    );
+    expect(selectedItems).toEqual([]);
+  });
+
   test("상품이 전부 삭제되었을때 상품이 없을때의 UI가 렌더링 된다.", async () => {
     let getCallCount = 0;
     server.use(

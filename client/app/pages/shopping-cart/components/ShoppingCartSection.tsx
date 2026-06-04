@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import Info from "../../../commons/images/info.svg?react";
 import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
@@ -9,6 +8,7 @@ import { CartItemsProps } from "../types";
 import CartAggregate from "../CartAggregate";
 import { CartPricing } from "../CartPricing";
 import useCartItems from "../hooks/useCartItems";
+import useCartItemSelected from "../hooks/useCartItemSelected";
 import ShoppingCartSectionSkeleton from "./ShoppingCartSectionSkeleton";
 
 export default function ShoppingCartSection() {
@@ -21,11 +21,11 @@ export default function ShoppingCartSection() {
     updateItem,
   } = useCartItems();
 
-  const isFirstVisit = localStorage.getItem("selectedItems") === null;
+  const { selectedItemId, initSelectedItemId, onChangeSelected } =
+    useCartItemSelected();
 
-  if (isFirstVisit && fetchStatus === "success") {
-    const allCartItemsId = cartItems.map((item) => item.product_id);
-    localStorage.setItem("selectedItems", JSON.stringify(allCartItemsId));
+  if (fetchStatus === "success" && selectedItemId === null) {
+    initSelectedItemId(cartItems.map((item) => item.product_id));
   }
 
   const goToOrderCheckPage = () => {
@@ -50,6 +50,7 @@ export default function ShoppingCartSection() {
             goToOrderCheck={goToOrderCheckPage}
             updateItem={updateItem}
             removeItem={removeItem}
+            onChangeSelected={onChangeSelected}
           />
         </>
       )}
@@ -78,6 +79,7 @@ export function ShoppingCartSectionContent({
   goToOrderCheck,
   updateItem,
   removeItem,
+  onChangeSelected,
 }: CartItemsProps & { goToOrderCheck: () => void }) {
   const aggregate = new CartAggregate(cartItems, CartPricing);
 
@@ -89,6 +91,7 @@ export function ShoppingCartSectionContent({
             cartItems={cartItems}
             updateItem={updateItem}
             removeItem={removeItem}
+            onChangeSelected={onChangeSelected}
           />
           <p className="sub-text icon-text">
             <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료

@@ -16,11 +16,11 @@
   - [] 에러시 사용자에게 보여준다
   - [x] 스켈레톤 UI
 
-- [] 로컬스토리지
-  - [] 선택된 상품을 로컬스토리지에 저장한다.
+- [x] 로컬스토리지
+  - [x] 선택된 상품을 로컬스토리지에 저장한다.
 
-- [] 새로고침
-  - [] 새로고침 시에도 선택된 상품은 유지되어야 한다. (useEffect of useSyncExternalStore, 부모/자식 컴포넌트 렌더링, 초기값 localStorage로부터)
+- [x] 새로고침
+  - [x] 새로고침 시에도 선택된 상품은 유지되어야 한다. (useEffect of useSyncExternalStore, 부모/자식 컴포넌트 렌더링, 초기값 localStorage로부터)
 
 - [x] 컴포넌트
   - [x] ShoppingCartPage

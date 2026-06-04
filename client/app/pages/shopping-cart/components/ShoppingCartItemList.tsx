@@ -6,6 +6,7 @@ export default function ShoppingCartItemList({
   cartItems,
   updateItem,
   removeItem,
+  onChangeSelected,
 }: CartItemsProps) {
   return (
     <ShoppingCartItemListContainer>
@@ -19,6 +20,7 @@ export default function ShoppingCartItemList({
             initialQuantity={quantity}
             updateItem={updateItem}
             removeItem={removeItem}
+            onChangeSelected={onChangeSelected}
           />
         );
       })}

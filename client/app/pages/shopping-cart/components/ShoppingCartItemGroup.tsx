@@ -7,14 +7,20 @@ export default function ShoppingCartItemGroup({
   cartItems,
   updateItem,
   removeItem,
+  onChangeSelected,
 }: CartItemsProps) {
   return (
     <ShoppingCartItemGroupContainer>
-      <Checkbox labelText={"전체선택"} />
+      <Checkbox
+        itemId={"null"}
+        labelText={"전체선택"}
+        onChangeSelected={onChangeSelected}
+      />
       <ShoppingCartItemList
         cartItems={cartItems}
         updateItem={updateItem}
         removeItem={removeItem}
+        onChangeSelected={onChangeSelected}
       />
     </ShoppingCartItemGroupContainer>
   );

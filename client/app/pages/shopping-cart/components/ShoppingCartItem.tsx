@@ -9,7 +9,7 @@ import useCartItemQuantity from "../hooks/useCartItemQuantity";
 
 interface ShoppingCartItemProps extends Pick<
   CartItemsProps,
-  "updateItem" | "removeItem"
+  "updateItem" | "removeItem" | "onChangeSelected"
 > {
   itemId: string;
   name: string;
@@ -24,18 +24,16 @@ export default function ShoppingCartItem({
   initialQuantity,
   updateItem,
   removeItem,
+  onChangeSelected,
 }: ShoppingCartItemProps) {
-  const { quantity, increase, decrease, canIncrease, canDecrease } = useCartItemQuantity(
-    initialQuantity,
-    itemId,
-    updateItem,
-  );
+  const { quantity, increase, decrease, canIncrease, canDecrease } =
+    useCartItemQuantity(initialQuantity, itemId, updateItem);
 
   return (
     <ShoppingCartItemContainer>
       <div className="wrapper">
         <ShoppingCartItemHeader>
-          <Checkbox />
+          <Checkbox itemId={itemId} onChangeSelected={onChangeSelected} />
           <button className="item-delete" onClick={() => removeItem(itemId)}>
             삭제
           </button>
