@@ -4,7 +4,6 @@ import Info from "../../../commons/images/info.svg?react";
 import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
 import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
 import OrderCheckButton from "./OrderCheckButton";
-import { CartItem } from "../types";
 import { CartItemsProps } from "../types";
 import CartAggregate from "../CartAggregate";
 import { CartPricing } from "../CartPricing";
