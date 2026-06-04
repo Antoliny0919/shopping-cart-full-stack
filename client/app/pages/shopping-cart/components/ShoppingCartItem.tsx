@@ -16,6 +16,12 @@ interface ShoppingCartItemProps extends Pick<
   initialQuantity: number;
 }
 
+const CART_ITEM_QUANTITY_RULE = {
+  MAX: 99,
+  MIN: 1,
+  STEP: 1,
+};
+
 function useCartItemQuantity(
   initialQuantity: number,
   itemId: string,
@@ -24,15 +30,17 @@ function useCartItemQuantity(
   const [quantity, setQuantity] = useState(initialQuantity);
 
   function increase() {
-    const newQuantity = quantity + 1;
+    if (quantity >= CART_ITEM_QUANTITY_RULE.MAX) return;
+    const newQuantity = quantity + CART_ITEM_QUANTITY_RULE.STEP;
     updateItem(itemId, { quantity: newQuantity });
-    setQuantity((prev) => prev + 1);
+    setQuantity((prev) => prev + CART_ITEM_QUANTITY_RULE.STEP);
   }
 
   function decrease() {
-    const newQuantity = quantity - 1;
+    if (quantity <= CART_ITEM_QUANTITY_RULE.MIN) return;
+    const newQuantity = quantity - CART_ITEM_QUANTITY_RULE.STEP;
     updateItem(itemId, { quantity: newQuantity });
-    setQuantity((prev) => prev - 1);
+    setQuantity((prev) => prev - CART_ITEM_QUANTITY_RULE.STEP);
   }
 
   return { quantity, increase, decrease };
@@ -67,11 +75,11 @@ export default function ShoppingCartItem({
             <p className="name">{name}</p>
             <p className="price">{price.toLocaleString("ko-KR")}원</p>
             <ShoppingCartItemQuantity>
-              <button type="button" onClick={increase}>
+              <button type="button" onClick={decrease}>
                 <Minus />
               </button>
               <p className="quantity">{quantity}</p>
-              <button type="button" onClick={decrease}>
+              <button type="button" onClick={increase}>
                 <Plus />
               </button>
             </ShoppingCartItemQuantity>
