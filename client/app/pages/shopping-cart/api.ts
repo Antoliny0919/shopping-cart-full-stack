@@ -11,3 +11,15 @@ export async function deleteCartItem(id: string) {
     method: "DELETE",
   });
 }
+
+export async function updateCartItem(id: string, body: { quantity: number }) {
+  const response = await fetch(`${BASE_URL}/api/cart/items/${id}/`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+}

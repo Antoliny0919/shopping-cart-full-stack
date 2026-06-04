@@ -9,3 +9,8 @@ export interface Product {
   thumbnail: string;
   price: number;
 }
+
+export type handleUpdateCartItemType = (
+  itemId: string,
+  body: { quantity: number },
+) => void;

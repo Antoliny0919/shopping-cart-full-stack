@@ -3,22 +3,40 @@ import Checkbox from "../../../commons/components/Checkbox";
 import NikeWhiteShoes from "../images/nike-white-shoes.png";
 import Minus from "../../../commons/images/minus.svg?react";
 import Plus from "../../../commons/images/plus.svg?react";
+import { handleUpdateCartItemType } from "../types";
+import { useState } from "react";
 
 interface ShoppingCartItemProps {
   itemId: string;
   name: string;
   price: number;
-  quantity: number;
+  initialQuantity: number;
   handleDeleteCartItem: (itemId: string) => void;
+  handleUpdateCartItem: handleUpdateCartItemType;
 }
 
 export default function ShoppingCartItem({
   itemId,
   name,
   price,
-  quantity,
+  initialQuantity,
   handleDeleteCartItem,
+  handleUpdateCartItem,
 }: ShoppingCartItemProps) {
+  const [quantity, setQuantity] = useState(initialQuantity);
+
+  const upQuantity = () => {
+    const newQuantity = quantity + 1;
+    handleUpdateCartItem(itemId, { quantity: newQuantity });
+    setQuantity(newQuantity);
+  };
+
+  const downQuantity = () => {
+    const newQuantity = quantity - 1;
+    handleUpdateCartItem(itemId, { quantity: newQuantity });
+    setQuantity(newQuantity);
+  };
+
   return (
     <ShoppingCartItemContainer>
       <div className="wrapper">
@@ -37,11 +55,11 @@ export default function ShoppingCartItem({
             <p className="name">{name}</p>
             <p className="price">{price.toLocaleString("ko-KR")}원</p>
             <ShoppingCartItemQuantity>
-              <button type="button">
+              <button type="button" onClick={downQuantity}>
                 <Minus />
               </button>
               <p className="quantity">{quantity}</p>
-              <button type="button">
+              <button type="button" onClick={upQuantity}>
                 <Plus />
               </button>
             </ShoppingCartItemQuantity>

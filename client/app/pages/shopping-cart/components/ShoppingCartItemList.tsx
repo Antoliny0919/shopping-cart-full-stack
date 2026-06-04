@@ -1,13 +1,15 @@
 import styled from "@emotion/styled";
 import ShoppingCartItem from "./ShoppingCartItem";
-import { CartItem } from "../types";
+import { CartItem, handleUpdateCartItemType } from "../types";
 
 export default function ShoppingCartItemList({
   cartItems,
   handleDeleteCartItem,
+  handleUpdateCartItem,
 }: {
   cartItems: CartItem[];
   handleDeleteCartItem: (itemId: string) => void;
+  handleUpdateCartItem: handleUpdateCartItemType;
 }) {
   return (
     <ShoppingCartItemListContainer>
@@ -18,8 +20,9 @@ export default function ShoppingCartItemList({
             itemId={product_id}
             name={product.name}
             price={product.price}
-            quantity={quantity}
+            initialQuantity={quantity}
             handleDeleteCartItem={handleDeleteCartItem}
+            handleUpdateCartItem={handleUpdateCartItem}
           />
         );
       })}

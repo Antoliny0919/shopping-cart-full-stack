@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
-import { getCartItems, deleteCartItem } from "../api";
+import { getCartItems, deleteCartItem, updateCartItem } from "../api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Info from "../../../commons/images/info.svg?react";
 import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
 import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
 import OrderCheckButton from "./OrderCheckButton";
-import { CartItem } from "../types";
+import { CartItem, handleUpdateCartItemType } from "../types";
 import CartAggregate from "../CartAggregate";
 import { CartPricing } from "../CartPricing";
 import { FetchStatus } from "../../../commons/types";
@@ -32,6 +32,14 @@ export default function ShoppingCartSection() {
   const handleDeleteCartItem = async (itemId: string) => {
     await deleteCartItem(itemId);
     fetchCartItems();
+  };
+
+  const handleUpdateCartItem: handleUpdateCartItemType = async (
+    itemId,
+    body,
+  ) => {
+    const data = await updateCartItem(itemId, body);
+    return data;
   };
 
   const fetchCartItems = async () => {
@@ -61,6 +69,7 @@ export default function ShoppingCartSection() {
             cartItems={cartItems}
             goToOrderCheck={goToOrderCheckPage}
             handleDeleteCartItem={handleDeleteCartItem}
+            handleUpdateCartItem={handleUpdateCartItem}
           />
         </>
       )}
@@ -88,10 +97,12 @@ export function ShoppingCartSectionContent({
   cartItems,
   goToOrderCheck,
   handleDeleteCartItem,
+  handleUpdateCartItem,
 }: {
   cartItems: CartItem[];
   goToOrderCheck: () => void;
   handleDeleteCartItem: (itemId: string) => void;
+  handleUpdateCartItem: handleUpdateCartItemType;
 }) {
   const aggregate = new CartAggregate(cartItems, CartPricing);
 
@@ -102,6 +113,7 @@ export function ShoppingCartSectionContent({
           <ShoppingCartItemGroup
             cartItems={cartItems}
             handleDeleteCartItem={handleDeleteCartItem}
+            handleUpdateCartItem={handleUpdateCartItem}
           />
           <p className="sub-text icon-text">
             <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
