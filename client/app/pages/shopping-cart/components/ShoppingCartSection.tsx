@@ -4,7 +4,7 @@ import Info from "../../../commons/images/info.svg?react";
 import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
 import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
 import OrderCheckButton from "./OrderCheckButton";
-import { CartItemsProps } from "../types";
+import { CartItemsProps, OnChangeAllSelected } from "../types";
 import CartAggregate from "../CartAggregate";
 import { CartPricing } from "../CartPricing";
 import useCartItems from "../hooks/useCartItems";
@@ -21,8 +21,12 @@ export default function ShoppingCartSection() {
     updateItem,
   } = useCartItems();
 
-  const { selectedItemId, initSelectedItemId, onChangeSelected } =
-    useCartItemSelected();
+  const {
+    selectedItemId,
+    initSelectedItemId,
+    onChangeSelected,
+    onChangeAllSelected,
+  } = useCartItemSelected();
 
   if (fetchStatus === "success" && selectedItemId === null) {
     initSelectedItemId(cartItems.map((item) => item.product_id));
@@ -51,6 +55,8 @@ export default function ShoppingCartSection() {
             updateItem={updateItem}
             removeItem={removeItem}
             onChangeSelected={onChangeSelected}
+            onChangeAllSelected={onChangeAllSelected}
+            selectedItemId={selectedItemId}
           />
         </>
       )}
@@ -80,7 +86,12 @@ export function ShoppingCartSectionContent({
   updateItem,
   removeItem,
   onChangeSelected,
-}: CartItemsProps & { goToOrderCheck: () => void }) {
+  onChangeAllSelected,
+  selectedItemId,
+}: CartItemsProps & {
+  goToOrderCheck: () => void;
+  onChangeAllSelected: OnChangeAllSelected;
+}) {
   const aggregate = new CartAggregate(cartItems, CartPricing);
 
   return (
@@ -92,6 +103,8 @@ export function ShoppingCartSectionContent({
             updateItem={updateItem}
             removeItem={removeItem}
             onChangeSelected={onChangeSelected}
+            onChangeAllSelected={onChangeAllSelected}
+            selectedItemId={selectedItemId}
           />
           <p className="sub-text icon-text">
             <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료

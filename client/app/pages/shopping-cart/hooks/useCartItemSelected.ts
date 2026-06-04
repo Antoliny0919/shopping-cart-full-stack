@@ -21,5 +21,17 @@ export default function useCartItemSelected() {
     setSelectedItemId(newSelectedItem);
   };
 
-  return { selectedItemId, initSelectedItemId, onChangeSelected };
+  const onChangeAllSelected = (allCartItemsId: string[]) => {
+    const isAllChecked = (selectedItemId ?? []).length === allCartItemsId.length;
+    const newSelectedItem = isAllChecked ? [] : allCartItemsId;
+    localStorage.setItem("selectedItems", JSON.stringify(newSelectedItem));
+    setSelectedItemId(newSelectedItem);
+  };
+
+  return {
+    selectedItemId,
+    initSelectedItemId,
+    onChangeSelected,
+    onChangeAllSelected,
+  };
 }

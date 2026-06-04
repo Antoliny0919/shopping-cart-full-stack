@@ -15,6 +15,7 @@ interface ShoppingCartItemProps extends Pick<
   name: string;
   price: number;
   initialQuantity: number;
+  checked: boolean;
 }
 
 export default function ShoppingCartItem({
@@ -22,6 +23,7 @@ export default function ShoppingCartItem({
   name,
   price,
   initialQuantity,
+  checked,
   updateItem,
   removeItem,
   onChangeSelected,
@@ -33,7 +35,7 @@ export default function ShoppingCartItem({
     <ShoppingCartItemContainer>
       <div className="wrapper">
         <ShoppingCartItemHeader>
-          <ItemCheckbox itemId={itemId} onChangeSelected={onChangeSelected} />
+          <ItemCheckbox itemId={itemId} checked={checked} onChangeSelected={onChangeSelected} />
           <button className="item-delete" onClick={() => removeItem(itemId)}>
             삭제
           </button>

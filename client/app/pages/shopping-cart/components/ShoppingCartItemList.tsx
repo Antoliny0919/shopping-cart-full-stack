@@ -7,6 +7,7 @@ export default function ShoppingCartItemList({
   updateItem,
   removeItem,
   onChangeSelected,
+  selectedItemId,
 }: CartItemsProps) {
   return (
     <ShoppingCartItemListContainer>
@@ -15,6 +16,7 @@ export default function ShoppingCartItemList({
           <ShoppingCartItem
             key={product_id}
             itemId={product_id}
+            checked={selectedItemId?.includes(product_id) ?? false}
             name={product.name}
             price={product.price}
             initialQuantity={quantity}
