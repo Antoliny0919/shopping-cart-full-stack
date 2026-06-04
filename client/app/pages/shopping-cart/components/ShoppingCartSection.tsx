@@ -144,6 +144,7 @@ const ShoppingCartSectionContainer = styled.section`
   flex: 1;
   padding: 1.5rem;
   margin-bottom: 4rem;
+  overflow: scroll;
 
   .heading {
     margin: 2rem 0;
