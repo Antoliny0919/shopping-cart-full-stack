@@ -16,6 +16,28 @@ interface ShoppingCartItemProps extends Pick<
   initialQuantity: number;
 }
 
+function useCartItemQuantity(
+  initialQuantity: number,
+  itemId: string,
+  updateItem: CartItemsProps["updateItem"],
+) {
+  const [quantity, setQuantity] = useState(initialQuantity);
+
+  function increase() {
+    const newQuantity = quantity + 1;
+    updateItem(itemId, { quantity: newQuantity });
+    setQuantity((prev) => prev + 1);
+  }
+
+  function decrease() {
+    const newQuantity = quantity - 1;
+    updateItem(itemId, { quantity: newQuantity });
+    setQuantity((prev) => prev - 1);
+  }
+
+  return { quantity, increase, decrease };
+}
+
 export default function ShoppingCartItem({
   itemId,
   name,
@@ -24,19 +46,11 @@ export default function ShoppingCartItem({
   updateItem,
   removeItem,
 }: ShoppingCartItemProps) {
-  const [quantity, setQuantity] = useState(initialQuantity);
-
-  const upQuantity = () => {
-    const newQuantity = quantity + 1;
-    updateItem(itemId, { quantity: newQuantity });
-    setQuantity(newQuantity);
-  };
-
-  const downQuantity = () => {
-    const newQuantity = quantity - 1;
-    updateItem(itemId, { quantity: newQuantity });
-    setQuantity(newQuantity);
-  };
+  const { quantity, increase, decrease } = useCartItemQuantity(
+    initialQuantity,
+    itemId,
+    updateItem,
+  );
 
   return (
     <ShoppingCartItemContainer>
@@ -53,11 +67,11 @@ export default function ShoppingCartItem({
             <p className="name">{name}</p>
             <p className="price">{price.toLocaleString("ko-KR")}원</p>
             <ShoppingCartItemQuantity>
-              <button type="button" onClick={downQuantity}>
+              <button type="button" onClick={increase}>
                 <Minus />
               </button>
               <p className="quantity">{quantity}</p>
-              <button type="button" onClick={upQuantity}>
+              <button type="button" onClick={decrease}>
                 <Plus />
               </button>
             </ShoppingCartItemQuantity>
