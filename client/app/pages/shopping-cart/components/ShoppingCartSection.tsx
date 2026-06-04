@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import Info from "../../../commons/images/info.svg?react";
 import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
@@ -19,6 +20,13 @@ export default function ShoppingCartSection() {
     removeItem,
     updateItem,
   } = useCartItems();
+
+  const isFirstVisit = localStorage.getItem("selectedItems") === null;
+
+  if (isFirstVisit && fetchStatus === "success") {
+    const allCartItemsId = cartItems.map((item) => item.product_id);
+    localStorage.setItem("selectedItems", JSON.stringify(allCartItemsId));
+  }
 
   const goToOrderCheckPage = () => {
     const aggregate = new CartAggregate(cartItems, CartPricing);

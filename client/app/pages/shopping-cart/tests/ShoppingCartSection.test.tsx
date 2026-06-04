@@ -6,13 +6,17 @@ import {
   waitForElementToBeRemoved,
 } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
-import { describe, test, expect } from "vitest";
+import { describe, test, expect, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router";
 import { server } from "../../../../rtl-setup";
 import { BASE_URL } from "../../../constants";
 import ShoppingCartSection from "../components/ShoppingCartSection";
 
 describe("ShoppingCartSection", () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   test("서버에서 가져온 장바구니 상품이 화면에 표시된다", async () => {
     render(
       <MemoryRouter>
@@ -95,6 +99,67 @@ describe("ShoppingCartSection", () => {
 
     await waitForElementToBeRemoved(() => screen.queryByText("치킨"));
     expect(screen.queryByText("치킨")).not.toBeInTheDocument();
+  });
+
+  test("첫 방문 시 모든 카트 아이템 ID가 localStorage의 selectedItems에 저장된다", async () => {
+    const mockItems = [
+      {
+        product_id: "id-1",
+        quantity: 1,
+        product: { name: "아이템1", price: 10000, thumbnail: "" },
+      },
+      {
+        product_id: "id-2",
+        quantity: 2,
+        product: { name: "아이템2", price: 20000, thumbnail: "" },
+      },
+    ];
+    server.use(
+      http.get(`${BASE_URL}/api/cart/`, () => HttpResponse.json(mockItems)),
+    );
+
+    render(
+      <MemoryRouter>
+        <ShoppingCartSection />
+      </MemoryRouter>,
+    );
+
+    await screen.findByText("아이템1");
+
+    const selectedItems = JSON.parse(
+      localStorage.getItem("selectedItems") ?? "[]",
+    );
+    expect(selectedItems).toEqual(["id-1", "id-2"]);
+  });
+
+  test("재방문 시 기존 localStorage의 selectedItems가 덮어씌워지지 않는다", async () => {
+    const existingItems = ["existing-id-1", "existing-id-2"];
+    localStorage.setItem("selectedItems", JSON.stringify(existingItems));
+
+    server.use(
+      http.get(`${BASE_URL}/api/cart/`, () =>
+        HttpResponse.json([
+          {
+            product_id: "id-1",
+            quantity: 1,
+            product: { name: "아이템1", price: 10000, thumbnail: "" },
+          },
+        ]),
+      ),
+    );
+
+    render(
+      <MemoryRouter>
+        <ShoppingCartSection />
+      </MemoryRouter>,
+    );
+
+    await screen.findByText("아이템1");
+
+    const selectedItems = JSON.parse(
+      localStorage.getItem("selectedItems") ?? "[]",
+    );
+    expect(selectedItems).toEqual(existingItems);
   });
 
   test("상품이 전부 삭제되었을때 상품이 없을때의 UI가 렌더링 된다.", async () => {
