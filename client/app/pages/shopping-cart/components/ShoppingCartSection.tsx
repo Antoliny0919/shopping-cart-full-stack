@@ -33,7 +33,10 @@ export default function ShoppingCartSection() {
   }
 
   const goToOrderCheckPage = () => {
-    const aggregate = new CartAggregate(cartItems, CartPricing);
+    const selectedCartItems = cartItems.filter((item) =>
+      selectedItemId?.includes(item.product_id),
+    );
+    const aggregate = new CartAggregate(selectedCartItems, CartPricing);
     navigate("/cart/check/", {
       state: {
         totalItems: aggregate.totalItems,
