@@ -12,6 +12,7 @@ import { SelectedItemsLocalStorage } from "../storages/SelectedItemsStorage";
 import useCartItems from "../hooks/useCartItems";
 import useCartItemSelected from "../hooks/useCartItemSelected";
 import Loading from "./Loading";
+import { useEffect } from "react";
 
 export default function Section() {
   const navigate = useNavigate();
@@ -31,10 +32,6 @@ export default function Section() {
     onChangeAllSelected,
   } = useCartItemSelected(storage);
 
-  if (fetchStatus === "success" && selectedItemId === null) {
-    initSelectedItemId(cartItems.map((item) => item.product_id));
-  }
-
   const cartManager = new CartManager(selectedItemId, cartItems);
   const summary = new CartSummary(cartManager.selectedCartItems, CartPricing);
 
@@ -47,6 +44,12 @@ export default function Section() {
       },
     });
   };
+
+  useEffect(() => {
+    if (fetchStatus === "success" && selectedItemId === null) {
+      initSelectedItemId(cartItems.map((item) => item.product_id));
+    }
+  }, [fetchStatus]);
 
   return (
     <SectionLayout>
