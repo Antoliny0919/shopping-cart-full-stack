@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router";
 import Info from "../../../commons/images/info.svg?react";
-import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
+import AllItemCheckbox from "./AllItemCheckbox";
+import ShoppingCartItemList from "./ShoppingCartItemList";
 import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
-import { CartItem } from "../types";
 import CartAggregate from "../CartAggregate";
 import CartManager from "../CartManager";
 import { CartPricing } from "../CartPricing";
@@ -35,12 +35,13 @@ export default function ShoppingCartSection() {
     initSelectedItemId(cartItems.map((item) => item.product_id));
   }
 
+  const cartManager = new CartManager(selectedItemId, cartItems);
+  const aggregate = new CartAggregate(
+    cartManager.selectedCartItems,
+    CartPricing,
+  );
+
   const goToOrderCheckPage = () => {
-    const cartManager = new CartManager(selectedItemId, cartItems);
-    const aggregate = new CartAggregate(
-      cartManager.selectedCartItems,
-      CartPricing,
-    );
     navigate("/cart/check/", {
       state: {
         totalItems: aggregate.totalItems,
@@ -51,124 +52,81 @@ export default function ShoppingCartSection() {
   };
 
   return (
-    <ShoppingCartSectionContainer>
+    <Section>
       {fetchStatus === "loading" && <ShoppingCartSectionSkeleton />}
       {fetchStatus === "success" && (
         <>
-          <ShoppingCartSectionHeader itemCount={cartItems.length} />
-          <ShoppingCartSectionContent
-            cartItems={cartItems}
-            goToOrderCheck={goToOrderCheckPage}
-            updateItem={updateItem}
-            removeItem={removeItem}
-            onChangeSelected={onChangeSelected}
-            onChangeAllSelected={onChangeAllSelected}
-            selectedItemId={selectedItemId}
-          />
+          <Header>
+            <Title>장바구니</Title>
+            {cartItems.length > 0 && (
+              <SubText>
+                현재 {cartItems.length}종류의 상품이 담겨있습니다.
+              </SubText>
+            )}
+          </Header>
+          {cartItems.length ? (
+            <>
+              <AllItemCheckbox
+                labelText={"전체선택"}
+                checked={cartManager.allItemsSelected}
+                onChangeAllSelected={onChangeAllSelected}
+                allItemsId={cartManager.allItemsId}
+              />
+              <ShoppingCartItemList
+                cartItems={cartItems}
+                updateItem={updateItem}
+                removeItem={removeItem}
+                onChangeSelected={onChangeSelected}
+                selectedItemId={selectedItemId}
+              />
+              <SubText className="icon-text">
+                <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우
+                무료 배송됩니다.
+              </SubText>
+              <ShoppingCartOrderSummary
+                total={aggregate.total}
+                delivery={aggregate.delivery}
+                grandTotal={aggregate.grandTotal}
+              />
+            </>
+          ) : (
+            <EmptyCart>
+              <p>장바구니에 담은 상품이 없습니다.</p>
+            </EmptyCart>
+          )}
+          <Button
+            disabled={!Boolean(aggregate.totalItems)}
+            onClick={goToOrderCheckPage}
+          ></Button>
         </>
       )}
       {fetchStatus === "error" && <div>error..</div>}
-    </ShoppingCartSectionContainer>
+    </Section>
   );
 }
 
-export function ShoppingCartSectionHeader({
-  itemCount,
-}: {
-  itemCount: number;
-}) {
-  return (
-    <div className="heading">
-      <h2 className="title">장바구니</h2>
-      {itemCount > 0 && (
-        <p className="sub-text">현재 {itemCount}종류의 상품이 담겨있습니다.</p>
-      )}
-    </div>
-  );
-}
+const Header = styled.div`
+  margin: 2rem 0;
+`;
 
-interface ShoppingCartSectionContentProps {
-  cartItems: CartItem[];
-  goToOrderCheck: () => void;
-  updateItem: (itemId: string, body: { quantity: number }) => void;
-  removeItem: (itemId: string) => void;
-  onChangeSelected: (checked: boolean, id: string) => void;
-  onChangeAllSelected: (allCartItemsId: string[]) => void;
-  selectedItemId: string[] | null;
-}
+const Title = styled.h2`
+  font-size: 24px;
+  font-weight: 700;
+  margin: 12px 0;
+`;
 
-export function ShoppingCartSectionContent({
-  cartItems,
-  goToOrderCheck,
-  updateItem,
-  removeItem,
-  onChangeSelected,
-  onChangeAllSelected,
-  selectedItemId,
-}: ShoppingCartSectionContentProps) {
-  const cartManager = new CartManager(selectedItemId, cartItems);
-  const aggregate = new CartAggregate(
-    cartManager.selectedCartItems,
-    CartPricing,
-  );
+const SubText = styled.p`
+  font-weight: 500;
+  font-size: 12px;
+`;
 
-  return (
-    <>
-      {cartItems.length ? (
-        <>
-          <ShoppingCartItemGroup
-            cartItems={cartItems}
-            updateItem={updateItem}
-            removeItem={removeItem}
-            onChangeSelected={onChangeSelected}
-            onChangeAllSelected={onChangeAllSelected}
-            selectedItemId={selectedItemId}
-          />
-          <p className="sub-text icon-text">
-            <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
-            배송됩니다.
-          </p>
-          <ShoppingCartOrderSummary
-            total={aggregate.total}
-            delivery={aggregate.delivery}
-            grandTotal={aggregate.grandTotal}
-          />
-        </>
-      ) : (
-        <ShoppingCartNoItemsContent>
-          <p>장바구니에 담은 상품이 없습니다.</p>
-        </ShoppingCartNoItemsContent>
-      )}
-      <Button
-        disabled={!Boolean(aggregate.totalItems)}
-        onClick={goToOrderCheck}
-      ></Button>
-    </>
-  );
-}
-
-const ShoppingCartSectionContainer = styled.section`
+const Section = styled.section`
   display: flex;
   flex-direction: column;
   flex: 1;
   padding: 1.5rem;
   margin-bottom: 4rem;
   overflow: scroll;
-
-  .heading {
-    margin: 2rem 0;
-  }
-
-  .title {
-    font-size: 24px;
-    font-weight: 700;
-    margin: 12px 0;
-  }
-
-  .sub-text {
-    font-weight: 500;
-    font-size: 12px;
-  }
 
   .icon-text {
     display: flex;
@@ -177,7 +135,7 @@ const ShoppingCartSectionContainer = styled.section`
   }
 `;
 
-const ShoppingCartNoItemsContent = styled.div`
+const EmptyCart = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
