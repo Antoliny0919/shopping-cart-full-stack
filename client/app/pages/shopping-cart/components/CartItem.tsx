@@ -17,7 +17,7 @@ interface Props {
   onChangeSelected: (checked: boolean, id: string) => void;
 }
 
-export default function ShoppingCartItem({
+export default function CartItem({
   itemId,
   name,
   price,
@@ -32,9 +32,9 @@ export default function ShoppingCartItem({
     useCartItemQuantity(initialQuantity, itemId, updateItem);
 
   return (
-    <ShoppingCartItemContainer>
+    <CartItemLayout>
       <div className="wrapper">
-        <ShoppingCartItemHeader>
+        <Header>
           <ItemCheckbox
             itemId={itemId}
             checked={checked}
@@ -43,17 +43,17 @@ export default function ShoppingCartItem({
           <button className="item-delete" onClick={() => removeItem(itemId)}>
             삭제
           </button>
-        </ShoppingCartItemHeader>
-        <ShoppingCartItemBody>
+        </Header>
+        <Content>
           <img
             className="thumbnail"
             src={`${import.meta.env.VITE_API_BASE_URL}${thumbnail}`}
             alt="상품 이미지"
           />
-          <ShoppingCartItemInfo>
+          <Info>
             <p className="name">{name}</p>
             <p className="price">{formatToKoreanPrice(price)}</p>
-            <ShoppingCartItemQuantity>
+            <Quantity>
               <button
                 type="button"
                 aria-label="수량 감소"
@@ -71,15 +71,15 @@ export default function ShoppingCartItem({
               >
                 <Plus />
               </button>
-            </ShoppingCartItemQuantity>
-          </ShoppingCartItemInfo>
-        </ShoppingCartItemBody>
+            </Quantity>
+          </Info>
+        </Content>
       </div>
-    </ShoppingCartItemContainer>
+    </CartItemLayout>
   );
 }
 
-const ShoppingCartItemContainer = styled.li`
+const CartItemLayout = styled.li`
   list-style: none;
   display: flex;
   gap: 1rem;
@@ -91,7 +91,7 @@ const ShoppingCartItemContainer = styled.li`
   }
 `;
 
-const ShoppingCartItemHeader = styled.div`
+const Header = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 12px 0;
@@ -105,7 +105,7 @@ const ShoppingCartItemHeader = styled.div`
   }
 `;
 
-const ShoppingCartItemBody = styled.div`
+const Content = styled.div`
   display: flex;
   gap: 12px;
 
@@ -116,7 +116,7 @@ const ShoppingCartItemBody = styled.div`
   }
 `;
 
-const ShoppingCartItemInfo = styled.div`
+const Info = styled.div`
   padding: 4px 0;
   .name {
     font-weight: 500;
@@ -137,7 +137,7 @@ const ShoppingCartItemInfo = styled.div`
   }
 `;
 
-const ShoppingCartItemQuantity = styled.div`
+const Quantity = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;

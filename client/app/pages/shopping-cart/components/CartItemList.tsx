@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
-import ShoppingCartItem from "./ShoppingCartItem";
-import { CartItem } from "../types";
+import CartItem from "./CartItem";
+import { CartItem as CartItemType } from "../types";
 
 interface Props {
-  cartItems: CartItem[];
+  cartItems: CartItemType[];
   updateItem: (itemId: string, body: { quantity: number }) => void;
   removeItem: (itemId: string) => void;
   onChangeSelected: (checked: boolean, id: string) => void;
@@ -21,7 +21,7 @@ export default function CartItemList({
     <ItemListLayout>
       {cartItems.map(({ product_id, quantity, product }) => {
         return (
-          <ShoppingCartItem
+          <CartItem
             key={product_id}
             itemId={product_id}
             checked={selectedItemId?.includes(product_id) ?? false}
