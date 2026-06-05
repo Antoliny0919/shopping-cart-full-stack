@@ -1,11 +1,17 @@
 import styled from "@emotion/styled";
-import Navigation from "../order-check/Navigation";
+import { Link } from "react-router";
+import GoBack from "../../commons/images/go-back.svg";
+import Navigation from "../../commons/components/Navigation";
 import Section from "../order-check/Section";
 
 export default function OrderCheckPage() {
   return (
     <OrderCheckPageContainer>
-      <Navigation />
+      <Navigation>
+        <Link to="/cart/">
+          <GoBack />
+        </Link>
+      </Navigation>
       <Section />
     </OrderCheckPageContainer>
   );

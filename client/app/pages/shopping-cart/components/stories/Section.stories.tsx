@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MemoryRouter } from "react-router";
 import { http, HttpResponse, delay } from "msw";
-import { worker } from "../../../msw-browser";
-import { BASE_URL } from "../../../constants";
-import Section from "./Section";
+import { worker } from "../../../../msw-browser";
+import { BASE_URL } from "../../../../constants";
+import Section from "../Section";
 
 const cartItemsData = [
   {
@@ -81,9 +81,7 @@ export const Error: Story = {
   loaders: [
     async () => {
       await worker.start({ onUnhandledRequest: "bypass" });
-      worker.use(
-        http.get(`${BASE_URL}/api/cart/`, () => HttpResponse.error()),
-      );
+      worker.use(http.get(`${BASE_URL}/api/cart/`, () => HttpResponse.error()));
       return {};
     },
   ],

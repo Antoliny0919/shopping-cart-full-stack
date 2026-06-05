@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import Loading from "./Loading";
+import Loading from "../Loading";
 
 const meta = {
   title: "shopping-cart/Loading",
