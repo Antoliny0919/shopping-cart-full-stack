@@ -1,13 +1,13 @@
-import Navigation from "../../../commons/components/Navigation";
+import NavLayout from "../../commons/components/Navigation";
 import GoBack from "../../../commons/images/go-back.svg?react";
 import { Link } from "react-router";
 
-export default function OrderCheckNavigation() {
+export default function Navigation() {
   return (
-    <Navigation>
+    <NavLayout>
       <Link to="/cart/">
         <GoBack />
       </Link>
-    </Navigation>
+    </NavLayout>
   );
 }

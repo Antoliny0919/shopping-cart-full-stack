@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
-import OrderCheckNavigation from "./components/OrderCheckNavigation";
-import OrderCheckSection from "./components/OrderCheckSection";
+import Navigation from "../order-check/Navigation";
+import Section from "../order-check/Section";
 
 export default function OrderCheckPage() {
   return (
     <OrderCheckPageContainer>
-      <OrderCheckNavigation />
-      <OrderCheckSection />
+      <Navigation />
+      <Section />
     </OrderCheckPageContainer>
   );
 }
