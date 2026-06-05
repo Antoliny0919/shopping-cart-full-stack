@@ -1,15 +1,10 @@
-import {
-  render,
-  screen,
-  within,
-  fireEvent,
-} from "@testing-library/react";
+import { render, screen, within, fireEvent } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { describe, test, expect, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router";
 import { server } from "../../../../rtl-setup";
 import { BASE_URL } from "../../../constants";
-import ShoppingCartSection from "../components/ShoppingCartSection";
+import ShoppingCartSection from "../components/CartSection";
 
 describe("ShoppingCartCheckbox", () => {
   beforeEach(() => {

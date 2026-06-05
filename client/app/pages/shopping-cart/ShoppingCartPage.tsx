@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
 import ShoppingCartNavigation from "./components/ShoppingCartNavigation";
-import ShoppingCartSection from "./components/ShoppingCartSection";
+import CartSection from "./components/CartSection";
 
 export default function ShoppingCartPage() {
   return (
     <ShoppingCartPageContainer>
       <ShoppingCartNavigation />
-      <ShoppingCartSection />
+      <CartSection />
     </ShoppingCartPageContainer>
   );
 }

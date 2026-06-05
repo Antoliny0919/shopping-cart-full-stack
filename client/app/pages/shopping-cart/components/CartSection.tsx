@@ -13,7 +13,7 @@ import useCartItems from "../hooks/useCartItems";
 import useCartItemSelected from "../hooks/useCartItemSelected";
 import ShoppingCartSectionSkeleton from "./ShoppingCartSectionSkeleton";
 
-export default function ShoppingCartSection() {
+export default function CartSection() {
   const navigate = useNavigate();
   const storage = new SelectedItemLocalStorage();
 

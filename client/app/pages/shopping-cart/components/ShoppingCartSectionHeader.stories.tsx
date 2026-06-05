@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { ShoppingCartSectionHeader } from "./ShoppingCartSection";
+import { ShoppingCartSectionHeader } from "./CartSection";
 
 const meta = {
   title: "shopping-cart/ShoppingCartSectionHeader",

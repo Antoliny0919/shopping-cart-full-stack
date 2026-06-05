@@ -10,7 +10,7 @@ import { describe, test, expect, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router";
 import { server } from "../../../../rtl-setup";
 import { BASE_URL } from "../../../constants";
-import ShoppingCartSection from "../components/ShoppingCartSection";
+import ShoppingCartSection from "../components/CartSection";
 
 describe("ShoppingCartSection", () => {
   beforeEach(() => {

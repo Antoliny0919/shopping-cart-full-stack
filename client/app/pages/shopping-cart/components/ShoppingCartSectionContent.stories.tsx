@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MemoryRouter } from "react-router";
 
-import { ShoppingCartSectionContent } from "./ShoppingCartSection";
+import { ShoppingCartSectionContent } from "./CartSection";
 
 const meta = {
   title: "shopping-cart/ShoppingCartSectionContent",
