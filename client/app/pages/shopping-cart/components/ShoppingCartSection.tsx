@@ -99,7 +99,7 @@ export function ShoppingCartSectionContent({
 
   return (
     <>
-      {aggregate.totalItems ? (
+      {cartItems.length ? (
         <>
           <ShoppingCartItemGroup
             cartItems={cartItems}

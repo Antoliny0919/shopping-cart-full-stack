@@ -422,6 +422,38 @@ describe("ShoppingCartSection", () => {
     ).toBeInTheDocument();
   });
 
+  test("localStorage의 selectedItems가 빈 배열이어도 장바구니 상품 목록이 렌더링된다.", async () => {
+    localStorage.setItem("selectedItems", JSON.stringify([]));
+    server.use(
+      http.get(`${BASE_URL}/api/cart/`, () =>
+        HttpResponse.json([
+          {
+            product_id: "123-123",
+            quantity: 1,
+            product: { name: "하겐다즈 말차", price: 10000, thumbnail: "" },
+          },
+          {
+            product_id: "456-456",
+            quantity: 2,
+            product: { name: "하겐다즈 초코", price: 10000, thumbnail: "" },
+          },
+        ]),
+      ),
+    );
+
+    render(
+      <MemoryRouter>
+        <ShoppingCartSection />
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByText("하겐다즈 말차")).toBeInTheDocument();
+    expect(screen.getByText("하겐다즈 초코")).toBeInTheDocument();
+    expect(
+      screen.queryByText("장바구니에 담은 상품이 없습니다."),
+    ).not.toBeInTheDocument();
+  });
+
   test("선택된 상품의 주문금액을 렌더링한다.", async () => {
     localStorage.setItem(
       "selectedItems",
