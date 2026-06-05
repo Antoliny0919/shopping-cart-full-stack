@@ -1,1 +1,1 @@
-export const BASE_URL = "https://api.antoliny-amazon";
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL;

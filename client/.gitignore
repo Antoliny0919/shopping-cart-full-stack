@@ -3,6 +3,7 @@ dist/
 coverage/
 *.log
 .env
+.env.production
 .react-router
 
 *storybook.log
