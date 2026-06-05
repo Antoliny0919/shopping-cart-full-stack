@@ -1,11 +1,11 @@
-export interface SelectedItemStorage {
+export interface SelectedItemsStorage {
   get: () => string[] | null;
   save: (value: string[]) => void;
 }
 
 const KEY = "cart-selected-items";
 
-export class SelectedItemLocalStorage implements SelectedItemStorage {
+export class SelectedItemsLocalStorage implements SelectedItemsStorage {
   get() {
     const stored = localStorage.getItem(KEY);
     return stored ? JSON.parse(stored) : null;

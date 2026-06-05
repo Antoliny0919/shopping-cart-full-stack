@@ -8,14 +8,14 @@ import CartAggregate from "../CartAggregate";
 import CartManager from "../CartManager";
 import { CartPricing } from "../CartPricing";
 import { Button } from "../../../commons/styles/Button";
-import { SelectedItemLocalStorage } from "../storages/selected-item-storage";
+import { SelectedItemsLocalStorage } from "../storages/SelectedItemsStorage";
 import useCartItems from "../hooks/useCartItems";
 import useCartItemSelected from "../hooks/useCartItemSelected";
 import Loading from "./Loading";
 
 export default function Section() {
   const navigate = useNavigate();
-  const storage = new SelectedItemLocalStorage();
+  const storage = new SelectedItemsLocalStorage();
 
   const {
     items: cartItems,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SelectedItemStorage } from "../storages/selected-item-storage";
+import { SelectedItemStorage } from "../storages/SelectedItemsStorage";
 
 export default function useCartItemSelected(storage: SelectedItemStorage) {
   const [selectedItemId, setSelectedItemId] = useState<string[] | null>(() => {
