@@ -92,7 +92,10 @@ export function ShoppingCartSectionContent({
   goToOrderCheck: () => void;
   onChangeAllSelected: OnChangeAllSelected;
 }) {
-  const aggregate = new CartAggregate(cartItems, CartPricing);
+  const selectedCartItems = cartItems.filter((item) =>
+    selectedItemId?.includes(item.product_id),
+  );
+  const aggregate = new CartAggregate(selectedCartItems, CartPricing);
 
   return (
     <>

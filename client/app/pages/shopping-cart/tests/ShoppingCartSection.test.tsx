@@ -421,4 +421,51 @@ describe("ShoppingCartSection", () => {
       await screen.findByText("장바구니에 담은 상품이 없습니다."),
     ).toBeInTheDocument();
   });
+
+  test("선택된 상품의 주문금액을 렌더링한다.", async () => {
+    localStorage.setItem(
+      "selectedItems",
+      JSON.stringify(["123-123", "789-789"]),
+    );
+    server.use(
+      http.get(`${BASE_URL}/api/cart/`, () =>
+        HttpResponse.json([
+          {
+            product_id: "123-123",
+            quantity: 1,
+            product: { name: "하겐다즈 말차", price: 10000, thumbnail: "" },
+          },
+          {
+            product_id: "456-456",
+            quantity: 2,
+            product: { name: "하겐다즈 초코", price: 10000, thumbnail: "" },
+          },
+          {
+            product_id: "789-789",
+            quantity: 3,
+            product: { name: "하겐다즈 스페셜", price: 15000, thumbnail: "" },
+          },
+        ]),
+      ),
+    );
+
+    render(
+      <MemoryRouter>
+        <ShoppingCartSection />
+      </MemoryRouter>,
+    );
+
+    await screen.findByText("하겐다즈 말차");
+
+    const orderAmountRow = screen.getByText("주문 금액").closest("div")!;
+    expect(within(orderAmountRow).getByText("55,000원")).toBeInTheDocument();
+
+    const specialCheckbox = screen
+      .getByText("하겐다즈 스페셜")
+      .closest("li")!
+      .querySelector("input[type='checkbox']") as HTMLInputElement;
+    fireEvent.click(specialCheckbox);
+
+    expect(within(orderAmountRow).getByText("10,000원")).toBeInTheDocument();
+  });
 });
