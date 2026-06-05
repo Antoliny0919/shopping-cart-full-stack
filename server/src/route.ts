@@ -18,7 +18,12 @@ export function createApp({
 
   const __dirname = dirname(fileURLToPath(import.meta.url));
   router.use(express.json());
-  router.use(cors());
+  router.use(
+    cors({
+      origin: ["http://localhost:5173", "https://antoliny0919.github.io"],
+      methods: ["GET", "PATCH", "DELETE", "POST"],
+    }),
+  );
   router.use(express.static(join(__dirname, "../public/images")));
   router.use(createShopRouter({ productController, cartController }));
 
