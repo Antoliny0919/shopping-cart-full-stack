@@ -68,14 +68,20 @@ export function createProductController({
 
 export function createCartController({
   cartRepository,
+  productRepository,
 }: {
   cartRepository: CartRepository;
+  productRepository: ProductRepository;
 }): CartController {
   return {
     get: (_req, res, next) => {
       try {
         const cart = cartRepository.get();
-        res.send(cart.getAllItems());
+        const items = cart.getAllItems().map(({ product_id, quantity }) => {
+          const product = productRepository.findById(product_id)?.toObject();
+          return { product_id, quantity, product };
+        });
+        res.send(items);
       } catch (err) {
         next(err);
       }

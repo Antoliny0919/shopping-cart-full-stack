@@ -18,6 +18,7 @@ describe("프로덕트 API 테스트", () => {
 
   const cartController = createCartController({
     cartRepository,
+    productRepository,
   });
   const productController = createProductController({
     cartRepository,
@@ -163,7 +164,7 @@ describe("카트 API 테스트", () => {
     productRepository,
     cartRepository,
   });
-  const cartController = createCartController({ cartRepository });
+  const cartController = createCartController({ cartRepository, productRepository });
   const app = createApp({ productController, cartController });
   const cart = cartRepository.get();
 
