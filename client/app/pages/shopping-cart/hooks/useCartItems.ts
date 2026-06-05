@@ -21,11 +21,16 @@ export default function useCartItems() {
 
   const removeItem: RemoveCartItem = async (itemId) => {
     await deleteCartItem(itemId);
-    getItems();
+    setItems((prev) => prev.filter((item) => item.product_id !== itemId));
   };
 
   const updateItem: UpdateCartItem = async (itemId, body) => {
     const data = await updateCartItem(itemId, body);
+    setItems((prev) =>
+      prev.map((item) =>
+        item.product_id === itemId ? { ...item, ...data } : item,
+      ),
+    );
     return data;
   };
 
