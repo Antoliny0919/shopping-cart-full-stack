@@ -1,11 +1,17 @@
 import styled from "@emotion/styled";
-import ShoppingCartNavigation from "./components/ShoppingCartNavigation";
+import { Link } from "react-router";
 import Section from "../order-check/Section";
+import Navigation from "../../commons/components/Navigation";
+import Logo from "../../commons/images/logo.svg";
 
 export default function ShoppingCartPage() {
   return (
     <ShoppingCartPageContainer>
-      <ShoppingCartNavigation />
+      <Navigation>
+        <Link to="/">
+          <Logo />
+        </Link>
+      </Navigation>
       <Section />
     </ShoppingCartPageContainer>
   );
