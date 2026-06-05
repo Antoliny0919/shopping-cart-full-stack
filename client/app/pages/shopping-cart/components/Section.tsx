@@ -11,7 +11,7 @@ import { Button } from "../../../commons/styles/Button";
 import { SelectedItemLocalStorage } from "../storages/selected-item-storage";
 import useCartItems from "../hooks/useCartItems";
 import useCartItemSelected from "../hooks/useCartItemSelected";
-import CartLoading from "./CartLoading";
+import Loading from "./Loading";
 
 export default function Section() {
   const navigate = useNavigate();
@@ -53,7 +53,7 @@ export default function Section() {
 
   return (
     <SectionLayout>
-      {fetchStatus === "loading" && <CartLoading />}
+      {fetchStatus === "loading" && <Loading />}
       {fetchStatus === "success" && (
         <>
           <Header>

@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export default function CartLoading() {
+export default function Loading() {
   return (
     <SkeletonContainer>
       <SkeletonBlock width="160px" height="28px" />

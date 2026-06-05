@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import CartLoading from "./CartLoading";
+import Loading from "./Loading";
 
 const meta = {
-  title: "shopping-cart/CartLoading",
-  component: CartLoading,
+  title: "shopping-cart/Loading",
+  component: Loading,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
-} satisfies Meta<typeof CartLoading>;
+} satisfies Meta<typeof Loading>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
