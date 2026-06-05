@@ -3,7 +3,7 @@ import Minus from "../../../commons/images/minus.svg?react";
 import Plus from "../../../commons/images/plus.svg?react";
 import { formatToKoreanPrice } from "../../../commons/utils";
 import useCartItemQuantity from "../hooks/useCartItemQuantity";
-import ItemCheckbox from "./ItemCheckbox";
+import Checkbox from "../../../commons/components/Checkbox";
 
 interface Props {
   itemId: string;
@@ -35,10 +35,9 @@ export default function CartItem({
     <CartItemLayout>
       <div className="wrapper">
         <Header>
-          <ItemCheckbox
-            itemId={itemId}
+          <Checkbox
             checked={checked}
-            onChangeSelected={onChangeSelected}
+            onChange={() => onChangeSelected(!checked, itemId)}
           />
           <button className="item-delete" onClick={() => removeItem(itemId)}>
             삭제
