@@ -27,6 +27,9 @@ const defaultArgs = {
   goToOrderCheck: () => {},
   removeItem: () => {},
   updateItem: () => {},
+  onChangeSelected: () => {},
+  onChangeAllSelected: () => {},
+  selectedItemId: [],
 };
 
 export const ManyItems: Story = {
