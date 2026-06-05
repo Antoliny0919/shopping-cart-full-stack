@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
-import CartAggregate, { PricingStrategy } from "../CartAggregate";
+import CartSummary from "../domain/CartSummary";
 import { CartItem } from "../types";
 
-class StubPricing implements PricingStrategy {
+class StubPricing {
   constructor(_items: CartItem[]) {}
   get total() {
     return 999;
@@ -15,7 +15,7 @@ class StubPricing implements PricingStrategy {
   }
 }
 
-describe("CartAggregate Tests", () => {
+describe("CartSummary Tests", () => {
   const cartItems: CartItem[] = [
     {
       product_id: "99444",
@@ -37,19 +37,19 @@ describe("CartAggregate Tests", () => {
     },
   ];
 
-  const aggregate = new CartAggregate(cartItems, StubPricing);
+  const summary = new CartSummary(cartItems, StubPricing);
 
   test("카트에 담긴 총 아이템 종류 수를 반환한다.", () => {
-    expect(aggregate.totalItems).toBe(2);
+    expect(summary.totalItems).toBe(2);
   });
 
   test("카트에 담긴 총 수량을 반환한다.", () => {
-    expect(aggregate.totalQuantity).toBe(5);
+    expect(summary.totalQuantity).toBe(5);
   });
 
   test("상품이 없으면 배달비는 계산되지 않는다", () => {
-    expect(aggregate.delivery).toBe(100);
-    const emptyItemAggregate = new CartAggregate([], StubPricing);
+    expect(summary.delivery).toBe(100);
+    const emptyItemAggregate = new CartSummary([], StubPricing);
     expect(emptyItemAggregate.delivery).toBe(0);
   });
 });

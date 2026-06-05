@@ -1,5 +1,10 @@
 import { CartItem } from "./types";
-import { PricingStrategy } from "./CartAggregate";
+
+export interface PricingStrategy {
+  total: number;
+  delivery: number;
+  grandTotal: number;
+}
 
 const FREE_DELIVERY_THRESHOLD = 100_000;
 const DELIVERY_FEE = 3_000;

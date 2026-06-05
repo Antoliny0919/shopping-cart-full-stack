@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { CartPricing } from "../CartPricing";
+import { CartPricing } from "../domain/CartPricing";
 
 describe("CartPricing Tests", () => {
   const bigCartItems = [

@@ -4,9 +4,9 @@ import Info from "../../../commons/images/info.svg?react";
 import Checkbox from "../../../commons/components/Checkbox";
 import CartItemList from "./CartItemList";
 import OrderSummary from "./OrderSummary";
-import CartAggregate from "../CartAggregate";
-import CartManager from "../CartManager";
-import { CartPricing } from "../CartPricing";
+import CartSummary from "../domain/CartSummary";
+import CartManager from "../domain/CartManager";
+import { CartPricing } from "../domain/CartPricing";
 import { Button } from "../../../commons/styles/Button";
 import { SelectedItemsLocalStorage } from "../storages/SelectedItemsStorage";
 import useCartItems from "../hooks/useCartItems";
@@ -36,17 +36,14 @@ export default function Section() {
   }
 
   const cartManager = new CartManager(selectedItemId, cartItems);
-  const aggregate = new CartAggregate(
-    cartManager.selectedCartItems,
-    CartPricing,
-  );
+  const summary = new CartSummary(cartManager.selectedCartItems, CartPricing);
 
   const goToOrderCheckPage = () => {
     navigate("/cart/check/", {
       state: {
-        totalItems: aggregate.totalItems,
-        totalQuantity: aggregate.totalQuantity,
-        totalPrice: aggregate.grandTotal,
+        totalItems: summary.totalItems,
+        totalQuantity: summary.totalQuantity,
+        totalPrice: summary.grandTotal,
       },
     });
   };
@@ -83,9 +80,9 @@ export default function Section() {
                 무료 배송됩니다.
               </SubText>
               <OrderSummary
-                total={aggregate.total}
-                delivery={aggregate.delivery}
-                grandTotal={aggregate.grandTotal}
+                total={summary.total}
+                delivery={summary.delivery}
+                grandTotal={summary.grandTotal}
               />
             </>
           ) : (
@@ -94,7 +91,7 @@ export default function Section() {
             </EmptyCart>
           )}
           <Button
-            disabled={!Boolean(aggregate.totalItems)}
+            disabled={!Boolean(summary.totalItems)}
             onClick={goToOrderCheckPage}
           ></Button>
         </>

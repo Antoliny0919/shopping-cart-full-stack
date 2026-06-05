@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import CartManager from "../CartManager";
+import CartManager from "../domain/CartManager";
 import { CartItem } from "../types";
 
 const cartItems: CartItem[] = [

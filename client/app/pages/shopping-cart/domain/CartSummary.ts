@@ -1,12 +1,7 @@
-import { CartItem } from "./types";
+import { CartItem } from "../types";
+import { PricingStrategy } from "./CartPricing";
 
-export interface PricingStrategy {
-  total: number;
-  delivery: number;
-  grandTotal: number;
-}
-
-class CartAggregate {
+class CartSummary {
   private pricing: PricingStrategy;
 
   constructor(
@@ -37,4 +32,4 @@ class CartAggregate {
   }
 }
 
-export default CartAggregate;
+export default CartSummary;
