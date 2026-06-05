@@ -11,7 +11,7 @@ import { Button } from "../../../commons/styles/Button";
 import { SelectedItemLocalStorage } from "../storages/selected-item-storage";
 import useCartItems from "../hooks/useCartItems";
 import useCartItemSelected from "../hooks/useCartItemSelected";
-import ShoppingCartSectionSkeleton from "./ShoppingCartSectionSkeleton";
+import CartLoading from "./CartLoading";
 
 export default function CartSection() {
   const navigate = useNavigate();
@@ -53,7 +53,7 @@ export default function CartSection() {
 
   return (
     <Section>
-      {fetchStatus === "loading" && <ShoppingCartSectionSkeleton />}
+      {fetchStatus === "loading" && <CartLoading />}
       {fetchStatus === "success" && (
         <>
           <Header>
