@@ -46,7 +46,11 @@ export default function ShoppingCartItem({
           </button>
         </ShoppingCartItemHeader>
         <ShoppingCartItemBody>
-          <img className="thumbnail" src={thumbnail} alt="상품 이미지" />
+          <img
+            className="thumbnail"
+            src={`${import.meta.env.VITE_API_BASE_URL}${thumbnail}`}
+            alt="상품 이미지"
+          />
           <ShoppingCartItemInfo>
             <p className="name">{name}</p>
             <p className="price">{formatToKoreanPrice(price)}</p>

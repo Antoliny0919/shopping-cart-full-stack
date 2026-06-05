@@ -8,7 +8,7 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 if (USE_MOCK) {
   await worker.start({
     onUnhandledRequest: "bypass",
-    serviceWorker: { url: "/mockServiceWorker.js" },
+    serviceWorker: { url: `${import.meta.env.BASE_URL}mockServiceWorker.js` },
   });
 }
 
