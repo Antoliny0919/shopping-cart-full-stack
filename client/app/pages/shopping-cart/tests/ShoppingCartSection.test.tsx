@@ -222,6 +222,170 @@ describe("ShoppingCartSection", () => {
     expect(selectedItems).toEqual([]);
   });
 
+  test("전체선택 버튼은 모든 아이템이 localStorage에 존재하면 chceked상태가 된다.", async () => {
+    localStorage.setItem(
+      "selectedItems",
+      JSON.stringify(["123-123", "456-456"]),
+    );
+    server.use(
+      http.get(`${BASE_URL}/api/cart/`, () =>
+        HttpResponse.json([
+          {
+            product_id: "123-123",
+            quantity: 1,
+            product: { name: "하겐다즈 말차", price: 10000, thumbnail: "" },
+          },
+          {
+            product_id: "456-456",
+            quantity: 2,
+            product: { name: "하겐다즈 초코", price: 10000, thumbnail: "" },
+          },
+        ]),
+      ),
+    );
+    render(
+      <MemoryRouter>
+        <ShoppingCartSection />
+      </MemoryRouter>,
+    );
+    await screen.findByText("하겐다즈 말차");
+    const allSelectCheckbox = screen.getByLabelText("전체선택");
+    expect(allSelectCheckbox).toBeChecked();
+  });
+
+  test("전체선택 버튼을 클릭하면 모든 체크박스가 활성화되고 localStorage에 아이템ID가 저장된다.", async () => {
+    localStorage.setItem("selectedItems", JSON.stringify([]));
+    server.use(
+      http.get(`${BASE_URL}/api/cart/`, () =>
+        HttpResponse.json([
+          {
+            product_id: "123-123",
+            quantity: 1,
+            product: { name: "하겐다즈 말차", price: 10000, thumbnail: "" },
+          },
+          {
+            product_id: "456-456",
+            quantity: 2,
+            product: { name: "하겐다즈 초코", price: 10000, thumbnail: "" },
+          },
+        ]),
+      ),
+    );
+    render(
+      <MemoryRouter>
+        <ShoppingCartSection />
+      </MemoryRouter>,
+    );
+    await screen.findByText("하겐다즈 말차");
+    const allSelectCheckbox = screen.getByLabelText("전체선택");
+    fireEvent.click(allSelectCheckbox);
+    const item1Checkbox = screen
+      .getByText("하겐다즈 말차")
+      .closest("li")!
+      .querySelector("input[type='checkbox']") as HTMLInputElement;
+    const item2Checkbox = screen
+      .getByText("하겐다즈 초코")
+      .closest("li")!
+      .querySelector("input[type='checkbox']") as HTMLInputElement;
+    expect(allSelectCheckbox).toBeChecked();
+    expect(item1Checkbox.checked).toBe(true);
+    expect(item2Checkbox.checked).toBe(true);
+    const selectedItems = JSON.parse(
+      localStorage.getItem("selectedItems") ?? "[]",
+    );
+    expect(selectedItems).toEqual(["123-123", "456-456"]);
+  });
+
+  test("일부 아이템이 선택된 상태에서 전체선택을 클릭하면 모든 체크박스가 활성화되고 localStorage에 아이템ID가 저장된다.", async () => {
+    localStorage.setItem("selectedItems", JSON.stringify(["123-123"]));
+    server.use(
+      http.get(`${BASE_URL}/api/cart/`, () =>
+        HttpResponse.json([
+          {
+            product_id: "123-123",
+            quantity: 1,
+            product: { name: "하겐다즈 말차", price: 10000, thumbnail: "" },
+          },
+          {
+            product_id: "456-456",
+            quantity: 2,
+            product: { name: "하겐다즈 초코", price: 10000, thumbnail: "" },
+          },
+        ]),
+      ),
+    );
+    render(
+      <MemoryRouter>
+        <ShoppingCartSection />
+      </MemoryRouter>,
+    );
+    await screen.findByText("하겐다즈 말차");
+    const allSelectCheckbox = screen.getByLabelText("전체선택");
+    const item1Checkbox = screen
+      .getByText("하겐다즈 말차")
+      .closest("li")!
+      .querySelector("input[type='checkbox']") as HTMLInputElement;
+    const item2Checkbox = screen
+      .getByText("하겐다즈 초코")
+      .closest("li")!
+      .querySelector("input[type='checkbox']") as HTMLInputElement;
+    expect(item1Checkbox).toBeChecked();
+    expect(item2Checkbox).not.toBeChecked();
+    fireEvent.click(allSelectCheckbox);
+    expect(allSelectCheckbox).toBeChecked();
+    expect(item1Checkbox.checked).toBe(true);
+    expect(item2Checkbox.checked).toBe(true);
+    const selectedItems = JSON.parse(
+      localStorage.getItem("selectedItems") ?? "[]",
+    );
+    expect(selectedItems).toEqual(["123-123", "456-456"]);
+  });
+  test("전체선택된 상태에서 전체선택 버튼을 클릭하면 모든 체크박스가 비활성화되고 localStorage에 아이템ID가 빈배열이된다.", async () => {
+    localStorage.setItem(
+      "selectedItems",
+      JSON.stringify(["123-123", "456-456"]),
+    );
+    server.use(
+      http.get(`${BASE_URL}/api/cart/`, () =>
+        HttpResponse.json([
+          {
+            product_id: "123-123",
+            quantity: 1,
+            product: { name: "하겐다즈 말차", price: 10000, thumbnail: "" },
+          },
+          {
+            product_id: "456-456",
+            quantity: 2,
+            product: { name: "하겐다즈 초코", price: 10000, thumbnail: "" },
+          },
+        ]),
+      ),
+    );
+    render(
+      <MemoryRouter>
+        <ShoppingCartSection />
+      </MemoryRouter>,
+    );
+    await screen.findByText("하겐다즈 말차");
+    const allSelectCheckbox = screen.getByLabelText("전체선택");
+    fireEvent.click(allSelectCheckbox);
+    const item1Checkbox = screen
+      .getByText("하겐다즈 말차")
+      .closest("li")!
+      .querySelector("input[type='checkbox']") as HTMLInputElement;
+    const item2Checkbox = screen
+      .getByText("하겐다즈 초코")
+      .closest("li")!
+      .querySelector("input[type='checkbox']") as HTMLInputElement;
+    expect(item1Checkbox).not.toBeChecked();
+    expect(item2Checkbox).not.toBeChecked();
+    expect(allSelectCheckbox).not.toBeChecked();
+    const selectedItems = JSON.parse(
+      localStorage.getItem("selectedItems") ?? "[]",
+    );
+    expect(selectedItems).toEqual([]);
+  });
+
   test("상품이 전부 삭제되었을때 상품이 없을때의 UI가 렌더링 된다.", async () => {
     let getCallCount = 0;
     server.use(
