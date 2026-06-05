@@ -6,6 +6,7 @@ import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
 import OrderCheckButton from "./OrderCheckButton";
 import { CartItemsProps, OnChangeAllSelected } from "../types";
 import CartAggregate from "../CartAggregate";
+import CartManager from "../CartManager";
 import { CartPricing } from "../CartPricing";
 import useCartItems from "../hooks/useCartItems";
 import useCartItemSelected from "../hooks/useCartItemSelected";
@@ -33,10 +34,11 @@ export default function ShoppingCartSection() {
   }
 
   const goToOrderCheckPage = () => {
-    const selectedCartItems = cartItems.filter((item) =>
-      selectedItemId?.includes(item.product_id),
+    const cartManager = new CartManager(selectedItemId, cartItems);
+    const aggregate = new CartAggregate(
+      cartManager.selectedCartItems,
+      CartPricing,
     );
-    const aggregate = new CartAggregate(selectedCartItems, CartPricing);
     navigate("/cart/check/", {
       state: {
         totalItems: aggregate.totalItems,
@@ -95,10 +97,11 @@ export function ShoppingCartSectionContent({
   goToOrderCheck: () => void;
   onChangeAllSelected: OnChangeAllSelected;
 }) {
-  const selectedCartItems = cartItems.filter((item) =>
-    selectedItemId?.includes(item.product_id),
+  const cartManager = new CartManager(selectedItemId, cartItems);
+  const aggregate = new CartAggregate(
+    cartManager.selectedCartItems,
+    CartPricing,
   );
-  const aggregate = new CartAggregate(selectedCartItems, CartPricing);
 
   return (
     <>
