@@ -10,7 +10,7 @@ interface Props {
   selectedItemId: string[] | null;
 }
 
-export default function ShoppingCartItemList({
+export default function CartItemList({
   cartItems,
   updateItem,
   removeItem,
@@ -18,7 +18,7 @@ export default function ShoppingCartItemList({
   selectedItemId,
 }: Props) {
   return (
-    <ShoppingCartItemListContainer>
+    <ItemListLayout>
       {cartItems.map(({ product_id, quantity, product }) => {
         return (
           <ShoppingCartItem
@@ -35,11 +35,11 @@ export default function ShoppingCartItemList({
           />
         );
       })}
-    </ShoppingCartItemListContainer>
+    </ItemListLayout>
   );
 }
 
-const ShoppingCartItemListContainer = styled.ul`
+const ItemListLayout = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 12px;

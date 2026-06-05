@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { useNavigate } from "react-router";
 import Info from "../../../commons/images/info.svg?react";
 import AllItemCheckbox from "./AllItemCheckbox";
-import ShoppingCartItemList from "./ShoppingCartItemList";
+import CartItemList from "./CartItemList";
 import OrderSummary from "./OrderSummary";
 import CartAggregate from "../CartAggregate";
 import CartManager from "../CartManager";
@@ -72,7 +72,7 @@ export default function Section() {
                 onChangeAllSelected={onChangeAllSelected}
                 allItemsId={cartManager.allItemsId}
               />
-              <ShoppingCartItemList
+              <CartItemList
                 cartItems={cartItems}
                 updateItem={updateItem}
                 removeItem={removeItem}
