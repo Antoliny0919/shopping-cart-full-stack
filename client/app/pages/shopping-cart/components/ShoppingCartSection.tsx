@@ -3,11 +3,11 @@ import { useNavigate } from "react-router";
 import Info from "../../../commons/images/info.svg?react";
 import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
 import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
-import OrderCheckButton from "./OrderCheckButton";
 import { CartItem } from "../types";
 import CartAggregate from "../CartAggregate";
 import CartManager from "../CartManager";
 import { CartPricing } from "../CartPricing";
+import { Button } from "../../../commons/styles/Button";
 import { SelectedItemLocalStorage } from "../storages/selected-item-storage";
 import useCartItems from "../hooks/useCartItems";
 import useCartItemSelected from "../hooks/useCartItemSelected";
@@ -139,10 +139,10 @@ export function ShoppingCartSectionContent({
           <p>장바구니에 담은 상품이 없습니다.</p>
         </ShoppingCartNoItemsContent>
       )}
-      <OrderCheckButton
+      <Button
         disabled={!Boolean(aggregate.totalItems)}
         onClick={goToOrderCheck}
-      />
+      ></Button>
     </>
   );
 }
