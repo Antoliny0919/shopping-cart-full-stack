@@ -19,7 +19,7 @@ export function createApp({
   const __dirname = dirname(fileURLToPath(import.meta.url));
   router.use(express.json());
   router.use(cors());
-  router.use(express.static(join(__dirname, "../../public/images")));
+  router.use(express.static(join(__dirname, "../public/images")));
   router.use(createShopRouter({ productController, cartController }));
 
   router.use(
