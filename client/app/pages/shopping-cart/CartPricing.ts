@@ -15,6 +15,7 @@ export class CartPricing implements PricingStrategy {
   }
 
   get delivery() {
+    if (this.total === 0) return 0;
     return this.total >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
   }
 
