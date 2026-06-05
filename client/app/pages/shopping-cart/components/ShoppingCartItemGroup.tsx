@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import AllItemCheckbox from "./AllItemCheckbox";
 import ShoppingCartItemList from "./ShoppingCartItemList";
+import CartManager from "../CartManager";
 import { CartItemsProps, OnChangeAllSelected } from "../types";
 
 export default function ShoppingCartItemGroup({
@@ -11,17 +12,15 @@ export default function ShoppingCartItemGroup({
   onChangeAllSelected,
   selectedItemId,
 }: CartItemsProps & { onChangeAllSelected: OnChangeAllSelected }) {
-  const allItemsId = cartItems.map((item) => item.product_id);
-  const isAllChecked =
-    allItemsId.length > 0 && allItemsId.every((id) => selectedItemId?.includes(id));
+  const cartManager = new CartManager(selectedItemId, cartItems);
 
   return (
     <ShoppingCartItemGroupContainer>
       <AllItemCheckbox
         labelText={"전체선택"}
-        checked={isAllChecked}
+        checked={cartManager.allItemsSelected}
         onChangeAllSelected={onChangeAllSelected}
-        allItemsId={allItemsId}
+        allItemsId={cartManager.allItemsId}
       />
       <ShoppingCartItemList
         cartItems={cartItems}

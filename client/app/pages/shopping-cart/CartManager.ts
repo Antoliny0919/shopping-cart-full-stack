@@ -18,6 +18,17 @@ class CartManager {
     }
     return [];
   }
+
+  get allItemsId() {
+    return this.cartItems.map((item) => item.product_id);
+  }
+
+  get allItemsSelected() {
+    return (
+      this.allItemsId.length > 0 &&
+      this.allItemsId.every((id) => this.selectedItemId?.includes(id))
+    );
+  }
 }
 
 export default CartManager;

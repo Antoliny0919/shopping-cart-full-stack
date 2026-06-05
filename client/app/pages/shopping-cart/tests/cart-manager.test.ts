@@ -21,18 +21,54 @@ const cartItems: CartItem[] = [
 ];
 
 describe("CartManager Tests", () => {
-  test("selectedItemId가 null이면 빈 배열을 반환한다.", () => {
-    const manager = new CartManager(null, cartItems);
-    expect(manager.selectedCartItems).toEqual([]);
+  describe("selectedCartItems", () => {
+    test("selectedItemId가 null이면 빈 배열을 반환한다.", () => {
+      const manager = new CartManager(null, cartItems);
+      expect(manager.selectedCartItems).toEqual([]);
+    });
+
+    test("selectedItemId에 해당하는 CartItem만 반환한다.", () => {
+      const manager = new CartManager(["1", "3"], cartItems);
+      expect(manager.selectedCartItems).toEqual([cartItems[0], cartItems[2]]);
+    });
+
+    test("cartItems에 존재하지 않는 ID는 결과에 포함되지 않는다.", () => {
+      const manager = new CartManager(["1", "99"], cartItems);
+      expect(manager.selectedCartItems).toEqual([cartItems[0]]);
+    });
   });
 
-  test("selectedItemId에 해당하는 CartItem만 반환한다.", () => {
-    const manager = new CartManager(["1", "3"], cartItems);
-    expect(manager.selectedCartItems).toEqual([cartItems[0], cartItems[2]]);
+  describe("allItemsId", () => {
+    test("존재하는 모든 아이템의 product_id를 반환한다.", () => {
+      const manager = new CartManager(null, cartItems);
+      expect(manager.allItemsId).toEqual(["1", "2", "3"]);
+    });
+
+    test("아이템이 존재하지 않으면 빈 배열을 반환한다.", () => {
+      const manager = new CartManager(null, []);
+      expect(manager.allItemsId).toEqual([]);
+    });
   });
 
-  test("cartItems에 존재하지 않는 ID는 결과에 포함되지 않는다.", () => {
-    const manager = new CartManager(["1", "99"], cartItems);
-    expect(manager.selectedCartItems).toEqual([cartItems[0]]);
+  describe("allItemsSelected", () => {
+    test("모든 아이템이 선택되어 있으면 true를 반환한다.", () => {
+      const manager = new CartManager(["1", "2", "3"], cartItems);
+      expect(manager.allItemsSelected).toBe(true);
+    });
+
+    test("일부 아이템이 선택되어 있으면 false를 반환한다.", () => {
+      const manager = new CartManager(["1", "2"], cartItems);
+      expect(manager.allItemsSelected).toBe(false);
+    });
+
+    test("선택된 아이템이 없으면 false를 반환한다.", () => {
+      const manager = new CartManager(null, cartItems);
+      expect(manager.allItemsSelected).toBe(false);
+    });
+
+    test("아이템이 비어있으면 false를 반환한다.", () => {
+      const manager = new CartManager([], []);
+      expect(manager.allItemsSelected).toBe(false);
+    });
   });
 });
