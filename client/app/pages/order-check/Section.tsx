@@ -1,6 +1,7 @@
 import { useLocation } from "react-router";
 import styled from "@emotion/styled";
 import { Button } from "../../commons/styles/Button";
+import { formatToKoreanPrice } from "../../commons/utils";
 
 export default function Section() {
   const { totalItems, totalQuantity, totalPrice } = useLocation().state;
@@ -12,7 +13,7 @@ export default function Section() {
       </SubText>
       <SubText>최종 결제 금액을 확인해 주세요.</SubText>
       <TotalPriceLabel>총 결제 금액</TotalPriceLabel>
-      <TotalPrice>{totalPrice.toLocaleString("ko-KR")}원</TotalPrice>
+      <TotalPrice>{formatToKoreanPrice(totalPrice)}</TotalPrice>
       <Button type="button" disabled={true}>
         결제하기
       </Button>
