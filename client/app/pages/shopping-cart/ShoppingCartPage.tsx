@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Link } from "react-router";
-import Section from "../order-check/Section";
+import Section from "./components/Section";
 import Navigation from "../../commons/components/Navigation";
 import Logo from "../../commons/images/logo.svg?react";
 
