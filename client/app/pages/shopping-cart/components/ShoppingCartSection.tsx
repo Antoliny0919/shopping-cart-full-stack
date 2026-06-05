@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import Info from "../../../commons/images/info.svg?react";
 import AllItemCheckbox from "./AllItemCheckbox";
 import ShoppingCartItemList from "./ShoppingCartItemList";
-import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
+import OrderSummary from "./OrderSummary";
 import CartAggregate from "../CartAggregate";
 import CartManager from "../CartManager";
 import { CartPricing } from "../CartPricing";
@@ -83,7 +83,7 @@ export default function ShoppingCartSection() {
                 <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우
                 무료 배송됩니다.
               </SubText>
-              <ShoppingCartOrderSummary
+              <OrderSummary
                 total={aggregate.total}
                 delivery={aggregate.delivery}
                 grandTotal={aggregate.grandTotal}

@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { formatToKoreanPrice } from "../../../commons/utils";
 
-export default function ShoppingCartOrderSummary({
+export default function OrderSummary({
   total,
   delivery,
   grandTotal,
@@ -11,7 +11,7 @@ export default function ShoppingCartOrderSummary({
   grandTotal: number;
 }) {
   return (
-    <ShoppingCartOrderSummaryContainer>
+    <OrderSummaryContainer>
       <ShoppingCartOrderSummaryList>
         <div className="receipt-item">
           <dt>주문 금액</dt>
@@ -28,11 +28,11 @@ export default function ShoppingCartOrderSummary({
           <dd>{formatToKoreanPrice(grandTotal)}</dd>
         </div>
       </ShoppingCartOrderSummaryResult>
-    </ShoppingCartOrderSummaryContainer>
+    </OrderSummaryContainer>
   );
 }
 
-const ShoppingCartOrderSummaryContainer = styled.div`
+const OrderSummaryContainer = styled.div`
   width: 100%;
 `;
 
