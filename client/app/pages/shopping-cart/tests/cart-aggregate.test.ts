@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import CartAggregate, { PricingStrategy } from "../CartAggregate";
+import { CartPricing } from "../CartPricing";
 import { CartItem } from "../types";
 
 class StubPricing implements PricingStrategy {
@@ -8,7 +9,7 @@ class StubPricing implements PricingStrategy {
     return 999;
   }
   get delivery() {
-    return 0;
+    return 100;
   }
   get grandTotal() {
     return 999;
@@ -45,5 +46,11 @@ describe("CartAggregate Tests", () => {
 
   test("카트에 담긴 총 수량을 반환한다.", () => {
     expect(aggregate.totalQuantity).toBe(5);
+  });
+
+  test("상품이 없으면 배달비는 계산되지 않는다", () => {
+    expect(aggregate.delivery).toBe(100);
+    const emptyItemAggregate = new CartAggregate([], StubPricing);
+    expect(emptyItemAggregate.delivery).toBe(0);
   });
 });

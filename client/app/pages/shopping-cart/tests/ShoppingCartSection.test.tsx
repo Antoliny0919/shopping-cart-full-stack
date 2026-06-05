@@ -500,4 +500,37 @@ describe("ShoppingCartSection", () => {
 
     expect(within(orderAmountRow).getByText("10,000원")).toBeInTheDocument();
   });
+
+  test("체크된 상품이 없으면 배달비는 0원이다.", async () => {
+    localStorage.setItem("selectedItems", JSON.stringify([]));
+    server.use(
+      http.get(`${BASE_URL}/api/cart/`, () =>
+        HttpResponse.json([
+          {
+            product_id: "123-123",
+            quantity: 1,
+            product: { name: "하겐다즈 말차", price: 10000, thumbnail: "" },
+          },
+        ]),
+      ),
+    );
+    render(
+      <MemoryRouter>
+        <ShoppingCartSection />
+      </MemoryRouter>,
+    );
+
+    await screen.findByText("하겐다즈 말차");
+
+    const deliveryRow = screen.getByText("배송비").closest("div")!;
+    expect(within(deliveryRow).queryByText("3,000원")).not.toBeInTheDocument();
+
+    const checkbox = screen
+      .getByText("하겐다즈 말차")
+      .closest("li")!
+      .querySelector("input[type='checkbox']") as HTMLInputElement;
+    fireEvent.click(checkbox);
+
+    expect(within(deliveryRow).getByText("3,000원")).toBeInTheDocument();
+  });
 });

@@ -29,7 +29,7 @@ class CartAggregate {
   }
 
   get delivery() {
-    return this.pricing.delivery;
+    return this.totalItems ? this.pricing.delivery : 0;
   }
 
   get grandTotal() {
