@@ -1,6 +1,5 @@
 import { describe, expect, test } from "vitest";
 import CartAggregate, { PricingStrategy } from "../CartAggregate";
-import { CartPricing } from "../CartPricing";
 import { CartItem } from "../types";
 
 class StubPricing implements PricingStrategy {
