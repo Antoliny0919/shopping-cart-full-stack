@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router";
 import Info from "../../../commons/images/info.svg?react";
-import AllItemCheckbox from "./AllItemCheckbox";
+import Checkbox from "../../../commons/components/Checkbox";
 import CartItemList from "./CartItemList";
 import OrderSummary from "./OrderSummary";
 import CartAggregate from "../CartAggregate";
@@ -66,12 +66,11 @@ export default function Section() {
           </Header>
           {cartItems.length ? (
             <>
-              <AllItemCheckbox
-                labelText={"전체선택"}
+              <Checkbox
                 checked={cartManager.allItemsSelected}
-                onChangeAllSelected={onChangeAllSelected}
-                allItemsId={cartManager.allItemsId}
-              />
+                labelText={"전체선택"}
+                onChange={() => onChangeAllSelected(cartManager.allItemsId)}
+              ></Checkbox>
               <CartItemList
                 cartItems={cartItems}
                 updateItem={updateItem}
