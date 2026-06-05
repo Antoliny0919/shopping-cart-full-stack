@@ -1,16 +1,7 @@
-import styled from "@emotion/styled";
-import { jsx } from "react/jsx-runtime";
-//#region app/commons/components/Navigation.tsx
-function Navigation({ children }) {
-	return /* @__PURE__ */ jsx(Nav, { children });
-}
-var Nav = styled.nav`
+import{t as e}from"./jsx-runtime-CNHsPo_i.js";import{t}from"./emotion-styled.browser.esm-a0sxEo5W.js";var n=e();function r({children:e}){return(0,n.jsx)(i,{children:e})}var i=t.nav`
   padding: 1.5rem;
   background-color: #000000;
-`;
-//#endregion
-//#region app/commons/styles/Button.tsx
-var Button = styled.button`
+`,a=t.button`
   position: fixed;
   bottom: 0;
   left: 50%;
@@ -29,6 +20,4 @@ var Button = styled.button`
     border: none;
     cursor: default;
   }
-`;
-//#endregion
-export { Navigation as n, Button as t };
+`;export{r as n,a as t};

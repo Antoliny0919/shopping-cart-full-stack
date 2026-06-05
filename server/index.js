@@ -1,8 +1,104 @@
-import { n as Navigation, t as Button } from "./Button-N6F7SLIV.js";
-import { Link, UNSAFE_withComponentProps, useNavigate } from "react-router";
-import styled from "@emotion/styled";
+import { PassThrough } from "node:stream";
+import { createReadableStreamFromReadable } from "@react-router/node";
+import { Link, Outlet, Scripts, ServerRouter, UNSAFE_withComponentProps, useLocation, useNavigate } from "react-router";
+import { isbot } from "isbot";
+import { renderToPipeableStream } from "react-dom/server";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
+import { Global, css } from "@emotion/react";
+import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
+//#region \0rolldown/runtime.js
+var __defProp = Object.defineProperty;
+var __exportAll = (all, no_symbols) => {
+	let target = {};
+	for (var name in all) __defProp(target, name, {
+		get: all[name],
+		enumerable: true
+	});
+	if (!no_symbols) __defProp(target, Symbol.toStringTag, { value: "Module" });
+	return target;
+};
+//#endregion
+//#region node_modules/@react-router/dev/dist/config/defaults/entry.server.node.tsx
+var entry_server_node_exports = /* @__PURE__ */ __exportAll({
+	default: () => handleRequest,
+	streamTimeout: () => streamTimeout
+});
+var streamTimeout = 5e3;
+function handleRequest(request, responseStatusCode, responseHeaders, routerContext, loadContext) {
+	if (request.method.toUpperCase() === "HEAD") return new Response(null, {
+		status: responseStatusCode,
+		headers: responseHeaders
+	});
+	return new Promise((resolve, reject) => {
+		let shellRendered = false;
+		let userAgent = request.headers.get("user-agent");
+		let readyOption = userAgent && isbot(userAgent) || routerContext.isSpaMode ? "onAllReady" : "onShellReady";
+		let timeoutId = setTimeout(() => abort(), 6e3);
+		const { pipe, abort } = renderToPipeableStream(/* @__PURE__ */ jsx(ServerRouter, {
+			context: routerContext,
+			url: request.url
+		}), {
+			[readyOption]() {
+				shellRendered = true;
+				const body = new PassThrough({ final(callback) {
+					clearTimeout(timeoutId);
+					timeoutId = void 0;
+					callback();
+				} });
+				const stream = createReadableStreamFromReadable(body);
+				responseHeaders.set("Content-Type", "text/html");
+				pipe(body);
+				resolve(new Response(stream, {
+					headers: responseHeaders,
+					status: responseStatusCode
+				}));
+			},
+			onShellError(error) {
+				reject(error);
+			},
+			onError(error) {
+				responseStatusCode = 500;
+				if (shellRendered) console.error(error);
+			}
+		});
+	});
+}
+//#endregion
+//#region app/root.tsx
+var root_exports = /* @__PURE__ */ __exportAll({ default: () => root_default });
+var GlobalStyle = css`
+  body {
+    margin: 0;
+  }
+
+  button {
+    cursor: pointer;
+    outline: none;
+  }
+`;
+var root_default = UNSAFE_withComponentProps(function App() {
+	return /* @__PURE__ */ jsxs("html", {
+		lang: "ko",
+		children: [/* @__PURE__ */ jsxs("head", { children: [
+			/* @__PURE__ */ jsx("link", {
+				rel: "icon",
+				href: "data:image/x-icon;base64,AA"
+			}),
+			/* @__PURE__ */ jsx("meta", { charSet: "UTF-8" }),
+			/* @__PURE__ */ jsx("meta", {
+				name: "viewport",
+				content: "width=device-width, initial-scale=1.0"
+			})
+		] }), /* @__PURE__ */ jsxs("body", { children: [/* @__PURE__ */ jsx(Global, { styles: GlobalStyle }), /* @__PURE__ */ jsxs(MobileAppView, { children: [/* @__PURE__ */ jsx(Outlet, {}), /* @__PURE__ */ jsx(Scripts, {})] })] })]
+	});
+});
+var MobileAppView = styled.div`
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
+`;
+//#endregion
 //#region app/commons/images/logo.svg?react
 var SvgLogo = (props) => /* @__PURE__ */ jsx("svg", {
 	width: 55,
@@ -16,6 +112,15 @@ var SvgLogo = (props) => /* @__PURE__ */ jsx("svg", {
 		fill: "white"
 	})
 });
+//#endregion
+//#region app/commons/components/Navigation.tsx
+function Navigation({ children }) {
+	return /* @__PURE__ */ jsx(Nav, { children });
+}
+var Nav = styled.nav`
+  padding: 1.5rem;
+  background-color: #000000;
+`;
 //#endregion
 //#region app/pages/shopping-cart/components/ShoppingCartNavigation.tsx
 function ShoppingCartNavigation() {
@@ -461,6 +566,28 @@ var ShoppingCartOrderSummaryList = styled.dl`
 `;
 var ShoppingCartOrderSummaryResult = styled(ShoppingCartOrderSummaryList)``;
 //#endregion
+//#region app/commons/styles/Button.tsx
+var Button = styled.button`
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000000;
+  font-weight: 700;
+  padding: 1.5rem 0;
+  font-size: 16px;
+  text-align: center;
+  color: #ffffff;
+  width: 100%;
+  max-width: 768px;
+
+  :disabled {
+    background-color: #bebebe;
+    border: none;
+    cursor: default;
+  }
+`;
+//#endregion
 //#region app/pages/shopping-cart/components/OrderCheckButton.tsx
 function OrderCheckButton(props) {
 	return /* @__PURE__ */ jsx(Button, {
@@ -797,6 +924,7 @@ var ShoppingCartNoItemsContent = styled.div`
 `;
 //#endregion
 //#region app/pages/shopping-cart/ShoppingCartPage.tsx
+var ShoppingCartPage_exports = /* @__PURE__ */ __exportAll({ default: () => ShoppingCartPage_default });
 var ShoppingCartPage_default = UNSAFE_withComponentProps(function ShoppingCartPage() {
 	return /* @__PURE__ */ jsxs(ShoppingCartPageContainer, { children: [/* @__PURE__ */ jsx(ShoppingCartNavigation, {}), /* @__PURE__ */ jsx(ShoppingCartSection, {})] });
 });
@@ -807,4 +935,248 @@ var ShoppingCartPageContainer = styled.div`
   overflow: hidden;
 `;
 //#endregion
-export { ShoppingCartPage_default as default };
+//#region app/commons/images/go-back.svg?react
+var SvgGoBack = (props) => /* @__PURE__ */ jsx("svg", {
+	width: 25,
+	height: 23,
+	viewBox: "0 0 25 23",
+	fill: "none",
+	xmlns: "http://www.w3.org/2000/svg",
+	...props,
+	children: /* @__PURE__ */ jsx("path", {
+		d: "M1.9209 11.3537L0.749595 10.4167L-3.8743e-05 11.3537L0.749595 12.2908L1.9209 11.3537ZM22.7542 12.8537C23.5827 12.8537 24.2542 12.1821 24.2542 11.3537C24.2542 10.5253 23.5827 9.85371 22.7542 9.85371V12.8537ZM9.08293 -2.98023e-07L0.749595 10.4167L3.0922 12.2908L11.4255 1.87408L9.08293 -2.98023e-07ZM0.749595 12.2908L9.08293 22.7074L11.4255 20.8333L3.0922 10.4167L0.749595 12.2908ZM1.9209 12.8537H22.7542V9.85371H1.9209V12.8537Z",
+		fill: "white"
+	})
+});
+//#endregion
+//#region app/pages/shopping-cart/components/OrderCheckNavigation.tsx
+function OrderCheckNavigation() {
+	return /* @__PURE__ */ jsx(Navigation, { children: /* @__PURE__ */ jsx(Link, {
+		to: "/cart/",
+		children: /* @__PURE__ */ jsx(SvgGoBack, {})
+	}) });
+}
+//#endregion
+//#region app/pages/shopping-cart/components/OrderSubmitButton.tsx
+function OrderSubmitButton() {
+	return /* @__PURE__ */ jsx(Button, {
+		type: "button",
+		disabled: true,
+		children: "결제 하기"
+	});
+}
+//#endregion
+//#region app/pages/shopping-cart/components/OrderCheckSection.tsx
+function OrderCheckSection() {
+	const { totalItems, totalQuantity, totalPrice } = useLocation().state;
+	return /* @__PURE__ */ jsxs(OrderCheckSectionContainer, { children: [
+		/* @__PURE__ */ jsx("h2", {
+			className: "title",
+			children: "주문 확인"
+		}),
+		/* @__PURE__ */ jsxs("p", {
+			className: "order-summary-sub-text",
+			children: [
+				"총 ",
+				totalItems,
+				"종류의 상품 ",
+				totalQuantity,
+				"개를 주문합니다."
+			]
+		}),
+		/* @__PURE__ */ jsx("p", {
+			className: "order-summary-sub-text",
+			children: "최종 결제 금액을 확인해 주세요."
+		}),
+		/* @__PURE__ */ jsx("p", {
+			className: "total-price-title",
+			children: "총 결제 금액"
+		}),
+		/* @__PURE__ */ jsxs("p", {
+			className: "total-price",
+			children: [totalPrice.toLocaleString("ko-KR"), "원"]
+		}),
+		/* @__PURE__ */ jsx(OrderSubmitButton, {})
+	] });
+}
+var OrderCheckSectionContainer = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+
+  p {
+    margin: 0;
+  }
+
+  .title,
+  .total-price {
+    font-weight: 700;
+    font-size: 24px;
+  }
+
+  .order-summary-sub-text {
+    font-weight: 500;
+    font-size: 12px;
+  }
+
+  .total-price-title {
+    font-weight: 700;
+    font-size: 16px;
+    margin: 1.5rem 0;
+  }
+`;
+//#endregion
+//#region app/pages/shopping-cart/OrderCheckPage.tsx
+var OrderCheckPage_exports = /* @__PURE__ */ __exportAll({ default: () => OrderCheckPage_default });
+var OrderCheckPage_default = UNSAFE_withComponentProps(function OrderCheckPage() {
+	return /* @__PURE__ */ jsxs(OrderCheckPageContainer, { children: [/* @__PURE__ */ jsx(OrderCheckNavigation, {}), /* @__PURE__ */ jsx(OrderCheckSection, {})] });
+});
+var OrderCheckPageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+`;
+//#endregion
+//#region \0virtual:react-router/server-manifest
+var server_manifest_default = {
+	"entry": {
+		"module": "/assets/entry.client-C8OJAmv1.js",
+		"imports": ["/assets/jsx-runtime-CNHsPo_i.js", "/assets/constants-D7t0_D17.js"],
+		"css": []
+	},
+	"routes": {
+		"root": {
+			"id": "root",
+			"parentId": void 0,
+			"path": "",
+			"index": void 0,
+			"caseSensitive": void 0,
+			"hasAction": false,
+			"hasLoader": false,
+			"hasClientAction": false,
+			"hasClientLoader": false,
+			"hasClientMiddleware": false,
+			"hasDefaultExport": true,
+			"hasErrorBoundary": false,
+			"module": "/assets/root-k_QDQUHi.js",
+			"imports": [
+				"/assets/jsx-runtime-CNHsPo_i.js",
+				"/assets/constants-D7t0_D17.js",
+				"/assets/emotion-styled.browser.esm-a0sxEo5W.js"
+			],
+			"css": [],
+			"clientActionModule": void 0,
+			"clientLoaderModule": void 0,
+			"clientMiddlewareModule": void 0,
+			"hydrateFallbackModule": void 0
+		},
+		"pages/shopping-cart/ShoppingCartPage": {
+			"id": "pages/shopping-cart/ShoppingCartPage",
+			"parentId": "root",
+			"path": "cart/",
+			"index": true,
+			"caseSensitive": void 0,
+			"hasAction": false,
+			"hasLoader": false,
+			"hasClientAction": false,
+			"hasClientLoader": false,
+			"hasClientMiddleware": false,
+			"hasDefaultExport": true,
+			"hasErrorBoundary": false,
+			"module": "/assets/ShoppingCartPage-D5Nak5Pf.js",
+			"imports": [
+				"/assets/jsx-runtime-CNHsPo_i.js",
+				"/assets/Button-CsVC_2IU.js",
+				"/assets/constants-D7t0_D17.js",
+				"/assets/emotion-styled.browser.esm-a0sxEo5W.js"
+			],
+			"css": [],
+			"clientActionModule": void 0,
+			"clientLoaderModule": void 0,
+			"clientMiddlewareModule": void 0,
+			"hydrateFallbackModule": void 0
+		},
+		"pages/shopping-cart/OrderCheckPage": {
+			"id": "pages/shopping-cart/OrderCheckPage",
+			"parentId": "root",
+			"path": "cart/check/",
+			"index": void 0,
+			"caseSensitive": void 0,
+			"hasAction": false,
+			"hasLoader": false,
+			"hasClientAction": false,
+			"hasClientLoader": false,
+			"hasClientMiddleware": false,
+			"hasDefaultExport": true,
+			"hasErrorBoundary": false,
+			"module": "/assets/OrderCheckPage-Dcv8ccQS.js",
+			"imports": [
+				"/assets/jsx-runtime-CNHsPo_i.js",
+				"/assets/Button-CsVC_2IU.js",
+				"/assets/emotion-styled.browser.esm-a0sxEo5W.js"
+			],
+			"css": [],
+			"clientActionModule": void 0,
+			"clientLoaderModule": void 0,
+			"clientMiddlewareModule": void 0,
+			"hydrateFallbackModule": void 0
+		}
+	},
+	"url": "/assets/manifest-46190734.js",
+	"version": "46190734",
+	"sri": void 0
+};
+//#endregion
+//#region \0virtual:react-router/server-build
+var assetsBuildDirectory = "build/client";
+var basename = "/";
+var future = {
+	"unstable_optimizeDeps": false,
+	"v8_passThroughRequests": false,
+	"v8_trailingSlashAwareDataRequests": false,
+	"unstable_previewServerPrerendering": false,
+	"v8_middleware": false,
+	"v8_splitRouteModules": false,
+	"v8_viteEnvironmentApi": false
+};
+var ssr = true;
+var isSpaMode = false;
+var prerender = [];
+var routeDiscovery = {
+	"mode": "lazy",
+	"manifestPath": "/__manifest"
+};
+var publicPath = "/";
+var entry = { module: entry_server_node_exports };
+var routes = {
+	"root": {
+		id: "root",
+		parentId: void 0,
+		path: "",
+		index: void 0,
+		caseSensitive: void 0,
+		module: root_exports
+	},
+	"pages/shopping-cart/ShoppingCartPage": {
+		id: "pages/shopping-cart/ShoppingCartPage",
+		parentId: "root",
+		path: "cart/",
+		index: true,
+		caseSensitive: void 0,
+		module: ShoppingCartPage_exports
+	},
+	"pages/shopping-cart/OrderCheckPage": {
+		id: "pages/shopping-cart/OrderCheckPage",
+		parentId: "root",
+		path: "cart/check/",
+		index: void 0,
+		caseSensitive: void 0,
+		module: OrderCheckPage_exports
+	}
+};
+var allowedActionOrigins = false;
+//#endregion
+export { allowedActionOrigins, server_manifest_default as assets, assetsBuildDirectory, basename, entry, future, isSpaMode, prerender, publicPath, routeDiscovery, routes, ssr };
