@@ -13,7 +13,7 @@ import useCartItems from "../hooks/useCartItems";
 import useCartItemSelected from "../hooks/useCartItemSelected";
 import CartLoading from "./CartLoading";
 
-export default function CartSection() {
+export default function Section() {
   const navigate = useNavigate();
   const storage = new SelectedItemLocalStorage();
 
@@ -52,7 +52,7 @@ export default function CartSection() {
   };
 
   return (
-    <Section>
+    <SectionLayout>
       {fetchStatus === "loading" && <CartLoading />}
       {fetchStatus === "success" && (
         <>
@@ -101,7 +101,7 @@ export default function CartSection() {
         </>
       )}
       {fetchStatus === "error" && <div>error..</div>}
-    </Section>
+    </SectionLayout>
   );
 }
 
@@ -120,7 +120,7 @@ const SubText = styled.p`
   font-size: 12px;
 `;
 
-const Section = styled.section`
+const SectionLayout = styled.section`
   display: flex;
   flex-direction: column;
   flex: 1;

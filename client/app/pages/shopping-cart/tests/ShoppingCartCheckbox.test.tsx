@@ -4,7 +4,7 @@ import { describe, test, expect, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router";
 import { server } from "../../../../rtl-setup";
 import { BASE_URL } from "../../../constants";
-import ShoppingCartSection from "../components/CartSection";
+import ShoppingCartSection from "../components/Section";
 
 describe("ShoppingCartCheckbox", () => {
   beforeEach(() => {
