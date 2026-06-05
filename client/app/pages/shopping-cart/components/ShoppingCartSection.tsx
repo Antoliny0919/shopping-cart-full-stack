@@ -8,12 +8,14 @@ import { CartItemsProps, OnChangeAllSelected } from "../types";
 import CartAggregate from "../CartAggregate";
 import CartManager from "../CartManager";
 import { CartPricing } from "../CartPricing";
+import { SelectedItemLocalStorage } from "../storages/selected-item-storage";
 import useCartItems from "../hooks/useCartItems";
 import useCartItemSelected from "../hooks/useCartItemSelected";
 import ShoppingCartSectionSkeleton from "./ShoppingCartSectionSkeleton";
 
 export default function ShoppingCartSection() {
   const navigate = useNavigate();
+  const storage = new SelectedItemLocalStorage();
 
   const {
     items: cartItems,
@@ -27,7 +29,7 @@ export default function ShoppingCartSection() {
     initSelectedItemId,
     onChangeSelected,
     onChangeAllSelected,
-  } = useCartItemSelected();
+  } = useCartItemSelected(storage);
 
   if (fetchStatus === "success" && selectedItemId === null) {
     initSelectedItemId(cartItems.map((item) => item.product_id));

@@ -127,14 +127,14 @@ describe("ShoppingCartSection", () => {
     await screen.findByText("아이템1");
 
     const selectedItems = JSON.parse(
-      localStorage.getItem("selectedItems") ?? "[]",
+      localStorage.getItem("cart-selected-items") ?? "[]",
     );
     expect(selectedItems).toEqual(["id-1", "id-2"]);
   });
 
   test("재방문 시 기존 localStorage의 selectedItems가 덮어씌워지지 않는다", async () => {
     const existingItems = ["existing-id-1", "existing-id-2"];
-    localStorage.setItem("selectedItems", JSON.stringify(existingItems));
+    localStorage.setItem("cart-selected-items", JSON.stringify(existingItems));
 
     server.use(
       http.get(`${BASE_URL}/api/cart/`, () =>
@@ -157,13 +157,13 @@ describe("ShoppingCartSection", () => {
     await screen.findByText("아이템1");
 
     const selectedItems = JSON.parse(
-      localStorage.getItem("selectedItems") ?? "[]",
+      localStorage.getItem("cart-selected-items") ?? "[]",
     );
     expect(selectedItems).toEqual(existingItems);
   });
 
   test("상품이 체크되었을때 localStorage에 상품 id가 추가된다.", async () => {
-    localStorage.setItem("selectedItems", JSON.stringify([]));
+    localStorage.setItem("cart-selected-items", JSON.stringify([]));
     server.use(
       http.get(`${BASE_URL}/api/cart/`, () =>
         HttpResponse.json([
@@ -187,13 +187,13 @@ describe("ShoppingCartSection", () => {
     ) as HTMLInputElement;
     fireEvent.click(checkbox);
     const selectedItems = JSON.parse(
-      localStorage.getItem("selectedItems") ?? "[]",
+      localStorage.getItem("cart-selected-items") ?? "[]",
     );
     expect(selectedItems).toEqual(["123-123"]);
   });
 
   test("상품이 체크 해제 되었을때 localStorage에 상품 id가 제거된다.", async () => {
-    localStorage.setItem("selectedItems", JSON.stringify(["456-456"]));
+    localStorage.setItem("cart-selected-items", JSON.stringify(["456-456"]));
     server.use(
       http.get(`${BASE_URL}/api/cart/`, () =>
         HttpResponse.json([
@@ -217,14 +217,14 @@ describe("ShoppingCartSection", () => {
     ) as HTMLInputElement;
     fireEvent.click(checkbox);
     const selectedItems = JSON.parse(
-      localStorage.getItem("selectedItems") ?? "[]",
+      localStorage.getItem("cart-selected-items") ?? "[]",
     );
     expect(selectedItems).toEqual([]);
   });
 
   test("전체선택 버튼은 모든 아이템이 localStorage에 존재하면 chceked상태가 된다.", async () => {
     localStorage.setItem(
-      "selectedItems",
+      "cart-selected-items",
       JSON.stringify(["123-123", "456-456"]),
     );
     server.use(
@@ -254,7 +254,7 @@ describe("ShoppingCartSection", () => {
   });
 
   test("전체선택 버튼을 클릭하면 모든 체크박스가 활성화되고 localStorage에 아이템ID가 저장된다.", async () => {
-    localStorage.setItem("selectedItems", JSON.stringify([]));
+    localStorage.setItem("cart-selected-items", JSON.stringify([]));
     server.use(
       http.get(`${BASE_URL}/api/cart/`, () =>
         HttpResponse.json([
@@ -291,13 +291,13 @@ describe("ShoppingCartSection", () => {
     expect(item1Checkbox.checked).toBe(true);
     expect(item2Checkbox.checked).toBe(true);
     const selectedItems = JSON.parse(
-      localStorage.getItem("selectedItems") ?? "[]",
+      localStorage.getItem("cart-selected-items") ?? "[]",
     );
     expect(selectedItems).toEqual(["123-123", "456-456"]);
   });
 
   test("일부 아이템이 선택된 상태에서 전체선택을 클릭하면 모든 체크박스가 활성화되고 localStorage에 아이템ID가 저장된다.", async () => {
-    localStorage.setItem("selectedItems", JSON.stringify(["123-123"]));
+    localStorage.setItem("cart-selected-items", JSON.stringify(["123-123"]));
     server.use(
       http.get(`${BASE_URL}/api/cart/`, () =>
         HttpResponse.json([
@@ -336,13 +336,13 @@ describe("ShoppingCartSection", () => {
     expect(item1Checkbox.checked).toBe(true);
     expect(item2Checkbox.checked).toBe(true);
     const selectedItems = JSON.parse(
-      localStorage.getItem("selectedItems") ?? "[]",
+      localStorage.getItem("cart-selected-items") ?? "[]",
     );
     expect(selectedItems).toEqual(["123-123", "456-456"]);
   });
   test("전체선택된 상태에서 전체선택 버튼을 클릭하면 모든 체크박스가 비활성화되고 localStorage에 아이템ID가 빈배열이된다.", async () => {
     localStorage.setItem(
-      "selectedItems",
+      "cart-selected-items",
       JSON.stringify(["123-123", "456-456"]),
     );
     server.use(
@@ -381,7 +381,7 @@ describe("ShoppingCartSection", () => {
     expect(item2Checkbox).not.toBeChecked();
     expect(allSelectCheckbox).not.toBeChecked();
     const selectedItems = JSON.parse(
-      localStorage.getItem("selectedItems") ?? "[]",
+      localStorage.getItem("cart-selected-items") ?? "[]",
     );
     expect(selectedItems).toEqual([]);
   });
@@ -423,7 +423,7 @@ describe("ShoppingCartSection", () => {
   });
 
   test("localStorage의 selectedItems가 빈 배열이어도 장바구니 상품 목록이 렌더링된다.", async () => {
-    localStorage.setItem("selectedItems", JSON.stringify([]));
+    localStorage.setItem("cart-selected-items", JSON.stringify([]));
     server.use(
       http.get(`${BASE_URL}/api/cart/`, () =>
         HttpResponse.json([
@@ -456,7 +456,7 @@ describe("ShoppingCartSection", () => {
 
   test("선택된 상품의 주문금액을 렌더링한다.", async () => {
     localStorage.setItem(
-      "selectedItems",
+      "cart-selected-items",
       JSON.stringify(["123-123", "789-789"]),
     );
     server.use(
@@ -502,7 +502,7 @@ describe("ShoppingCartSection", () => {
   });
 
   test("체크된 상품이 없으면 배달비는 0원이다.", async () => {
-    localStorage.setItem("selectedItems", JSON.stringify([]));
+    localStorage.setItem("cart-selected-items", JSON.stringify([]));
     server.use(
       http.get(`${BASE_URL}/api/cart/`, () =>
         HttpResponse.json([

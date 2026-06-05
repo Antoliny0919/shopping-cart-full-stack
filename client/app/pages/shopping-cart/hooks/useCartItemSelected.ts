@@ -1,14 +1,14 @@
 import { useState } from "react";
+import { SelectedItemStorage } from "../storages/selected-item-storage";
 
-export default function useCartItemSelected() {
+export default function useCartItemSelected(storage: SelectedItemStorage) {
   const [selectedItemId, setSelectedItemId] = useState<string[] | null>(() => {
     if (typeof window === "undefined") return null;
-    const stored = localStorage.getItem("selectedItems");
-    return stored ? JSON.parse(stored) : null;
+    return storage.get();
   });
 
   const initSelectedItemId = (allCartItemsId: string[]) => {
-    localStorage.setItem("selectedItems", JSON.stringify(allCartItemsId));
+    storage.save(allCartItemsId);
     setSelectedItemId(allCartItemsId);
   };
 
@@ -17,14 +17,15 @@ export default function useCartItemSelected() {
     const newSelectedItem = checked
       ? [...prev, id]
       : prev.filter((itemId) => itemId !== id);
-    localStorage.setItem("selectedItems", JSON.stringify(newSelectedItem));
+    storage.save(newSelectedItem);
     setSelectedItemId(newSelectedItem);
   };
 
   const onChangeAllSelected = (allCartItemsId: string[]) => {
-    const isAllChecked = (selectedItemId ?? []).length === allCartItemsId.length;
+    const isAllChecked =
+      (selectedItemId ?? []).length === allCartItemsId.length;
     const newSelectedItem = isAllChecked ? [] : allCartItemsId;
-    localStorage.setItem("selectedItems", JSON.stringify(newSelectedItem));
+    storage.save(newSelectedItem);
     setSelectedItemId(newSelectedItem);
   };
 
