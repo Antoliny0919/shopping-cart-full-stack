@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import NikeWhiteShoes from "../images/nike-white-shoes.png";
 import Minus from "../../../commons/images/minus.svg?react";
 import Plus from "../../../commons/images/plus.svg?react";
 import { formatToKoreanPrice } from "../../../commons/utils";
@@ -14,6 +13,7 @@ interface ShoppingCartItemProps extends Pick<
   itemId: string;
   name: string;
   price: number;
+  thumbnail: string;
   initialQuantity: number;
   checked: boolean;
 }
@@ -22,6 +22,7 @@ export default function ShoppingCartItem({
   itemId,
   name,
   price,
+  thumbnail,
   initialQuantity,
   checked,
   updateItem,
@@ -35,13 +36,17 @@ export default function ShoppingCartItem({
     <ShoppingCartItemContainer>
       <div className="wrapper">
         <ShoppingCartItemHeader>
-          <ItemCheckbox itemId={itemId} checked={checked} onChangeSelected={onChangeSelected} />
+          <ItemCheckbox
+            itemId={itemId}
+            checked={checked}
+            onChangeSelected={onChangeSelected}
+          />
           <button className="item-delete" onClick={() => removeItem(itemId)}>
             삭제
           </button>
         </ShoppingCartItemHeader>
         <ShoppingCartItemBody>
-          <img className="thumbnail" src={NikeWhiteShoes} />
+          <img className="thumbnail" src={thumbnail} alt="상품 이미지" />
           <ShoppingCartItemInfo>
             <p className="name">{name}</p>
             <p className="price">{formatToKoreanPrice(price)}</p>

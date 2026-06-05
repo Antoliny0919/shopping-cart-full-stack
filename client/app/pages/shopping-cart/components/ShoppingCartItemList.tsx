@@ -19,6 +19,7 @@ export default function ShoppingCartItemList({
             checked={selectedItemId?.includes(product_id) ?? false}
             name={product.name}
             price={product.price}
+            thumbnail={product.thumbnail}
             initialQuantity={quantity}
             updateItem={updateItem}
             removeItem={removeItem}

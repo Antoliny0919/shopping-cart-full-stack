@@ -18,7 +18,7 @@ const productItemData = [
     quantity: 2,
     product: {
       name: "치킨",
-      thumbnail: "/chicken.jpg",
+      thumbnail: "/chicken.png",
       price: 25000,
     },
   },
@@ -45,7 +45,7 @@ const productItemData = [
     quantity: 99,
     product: {
       name: "홈런볼",
-      thumbnail: "homerun-ball.jpg",
+      thumbnail: "/home-run-ball.jpg",
       price: 1500,
     },
   },
