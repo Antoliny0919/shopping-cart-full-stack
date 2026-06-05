@@ -1,5 +1,4 @@
 import Checkbox from "../../../commons/components/Checkbox";
-import { onChangeSelected } from "../types";
 
 export default function ItemCheckbox({
   itemId,
@@ -8,7 +7,7 @@ export default function ItemCheckbox({
 }: {
   itemId: string;
   checked: boolean;
-  onChangeSelected: onChangeSelected;
+  onChangeSelected: (checked: boolean, id: string) => void;
 }) {
   const onChange = () => {
     onChangeSelected(!checked, itemId);

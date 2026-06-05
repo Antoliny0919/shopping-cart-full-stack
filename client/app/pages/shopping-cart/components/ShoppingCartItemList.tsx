@@ -1,6 +1,14 @@
 import styled from "@emotion/styled";
 import ShoppingCartItem from "./ShoppingCartItem";
-import { CartItemsProps } from "../types";
+import { CartItem } from "../types";
+
+interface Props {
+  cartItems: CartItem[];
+  updateItem: (itemId: string, body: { quantity: number }) => void;
+  removeItem: (itemId: string) => void;
+  onChangeSelected: (checked: boolean, id: string) => void;
+  selectedItemId: string[] | null;
+}
 
 export default function ShoppingCartItemList({
   cartItems,
@@ -8,7 +16,7 @@ export default function ShoppingCartItemList({
   removeItem,
   onChangeSelected,
   selectedItemId,
-}: CartItemsProps) {
+}: Props) {
   return (
     <ShoppingCartItemListContainer>
       {cartItems.map(({ product_id, quantity, product }) => {

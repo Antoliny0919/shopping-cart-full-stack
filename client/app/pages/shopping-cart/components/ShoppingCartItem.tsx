@@ -2,20 +2,19 @@ import styled from "@emotion/styled";
 import Minus from "../../../commons/images/minus.svg?react";
 import Plus from "../../../commons/images/plus.svg?react";
 import { formatToKoreanPrice } from "../../../commons/utils";
-import { CartItemsProps } from "../types";
 import useCartItemQuantity from "../hooks/useCartItemQuantity";
 import ItemCheckbox from "./ItemCheckbox";
 
-interface ShoppingCartItemProps extends Pick<
-  CartItemsProps,
-  "updateItem" | "removeItem" | "onChangeSelected"
-> {
+interface Props {
   itemId: string;
   name: string;
   price: number;
   thumbnail: string;
   initialQuantity: number;
   checked: boolean;
+  updateItem: (itemId: string, body: { quantity: number }) => void;
+  removeItem: (itemId: string) => void;
+  onChangeSelected: (checked: boolean, id: string) => void;
 }
 
 export default function ShoppingCartItem({
@@ -28,7 +27,7 @@ export default function ShoppingCartItem({
   updateItem,
   removeItem,
   onChangeSelected,
-}: ShoppingCartItemProps) {
+}: Props) {
   const { quantity, increase, decrease, canIncrease, canDecrease } =
     useCartItemQuantity(initialQuantity, itemId, updateItem);
 

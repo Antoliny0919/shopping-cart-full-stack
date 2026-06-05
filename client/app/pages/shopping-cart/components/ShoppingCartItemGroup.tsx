@@ -2,7 +2,16 @@ import styled from "@emotion/styled";
 import AllItemCheckbox from "./AllItemCheckbox";
 import ShoppingCartItemList from "./ShoppingCartItemList";
 import CartManager from "../CartManager";
-import { CartItemsProps, OnChangeAllSelected } from "../types";
+import { CartItem } from "../types";
+
+interface Props {
+  cartItems: CartItem[];
+  updateItem: (itemId: string, body: { quantity: number }) => void;
+  removeItem: (itemId: string) => void;
+  onChangeSelected: (checked: boolean, id: string) => void;
+  onChangeAllSelected: (allCartItemsId: string[]) => void;
+  selectedItemId: string[] | null;
+}
 
 export default function ShoppingCartItemGroup({
   cartItems,
@@ -11,7 +20,7 @@ export default function ShoppingCartItemGroup({
   onChangeSelected,
   onChangeAllSelected,
   selectedItemId,
-}: CartItemsProps & { onChangeAllSelected: OnChangeAllSelected }) {
+}: Props) {
   const cartManager = new CartManager(selectedItemId, cartItems);
 
   return (

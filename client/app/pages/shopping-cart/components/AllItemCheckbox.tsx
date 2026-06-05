@@ -1,17 +1,18 @@
 import Checkbox from "../../../commons/components/Checkbox";
-import { OnChangeAllSelected } from "../types";
+
+interface Props {
+  labelText: string;
+  checked: boolean;
+  onChangeAllSelected: (allCartItemsId: string[]) => void;
+  allItemsId: string[];
+}
 
 export default function AllItemCheckbox({
   labelText,
   checked,
   onChangeAllSelected,
   allItemsId,
-}: {
-  labelText: string;
-  checked: boolean;
-  onChangeAllSelected: OnChangeAllSelected;
-  allItemsId: string[];
-}) {
+}: Props) {
   const onChange = () => {
     onChangeAllSelected(allItemsId);
   };

@@ -4,7 +4,7 @@ import Info from "../../../commons/images/info.svg?react";
 import ShoppingCartItemGroup from "./ShoppingCartItemGroup";
 import ShoppingCartOrderSummary from "./ShoppingCartOrderSummary";
 import OrderCheckButton from "./OrderCheckButton";
-import { CartItemsProps, OnChangeAllSelected } from "../types";
+import { CartItem } from "../types";
 import CartAggregate from "../CartAggregate";
 import CartManager from "../CartManager";
 import { CartPricing } from "../CartPricing";
@@ -87,6 +87,16 @@ export function ShoppingCartSectionHeader({
   );
 }
 
+interface ShoppingCartSectionContentProps {
+  cartItems: CartItem[];
+  goToOrderCheck: () => void;
+  updateItem: (itemId: string, body: { quantity: number }) => void;
+  removeItem: (itemId: string) => void;
+  onChangeSelected: (checked: boolean, id: string) => void;
+  onChangeAllSelected: (allCartItemsId: string[]) => void;
+  selectedItemId: string[] | null;
+}
+
 export function ShoppingCartSectionContent({
   cartItems,
   goToOrderCheck,
@@ -95,10 +105,7 @@ export function ShoppingCartSectionContent({
   onChangeSelected,
   onChangeAllSelected,
   selectedItemId,
-}: CartItemsProps & {
-  goToOrderCheck: () => void;
-  onChangeAllSelected: OnChangeAllSelected;
-}) {
+}: ShoppingCartSectionContentProps) {
   const cartManager = new CartManager(selectedItemId, cartItems);
   const aggregate = new CartAggregate(
     cartManager.selectedCartItems,
