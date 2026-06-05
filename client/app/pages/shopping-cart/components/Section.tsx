@@ -93,7 +93,9 @@ export default function Section() {
           <Button
             disabled={!Boolean(summary.totalItems)}
             onClick={goToOrderCheckPage}
-          ></Button>
+          >
+            주문 확인
+          </Button>
         </>
       )}
       {fetchStatus === "error" && <div>error..</div>}

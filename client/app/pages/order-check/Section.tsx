@@ -13,7 +13,9 @@ export default function Section() {
       <SubText>최종 결제 금액을 확인해 주세요.</SubText>
       <TotalPriceLabel>총 결제 금액</TotalPriceLabel>
       <TotalPrice>{totalPrice.toLocaleString("ko-KR")}원</TotalPrice>
-      <Button type="button" disabled={true}></Button>
+      <Button type="button" disabled={true}>
+        결제하기
+      </Button>
     </SectionLayout>
   );
 }
