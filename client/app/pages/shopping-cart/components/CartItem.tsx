@@ -12,11 +12,11 @@ interface Props {
   thumbnail: string;
   quantity: number;
   checked: boolean;
-  updateItem: (
+  onUpdateQuantity: (
     itemId: string,
     body: { quantity: number },
   ) => Promise<void> | void;
-  onDelete: (itemId: string) => void;
+  onDeleteItem: (itemId: string) => void;
   onChangeSelected: (checked: boolean, id: string) => void;
 }
 
@@ -27,14 +27,14 @@ export default function CartItem({
   thumbnail,
   quantity,
   checked,
-  updateItem,
-  onDelete,
+  onUpdateQuantity,
+  onDeleteItem,
   onChangeSelected,
 }: Props) {
   const { increase, decrease, canIncrease, canDecrease } = useCartItemQuantity(
     quantity,
     itemId,
-    updateItem,
+    onUpdateQuantity,
   );
 
   return (
@@ -45,7 +45,7 @@ export default function CartItem({
             checked={checked}
             onChange={() => onChangeSelected(!checked, itemId)}
           />
-          <button className="item-delete" onClick={() => onDelete(itemId)}>
+          <button className="item-delete" onClick={() => onDeleteItem(itemId)}>
             삭제
           </button>
         </Header>

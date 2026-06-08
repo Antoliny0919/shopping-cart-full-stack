@@ -88,8 +88,8 @@ export default function Section() {
               ></Checkbox>
               <CartItemList
                 cartItems={cartItems}
-                updateItem={updateItem}
-                onDelete={onDelete}
+                onUpdateQuantity={updateItem}
+                onDeleteItem={onDelete}
                 onChangeSelected={onChangeSelected}
                 selectedItemId={selectedItemId}
               />

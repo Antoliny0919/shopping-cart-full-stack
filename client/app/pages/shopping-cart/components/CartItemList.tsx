@@ -4,19 +4,19 @@ import { CartItem as CartItemType } from "../types";
 
 interface Props {
   cartItems: CartItemType[];
-  updateItem: (
+  onUpdateQuantity: (
     itemId: string,
     body: { quantity: number },
   ) => void | Promise<void>;
-  onDelete: (itemId: string) => void;
+  onDeleteItem: (itemId: string) => void;
   onChangeSelected: (checked: boolean, id: string) => void;
   selectedItemId: string[] | null;
 }
 
 export default function CartItemList({
   cartItems,
-  updateItem,
-  onDelete,
+  onUpdateQuantity,
+  onDeleteItem,
   onChangeSelected,
   selectedItemId,
 }: Props) {
@@ -32,8 +32,8 @@ export default function CartItemList({
             price={product.price}
             thumbnail={product.thumbnail}
             quantity={quantity}
-            updateItem={updateItem}
-            onDelete={onDelete}
+            onUpdateQuantity={onUpdateQuantity}
+            onDeleteItem={onDeleteItem}
             onChangeSelected={onChangeSelected}
           />
         );
