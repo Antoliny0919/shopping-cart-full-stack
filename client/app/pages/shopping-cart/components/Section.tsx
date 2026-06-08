@@ -12,7 +12,7 @@ import { SelectedItemsLocalStorage } from "../storages/SelectedItemsStorage";
 import useCartItems from "../hooks/useCartItems";
 import useCartItemSelected from "../hooks/useCartItemSelected";
 import Loading from "./Loading";
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 
 export default function Section() {
   const navigate = useNavigate();
@@ -45,11 +45,20 @@ export default function Section() {
     });
   };
 
-  useEffect(() => {
-    if (fetchStatus === "success" && selectedItemId === null) {
+  const allSelect = useEffectEvent(() => {
+    if (selectedItemId === null) {
       initSelectedItemId(cartItems.map((item) => item.product_id));
     }
-  }, [fetchStatus]);
+  });
+
+  useEffect(
+    function isFirstVisit() {
+      if (fetchStatus === "success") {
+        allSelect();
+      }
+    },
+    [fetchStatus],
+  );
 
   return (
     <SectionLayout>
