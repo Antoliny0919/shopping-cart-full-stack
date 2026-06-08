@@ -3,11 +3,18 @@ import { CartItem } from "../types";
 import { FetchStatus } from "../../../commons/types";
 import { getCartItems, deleteCartItem, updateCartItem } from "../api";
 
-type RemoveCartItem = (itemId: string) => void;
+type RemoveCartItem = (
+  itemId: string,
+) => Promise<
+  { success: boolean; error?: undefined } | { success: boolean; error: unknown }
+>;
+
 type UpdateCartItem = (
   imemId: string,
   body: { quantity: number },
-) => void | Promise<void>;
+) => Promise<
+  { success: boolean; error?: undefined } | { success: boolean; error: unknown }
+>;
 
 export default function useCartItems() {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -25,8 +32,13 @@ export default function useCartItems() {
   };
 
   const removeItem: RemoveCartItem = async (itemId) => {
-    await deleteCartItem(itemId);
-    setItems((prev) => prev.filter((item) => item.product_id !== itemId));
+    try {
+      await deleteCartItem(itemId);
+      setItems((prev) => prev.filter((item) => item.product_id !== itemId));
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err };
+    }
   };
 
   const updateItem: UpdateCartItem = async (itemId, body) => {
@@ -38,10 +50,12 @@ export default function useCartItems() {
     );
     try {
       await updateCartItem(itemId, body);
-    } catch {
+      return { success: true };
+    } catch (err) {
       setItems((prev) =>
         prev.map((item) => (item.product_id === itemId ? original! : item)),
       );
+      return { success: false, error: err };
     }
   };
 

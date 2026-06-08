@@ -11,7 +11,9 @@ import { Button } from "../../../commons/styles/Button";
 import { SelectedItemsLocalStorage } from "../storages/SelectedItemsStorage";
 import useCartItems from "../hooks/useCartItems";
 import useCartItemSelected from "../hooks/useCartItemSelected";
+import useError from "../hooks/useError";
 import Loading from "./Loading";
+import Toast from "../../../commons/components/Toast";
 import { useEffect, useEffectEvent } from "react";
 
 export default function Section() {
@@ -32,13 +34,36 @@ export default function Section() {
     onChangeAllSelected,
   } = useCartItemSelected(storage);
 
+  const { networkError, error, handleError, clearError } = useError();
+
   const cartManager = new CartManager(selectedItemId, cartItems);
   const summary = new CartSummary(cartManager.selectedCartItems, CartPricing);
 
-  const onDelete = (itemId: string) => {
-    removeItem(itemId);
+  const onUpdateQuantity = async (
+    itemId: string,
+    body: { quantity: number },
+  ) => {
+    const { success, error } = await updateItem(itemId, body);
+    if (success) {
+      clearError();
+      return;
+    }
+    if (error) {
+      handleError(error);
+    }
+  };
+
+  const onDeleteItem = async (itemId: string) => {
+    const { success, error } = await removeItem(itemId);
     // 아이템이 선택된 상태로 제거되면 선택상태또한 제거됩니다.
-    onChangeSelected(false, itemId);
+    if (success) {
+      clearError();
+      onChangeSelected(false, itemId);
+      return;
+    }
+    if (error) {
+      handleError(error);
+    }
   };
 
   const goToOrderCheckPage = () => {
@@ -88,8 +113,8 @@ export default function Section() {
               ></Checkbox>
               <CartItemList
                 cartItems={cartItems}
-                onUpdateQuantity={updateItem}
-                onDeleteItem={onDelete}
+                onUpdateQuantity={onUpdateQuantity}
+                onDeleteItem={onDeleteItem}
                 onChangeSelected={onChangeSelected}
                 selectedItemId={selectedItemId}
               />
@@ -116,7 +141,8 @@ export default function Section() {
           </Button>
         </>
       )}
-      {fetchStatus === "error" && <div>error..</div>}
+      {(fetchStatus === "error" || networkError) && <div>error..</div>}
+      {error && <Toast message={error} onClose={clearError} />}
     </SectionLayout>
   );
 }

@@ -86,3 +86,20 @@ export const Error: Story = {
     },
   ],
 };
+
+export const DeleteItemError: Story = {
+  loaders: [
+    async () => {
+      await worker.start({ onUnhandledRequest: "bypass" });
+      worker.use(
+        http.get(`${BASE_URL}/api/cart/`, () =>
+          HttpResponse.json(cartItemsData),
+        ),
+        http.delete(`${BASE_URL}/api/cart/items/:id/`, () =>
+          HttpResponse.json({ message: "에러발생" }, { status: 400 }),
+        ),
+      );
+      return {};
+    },
+  ],
+};
