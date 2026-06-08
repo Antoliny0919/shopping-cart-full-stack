@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { describe, test, expect, beforeEach, afterEach } from "vitest";
 import { MemoryRouter } from "react-router";
@@ -50,7 +51,7 @@ describe("ShoppingCartError", () => {
     const listItem = chickenItem.closest("li")!;
     const deleteButton = within(listItem).getByRole("button", { name: "삭제" });
 
-    fireEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
 
     expect(
       await screen.findByText("서버와 연결할 수 없습니다."),
@@ -77,7 +78,7 @@ describe("ShoppingCartError", () => {
     const listItem = chickenItem.closest("li")!;
     const deleteButton = within(listItem).getByRole("button", { name: "삭제" });
 
-    fireEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
 
     expect(
       await screen.findByText("요청한 리소스를 찾을 수 없습니다."),
@@ -101,7 +102,7 @@ describe("ShoppingCartError", () => {
       name: "수량 증가",
     });
 
-    fireEvent.click(increaseButton);
+    await userEvent.click(increaseButton);
 
     expect(
       await screen.findByText("서버와 연결할 수 없습니다."),
@@ -135,7 +136,7 @@ describe("ShoppingCartError", () => {
       name: "수량 증가",
     });
 
-    fireEvent.click(increaseButton);
+    await userEvent.click(increaseButton);
 
     expect(
       await screen.findByText("수량은 1 이상 99 이하여야 합니다."),

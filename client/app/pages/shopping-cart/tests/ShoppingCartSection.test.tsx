@@ -2,10 +2,9 @@ import {
   render,
   screen,
   within,
-  fireEvent,
   waitFor,
-  waitForElementToBeRemoved,
 } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { describe, test, expect, beforeEach, afterEach } from "vitest";
 import { MemoryRouter } from "react-router";
@@ -86,7 +85,7 @@ describe("ShoppingCartSection", () => {
 
     expect(within(listItem).getByText("2")).toBeInTheDocument();
     expect(decreaseButton).not.toBeDisabled();
-    fireEvent.click(decreaseButton);
+    await userEvent.click(decreaseButton);
     await waitFor(() => {
       expect(within(listItem).getByText("1")).toBeInTheDocument();
       expect(decreaseButton).toBeDisabled();
@@ -138,7 +137,7 @@ describe("ShoppingCartSection", () => {
 
     expect(within(listItem).getByText("99")).toBeInTheDocument();
 
-    fireEvent.click(decreaseButton);
+    await userEvent.click(decreaseButton);
 
     await waitFor(() => {
       expect(within(listItem).getByText("99")).toBeInTheDocument();
@@ -156,9 +155,8 @@ describe("ShoppingCartSection", () => {
     const listItem = chickenItem.closest("li")!;
     const deleteButton = within(listItem).getByRole("button", { name: "삭제" });
 
-    fireEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
 
-    await waitForElementToBeRemoved(() => screen.queryByText("황금올리브"));
     expect(screen.queryByText("황금올리브")).not.toBeInTheDocument();
   });
 
@@ -175,8 +173,7 @@ describe("ShoppingCartSection", () => {
     const item = await screen.findByText("황금올리브");
     const listItem = item.closest("li")!;
     const deleteButton = within(listItem).getByRole("button", { name: "삭제" });
-    fireEvent.click(deleteButton);
-    await waitForElementToBeRemoved(() => screen.queryByText("황금올리브"));
+    await userEvent.click(deleteButton);
     const selectedItems = JSON.parse(
       localStorage.getItem("cart-selected-items") ?? "[]",
     );
@@ -192,13 +189,12 @@ describe("ShoppingCartSection", () => {
     );
 
     const firstItem = await screen.findByText("황금올리브");
-    fireEvent.click(
+    await userEvent.click(
       within(firstItem.closest("li")!).getByRole("button", { name: "삭제" }),
     );
-    await waitForElementToBeRemoved(() => screen.queryByText("황금올리브"));
 
     const secondItem = screen.getByText("황올반반 + 웨지감자");
-    fireEvent.click(
+    await userEvent.click(
       within(secondItem.closest("li")!).getByRole("button", { name: "삭제" }),
     );
 

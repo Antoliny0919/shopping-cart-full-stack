@@ -1,4 +1,5 @@
-import { render, screen, within, fireEvent } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { describe, test, expect, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router";
@@ -95,7 +96,7 @@ describe("ShoppingCartCheckbox", () => {
     const checkbox = listItem.querySelector(
       "input[type='checkbox']",
     ) as HTMLInputElement;
-    fireEvent.click(checkbox);
+    await userEvent.click(checkbox);
     const selectedItems = JSON.parse(
       localStorage.getItem("cart-selected-items") ?? "[]",
     );
@@ -125,7 +126,7 @@ describe("ShoppingCartCheckbox", () => {
     const checkbox = listItem.querySelector(
       "input[type='checkbox']",
     ) as HTMLInputElement;
-    fireEvent.click(checkbox);
+    await userEvent.click(checkbox);
     const selectedItems = JSON.parse(
       localStorage.getItem("cart-selected-items") ?? "[]",
     );
@@ -188,7 +189,7 @@ describe("ShoppingCartCheckbox", () => {
     );
     await screen.findByText("하겐다즈 말차");
     const allSelectCheckbox = screen.getByLabelText("전체선택");
-    fireEvent.click(allSelectCheckbox);
+    await userEvent.click(allSelectCheckbox);
     const item1Checkbox = screen
       .getByText("하겐다즈 말차")
       .closest("li")!
@@ -241,7 +242,7 @@ describe("ShoppingCartCheckbox", () => {
       .querySelector("input[type='checkbox']") as HTMLInputElement;
     expect(item1Checkbox).toBeChecked();
     expect(item2Checkbox).not.toBeChecked();
-    fireEvent.click(allSelectCheckbox);
+    await userEvent.click(allSelectCheckbox);
     expect(allSelectCheckbox).toBeChecked();
     expect(item1Checkbox.checked).toBe(true);
     expect(item2Checkbox.checked).toBe(true);
@@ -279,7 +280,7 @@ describe("ShoppingCartCheckbox", () => {
     );
     await screen.findByText("하겐다즈 말차");
     const allSelectCheckbox = screen.getByLabelText("전체선택");
-    fireEvent.click(allSelectCheckbox);
+    await userEvent.click(allSelectCheckbox);
     const item1Checkbox = screen
       .getByText("하겐다즈 말차")
       .closest("li")!
@@ -371,7 +372,7 @@ describe("ShoppingCartCheckbox", () => {
       .getByText("하겐다즈 스페셜")
       .closest("li")!
       .querySelector("input[type='checkbox']") as HTMLInputElement;
-    fireEvent.click(specialCheckbox);
+    await userEvent.click(specialCheckbox);
 
     expect(within(orderAmountRow).getByText("10,000원")).toBeInTheDocument();
   });
@@ -404,7 +405,7 @@ describe("ShoppingCartCheckbox", () => {
       .getByText("하겐다즈 말차")
       .closest("li")!
       .querySelector("input[type='checkbox']") as HTMLInputElement;
-    fireEvent.click(checkbox);
+    await userEvent.click(checkbox);
 
     expect(within(deliveryRow).getByText("3,000원")).toBeInTheDocument();
   });
