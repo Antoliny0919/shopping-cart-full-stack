@@ -4,12 +4,19 @@ import Checked from "../images/checked.svg?react";
 
 type CheckboxProps = React.ComponentPropsWithoutRef<"input"> & {
   labelText?: string;
+  checked: boolean;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export default function Checkbox({ labelText, checked, ...props }: CheckboxProps) {
+export default function Checkbox({
+  labelText,
+  checked,
+  onChange,
+  ...props
+}: CheckboxProps) {
   return (
     <CheckboxLabel>
-      <input type="checkbox" {...props} checked={checked} />
+      <input type="checkbox" {...props} onChange={onChange} checked={checked} />
       {checked ? <Checked /> : <UnChecked />}
       {labelText && <span>{labelText}</span>}
     </CheckboxLabel>
