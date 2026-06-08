@@ -1,5 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { BASE_URL } from "../../../constants";
+import { CartItemSerializer } from "./Serializer";
 import db from "./db";
 
 export const handlers = [
@@ -41,10 +42,27 @@ export const handlers = [
         { status: 404 },
       );
     }
-    db.cartItem.update({
-      where: { product_id: { equals: id as string } },
-      data: { quantity: quantity },
-    });
-    return HttpResponse.json({ quantity: quantity }, { status: 200 });
+    try {
+      CartItemSerializer.validate(quantity);
+      db.cartItem.update({
+        where: { product_id: { equals: id as string } },
+        data: { quantity: quantity },
+      });
+      return HttpResponse.json({ quantity: quantity }, { status: 200 });
+    } catch (err) {
+      if (err instanceof Error) {
+        return HttpResponse.json(
+          {
+            code: "BAD_REQUEST",
+            message: "요청 데이터가 유효하지 않습니다.",
+            errors: {
+              quantity: "INVALID_NUMBER_RANGE",
+              message: err.message,
+            },
+          },
+          { status: 400 },
+        );
+      }
+    }
   }),
 ];

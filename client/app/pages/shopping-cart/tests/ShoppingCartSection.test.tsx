@@ -87,6 +87,51 @@ describe("ShoppingCartSection", () => {
     expect(increaseButton).toBeDisabled();
   });
 
+  test("수량 업데이트를 시도했을때 에러가 발생하면 변경된 수량값을 다시 되돌린다.", async () => {
+    server.use(
+      http.get(`${BASE_URL}/api/cart/`, () => {
+        return HttpResponse.json([
+          {
+            product_id: "id-1",
+            quantity: 2,
+            product: { name: "크리스피 도넛", price: 2000, thumbnail: "" },
+          },
+        ]);
+      }),
+      http.patch(`${BASE_URL}/api/cart/items/:id/`, () => {
+        return HttpResponse.json(
+          {
+            errors: {
+              quantity: "SOME_ERROR_CODE",
+              message: "에러발생!",
+            },
+          },
+          { status: 400 },
+        );
+      }),
+    );
+
+    render(
+      <MemoryRouter>
+        <ShoppingCartSection />
+      </MemoryRouter>,
+    );
+
+    const chickenItem = await screen.findByText("크리스피 도넛");
+    const listItem = chickenItem.closest("li")!;
+    const decreaseButton = within(listItem).getByRole("button", {
+      name: "수량 감소",
+    });
+
+    expect(within(listItem).getByText("2")).toBeInTheDocument();
+
+    fireEvent.click(decreaseButton);
+
+    await waitFor(() => {
+      expect(within(listItem).getByText("2")).toBeInTheDocument();
+    });
+  });
+
   test("삭제 버튼을 클릭하면 해당 상품이 목록에서 사라진다", async () => {
     render(
       <MemoryRouter>

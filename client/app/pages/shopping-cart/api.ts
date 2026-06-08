@@ -20,6 +20,10 @@ export async function updateCartItem(id: string, body: { quantity: number }) {
     },
     body: JSON.stringify(body),
   });
+  if (!response.ok) {
+    const { errors } = await response.json();
+    throw new Error(errors.message);
+  }
   const data = await response.json();
   return data;
 }

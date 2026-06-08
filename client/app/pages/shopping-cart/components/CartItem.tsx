@@ -12,7 +12,7 @@ interface Props {
   thumbnail: string;
   quantity: number;
   checked: boolean;
-  updateItem: (itemId: string, body: { quantity: number }) => void;
+  updateItem: (itemId: string, body: { quantity: number }) => Promise<void>;
   removeItem: (itemId: string) => void;
   onChangeSelected: (checked: boolean, id: string) => void;
 }

@@ -4,7 +4,10 @@ import { FetchStatus } from "../../../commons/types";
 import { getCartItems, deleteCartItem, updateCartItem } from "../api";
 
 type RemoveCartItem = (itemId: string) => void;
-type UpdateCartItem = (imemId: string, body: { quantity: number }) => void;
+type UpdateCartItem = (
+  imemId: string,
+  body: { quantity: number },
+) => void | Promise<void>;
 
 export default function useCartItems() {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -27,13 +30,19 @@ export default function useCartItems() {
   };
 
   const updateItem: UpdateCartItem = async (itemId, body) => {
-    const data = await updateCartItem(itemId, body);
+    const original = items.find((item) => item.product_id === itemId);
     setItems((prev) =>
       prev.map((item) =>
-        item.product_id === itemId ? { ...item, ...data } : item,
+        item.product_id === itemId ? { ...item, ...body } : item,
       ),
     );
-    return data;
+    try {
+      await updateCartItem(itemId, body);
+    } catch {
+      setItems((prev) =>
+        prev.map((item) => (item.product_id === itemId ? original! : item)),
+      );
+    }
   };
 
   useEffect(function initialCartItems() {

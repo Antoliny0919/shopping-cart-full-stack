@@ -1,8 +1,4 @@
-const CART_ITEM_QUANTITY_RULE = {
-  MAX: 99,
-  MIN: 1,
-  STEP: 1,
-};
+import { CART_ITEM_QUANTITY_RULE } from "../constants";
 
 function useCartItemQuantity(
   quantity: number,
@@ -14,14 +10,16 @@ function useCartItemQuantity(
 
   function increase() {
     if (!canIncrease) return;
-    const newQuantity = quantity + CART_ITEM_QUANTITY_RULE.STEP;
-    updateItem(itemId, { quantity: newQuantity });
+    updateItem(itemId, {
+      quantity: quantity + CART_ITEM_QUANTITY_RULE.STEP,
+    });
   }
 
   function decrease() {
     if (!canDecrease) return;
-    const newQuantity = quantity - CART_ITEM_QUANTITY_RULE.STEP;
-    updateItem(itemId, { quantity: newQuantity });
+    updateItem(itemId, {
+      quantity: quantity - CART_ITEM_QUANTITY_RULE.STEP,
+    });
   }
 
   return { increase, decrease, canIncrease, canDecrease };
