@@ -10,7 +10,7 @@ interface Props {
   name: string;
   price: number;
   thumbnail: string;
-  initialQuantity: number;
+  quantity: number;
   checked: boolean;
   updateItem: (itemId: string, body: { quantity: number }) => void;
   removeItem: (itemId: string) => void;
@@ -22,14 +22,17 @@ export default function CartItem({
   name,
   price,
   thumbnail,
-  initialQuantity,
+  quantity,
   checked,
   updateItem,
   removeItem,
   onChangeSelected,
 }: Props) {
-  const { quantity, increase, decrease, canIncrease, canDecrease } =
-    useCartItemQuantity(initialQuantity, itemId, updateItem);
+  const { increase, decrease, canIncrease, canDecrease } = useCartItemQuantity(
+    quantity,
+    itemId,
+    updateItem,
+  );
 
   return (
     <CartItemLayout>

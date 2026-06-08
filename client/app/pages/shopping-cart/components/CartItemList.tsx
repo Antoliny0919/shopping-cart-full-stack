@@ -28,7 +28,7 @@ export default function CartItemList({
             name={product.name}
             price={product.price}
             thumbnail={product.thumbnail}
-            initialQuantity={quantity}
+            quantity={quantity}
             updateItem={updateItem}
             removeItem={removeItem}
             onChangeSelected={onChangeSelected}

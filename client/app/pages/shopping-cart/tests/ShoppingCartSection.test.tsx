@@ -3,6 +3,7 @@ import {
   screen,
   within,
   fireEvent,
+  waitFor,
   waitForElementToBeRemoved,
 } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
@@ -64,8 +65,10 @@ describe("ShoppingCartSection", () => {
     expect(within(listItem).getByText("2")).toBeInTheDocument();
     expect(decreaseButton).not.toBeDisabled();
     fireEvent.click(decreaseButton);
-    expect(within(listItem).getByText("1")).toBeInTheDocument();
-    expect(decreaseButton).toBeDisabled();
+    await waitFor(() => {
+      expect(within(listItem).getByText("1")).toBeInTheDocument();
+      expect(decreaseButton).toBeDisabled();
+    });
   });
 
   test("수량 증가 버튼은 특정 최대값에 도달했을때 버튼이 비활성화된다", async () => {
