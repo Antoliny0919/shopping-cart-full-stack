@@ -12,6 +12,7 @@ import { SelectedItemsLocalStorage } from "../storages/SelectedItemsStorage";
 import useCartItems from "../hooks/useCartItems";
 import useCartItemSelected from "../hooks/useCartItemSelected";
 import useError from "../hooks/useError";
+import NetworkError from "../../../commons/components/NetworkError";
 import Loading from "./Loading";
 import Toast from "../../../commons/components/Toast";
 import { useEffect, useEffectEvent } from "react";
@@ -141,7 +142,7 @@ export default function Section() {
           </Button>
         </>
       )}
-      {(fetchStatus === "error" || networkError) && <div>error..</div>}
+      {(fetchStatus === "error" || networkError) && <NetworkError />}
       {error && <Toast message={error} onClose={clearError} />}
     </SectionLayout>
   );
