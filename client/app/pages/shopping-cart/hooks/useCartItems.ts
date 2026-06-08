@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { CartItem } from "../types";
 import { FetchStatus } from "../../../commons/types";
 import { getCartItems, deleteCartItem, updateCartItem } from "../api";
-import { RemoveCartItem, UpdateCartItem } from "../types";
+
+type RemoveCartItem = (itemId: string) => void;
+type UpdateCartItem = (imemId: string, body: { quantity: number }) => void;
 
 export default function useCartItems() {
   const [items, setItems] = useState<CartItem[]>([]);

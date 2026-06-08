@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { SelectedItemStorage } from "../storages/SelectedItemsStorage";
+import { SelectedItemsStorage } from "../storages/SelectedItemsStorage";
 
-export default function useCartItemSelected(storage: SelectedItemStorage) {
+export default function useCartItemSelected(storage: SelectedItemsStorage) {
   const [selectedItemId, setSelectedItemId] = useState<string[] | null>(() => {
     if (typeof window === "undefined") return null;
     return storage.get();

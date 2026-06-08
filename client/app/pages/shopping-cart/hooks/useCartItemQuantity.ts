@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { CartItemsProps } from "../types";
 
 const CART_ITEM_QUANTITY_RULE = {
   MAX: 99,
@@ -10,7 +9,7 @@ const CART_ITEM_QUANTITY_RULE = {
 function useCartItemQuantity(
   initialQuantity: number,
   itemId: string,
-  updateItem: CartItemsProps["updateItem"],
+  updateItem: (itemId: string, body: { quantity: number }) => void,
 ) {
   const [quantity, setQuantity] = useState(initialQuantity);
 
