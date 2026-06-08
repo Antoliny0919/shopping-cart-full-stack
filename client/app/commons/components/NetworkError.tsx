@@ -6,11 +6,8 @@ export default function NetworkError() {
     <Wrapper>
       <Image src={networkErrorImage} alt="네트워크 에러" />
       <Title>네트워크 연결 오류</Title>
-      <Description>
-        서버와 연결할 수 없습니다.
-        <br />
-        인터넷 연결을 확인하고 다시 시도해 주세요.
-      </Description>
+      <Description>서버와 연결할 수 없습니다.</Description>
+      <SubDescription>인터넷 연결을 확인하고 다시 시도해 주세요.</SubDescription>
     </Wrapper>
   );
 }
@@ -38,6 +35,13 @@ const Title = styled.h2`
 `;
 
 const Description = styled.p`
+  font-size: 0.9rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+`;
+
+const SubDescription = styled.p`
   font-size: 0.9rem;
   color: #6b7280;
   line-height: 1.6;

@@ -1,14 +1,21 @@
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
-import { describe, test, expect, beforeEach } from "vitest";
+import { describe, test, expect, beforeEach, afterEach } from "vitest";
 import { MemoryRouter } from "react-router";
 import { server } from "../../../../rtl-setup";
 import { BASE_URL } from "../../../constants";
 import ShoppingCartSection from "../components/Section";
+import { drop } from "@mswjs/data";
+import db, { seedDb } from "../mocks/db";
 
 describe("ShoppingCartError", () => {
   beforeEach(() => {
     localStorage.clear();
+    seedDb();
+  });
+
+  afterEach(() => {
+    drop(db);
   });
 
   test("첫 데이터 로딩 중 네트워크 에러가 발생하면 에러 UI가 표시된다.", async () => {
@@ -20,7 +27,9 @@ describe("ShoppingCartError", () => {
       </MemoryRouter>,
     );
 
-    expect(await screen.findByText("error..")).toBeInTheDocument();
+    expect(
+      await screen.findByText("서버와 연결할 수 없습니다."),
+    ).toBeInTheDocument();
     expect(screen.queryByText("장바구니")).not.toBeInTheDocument();
   });
 
@@ -43,7 +52,9 @@ describe("ShoppingCartError", () => {
 
     fireEvent.click(deleteButton);
 
-    expect(await screen.findByText("error..")).toBeInTheDocument();
+    expect(
+      await screen.findByText("서버와 연결할 수 없습니다."),
+    ).toBeInTheDocument();
   });
 
   test("삭제시 서버 에러가 발생하면 Toast에 에러 메시지가 표시된다.", async () => {
@@ -92,7 +103,9 @@ describe("ShoppingCartError", () => {
 
     fireEvent.click(increaseButton);
 
-    expect(await screen.findByText("error..")).toBeInTheDocument();
+    expect(
+      await screen.findByText("서버와 연결할 수 없습니다."),
+    ).toBeInTheDocument();
   });
 
   test("수량 업데이트시 서버 에러가 발생하면 Toast에 에러 메시지가 표시된다.", async () => {
