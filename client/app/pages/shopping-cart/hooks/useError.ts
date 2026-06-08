@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NetworkError } from "../api";
+import { NetworkError } from "../../../commons/errors";
 
 export default function useError() {
   const [networkError, setNetworkError] = useState(false);
