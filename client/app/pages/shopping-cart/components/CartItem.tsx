@@ -50,7 +50,7 @@ export default function CartItem({
           <img
             className="thumbnail"
             src={`${import.meta.env.VITE_API_BASE_URL}${product.thumbnail}`}
-            alt="상품 이미지"
+            alt={`${product.name} 상품 이미지`}
           />
           <Info>
             <p className="name">{product.name}</p>

@@ -45,7 +45,7 @@ describe("CartPricing Tests", () => {
     expect(smallCart.delivery).toBe(3000);
   });
 
-  test("총금액과 배달비를 차감한 금액을 반환한다.", () => {
+  test("최종비용을 계산하여 반환한다.", () => {
     expect(bigCart.grandTotal).toBe(225000);
     expect(smallCart.grandTotal).toBe(3500);
   });

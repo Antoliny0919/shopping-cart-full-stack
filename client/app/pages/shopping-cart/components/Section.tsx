@@ -15,7 +15,7 @@ import useError from "../hooks/useError";
 import NetworkError from "../../../commons/components/NetworkError";
 import Loading from "./Loading";
 import Toast from "../../../commons/components/Toast";
-import { useEffect, useEffectEvent } from "react";
+import { useEffect, useEffectEvent, useMemo } from "react";
 
 export default function Section() {
   const navigate = useNavigate();
@@ -37,8 +37,14 @@ export default function Section() {
 
   const { networkError, error, handleError, clearError } = useError();
 
-  const cartManager = new CartManager(selectedItemId, cartItems);
-  const summary = new CartSummary(cartManager.selectedCartItems, CartPricing);
+  const cartManager = useMemo(
+    () => new CartManager(selectedItemId, cartItems),
+    [selectedItemId, cartItems],
+  );
+  const summary = useMemo(
+    () => new CartSummary(cartManager.selectedCartItems, CartPricing),
+    [cartManager.selectedCartItems],
+  );
 
   const onUpdateQuantity = async (
     itemId: string,
