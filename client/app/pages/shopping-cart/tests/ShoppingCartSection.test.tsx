@@ -7,15 +7,37 @@ import {
   waitForElementToBeRemoved,
 } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
-import { describe, test, expect, beforeEach } from "vitest";
+import { describe, test, expect, beforeEach, afterEach } from "vitest";
 import { MemoryRouter } from "react-router";
 import { server } from "../../../../rtl-setup";
 import { BASE_URL } from "../../../constants";
 import ShoppingCartSection from "../components/Section";
+import { drop } from "@mswjs/data";
+import db, { seedDb } from "../mocks/db";
 
 describe("ShoppingCartSection", () => {
   beforeEach(() => {
     localStorage.clear();
+    seedDb([
+      {
+        product_id: "bbq-1",
+        quantity: 99,
+        product: { name: "황금올리브", price: 25000, thumbnail: "" },
+      },
+      {
+        product_id: "bbq-2",
+        quantity: 2,
+        product: {
+          name: "황올반반 + 웨지감자",
+          price: 30000,
+          thumbnail: "",
+        },
+      },
+    ]);
+  });
+
+  afterEach(() => {
+    drop(db);
   });
 
   test("서버에서 가져온 장바구니 상품이 화면에 표시된다", async () => {
@@ -25,8 +47,8 @@ describe("ShoppingCartSection", () => {
       </MemoryRouter>,
     );
 
-    expect(await screen.findByText("치킨")).toBeInTheDocument();
-    expect(await screen.findByText("피자")).toBeInTheDocument();
+    expect(await screen.findByText("황금올리브")).toBeInTheDocument();
+    expect(await screen.findByText("황올반반 + 웨지감자")).toBeInTheDocument();
   });
 
   test("장바구니가 비어있을때 다른 UI 가 렌더링 된다", async () => {
@@ -56,7 +78,7 @@ describe("ShoppingCartSection", () => {
       </MemoryRouter>,
     );
 
-    const chickenItem = await screen.findByText("치킨");
+    const chickenItem = await screen.findByText("황올반반 + 웨지감자");
     const listItem = chickenItem.closest("li")!;
     const decreaseButton = within(listItem).getByRole("button", {
       name: "수량 감소",
@@ -78,7 +100,7 @@ describe("ShoppingCartSection", () => {
       </MemoryRouter>,
     );
 
-    const pizzaItem = await screen.findByText("홈런볼");
+    const pizzaItem = await screen.findByText("황금올리브");
     const listItem = pizzaItem.closest("li")!;
     const increaseButton = within(listItem).getByRole("button", {
       name: "수량 증가",
@@ -87,17 +109,8 @@ describe("ShoppingCartSection", () => {
     expect(increaseButton).toBeDisabled();
   });
 
-  test("수량 업데이트를 시도했을때 에러가 발생하면 변경된 수량값을 다시 되돌린다.", async () => {
+  test("수량 업데이트를 시도했을때 에러가 발생하면 변경된 수량값을 다시 되돌린다", async () => {
     server.use(
-      http.get(`${BASE_URL}/api/cart/`, () => {
-        return HttpResponse.json([
-          {
-            product_id: "id-1",
-            quantity: 2,
-            product: { name: "크리스피 도넛", price: 2000, thumbnail: "" },
-          },
-        ]);
-      }),
       http.patch(`${BASE_URL}/api/cart/items/:id/`, () => {
         return HttpResponse.json(
           {
@@ -117,18 +130,18 @@ describe("ShoppingCartSection", () => {
       </MemoryRouter>,
     );
 
-    const chickenItem = await screen.findByText("크리스피 도넛");
+    const chickenItem = await screen.findByText("황금올리브");
     const listItem = chickenItem.closest("li")!;
     const decreaseButton = within(listItem).getByRole("button", {
       name: "수량 감소",
     });
 
-    expect(within(listItem).getByText("2")).toBeInTheDocument();
+    expect(within(listItem).getByText("99")).toBeInTheDocument();
 
     fireEvent.click(decreaseButton);
 
     await waitFor(() => {
-      expect(within(listItem).getByText("2")).toBeInTheDocument();
+      expect(within(listItem).getByText("99")).toBeInTheDocument();
     });
   });
 
@@ -139,40 +152,20 @@ describe("ShoppingCartSection", () => {
       </MemoryRouter>,
     );
 
-    const chickenItem = await screen.findByText("치킨");
+    const chickenItem = await screen.findByText("황금올리브");
     const listItem = chickenItem.closest("li")!;
     const deleteButton = within(listItem).getByRole("button", { name: "삭제" });
 
     fireEvent.click(deleteButton);
 
-    await waitForElementToBeRemoved(() => screen.queryByText("치킨"));
-    expect(screen.queryByText("치킨")).not.toBeInTheDocument();
+    await waitForElementToBeRemoved(() => screen.queryByText("황금올리브"));
+    expect(screen.queryByText("황금올리브")).not.toBeInTheDocument();
   });
 
-  test("삭제 버튼을 클랙하면 해당 상품의 ID가 로컬스토리지에서 제거된다.", async () => {
+  test("삭제 버튼을 클랙하면 해당 상품의 ID가 로컬스토리지에서 제거된다", async () => {
     const existingItems = ["bbq-1", "bbq-2"];
     localStorage.setItem("cart-selected-items", JSON.stringify(existingItems));
 
-    server.use(
-      http.get(`${BASE_URL}/api/cart/`, () =>
-        HttpResponse.json([
-          {
-            product_id: "bbq-1",
-            quantity: 1,
-            product: { name: "황금올리브", price: 25000, thumbnail: "" },
-          },
-          {
-            product_id: "bbq-2",
-            quantity: 2,
-            product: {
-              name: "황올반반 + 웨지감자",
-              price: 30000,
-              thumbnail: "",
-            },
-          },
-        ]),
-      ),
-    );
     render(
       <MemoryRouter>
         <ShoppingCartSection />
@@ -182,7 +175,6 @@ describe("ShoppingCartSection", () => {
     const item = await screen.findByText("황금올리브");
     const listItem = item.closest("li")!;
     const deleteButton = within(listItem).getByRole("button", { name: "삭제" });
-
     fireEvent.click(deleteButton);
     await waitForElementToBeRemoved(() => screen.queryByText("황금올리브"));
     const selectedItems = JSON.parse(
@@ -192,36 +184,23 @@ describe("ShoppingCartSection", () => {
     expect(selectedItems).toEqual(["bbq-2"]);
   });
 
-  test("상품이 전부 삭제되었을때 상품이 없을때의 UI가 렌더링 된다.", async () => {
-    let getCallCount = 0;
-    server.use(
-      // 최초에만 하나의 값이 반환되도록 한다.
-      http.get(`${BASE_URL}/api/cart/`, () => {
-        getCallCount++;
-        if (getCallCount === 1) {
-          return HttpResponse.json([
-            {
-              product_id: "test-id",
-              quantity: 1,
-              product: { name: "뿌링클", price: 25000, thumbnail: "" },
-            },
-          ]);
-        }
-        return HttpResponse.json([]);
-      }),
-    );
-
+  test("상품이 전부 삭제되었을때 상품이 없을때의 UI가 렌더링 된다", async () => {
     render(
       <MemoryRouter>
         <ShoppingCartSection />
       </MemoryRouter>,
     );
 
-    const chickenItem = await screen.findByText("뿌링클");
-    const listItem = chickenItem.closest("li")!;
-    const deleteButton = within(listItem).getByRole("button", { name: "삭제" });
+    const firstItem = await screen.findByText("황금올리브");
+    fireEvent.click(
+      within(firstItem.closest("li")!).getByRole("button", { name: "삭제" }),
+    );
+    await waitForElementToBeRemoved(() => screen.queryByText("황금올리브"));
 
-    fireEvent.click(deleteButton);
+    const secondItem = screen.getByText("황올반반 + 웨지감자");
+    fireEvent.click(
+      within(secondItem.closest("li")!).getByRole("button", { name: "삭제" }),
+    );
 
     expect(
       await screen.findByText("장바구니에 담은 상품이 없습니다."),
