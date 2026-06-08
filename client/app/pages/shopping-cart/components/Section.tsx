@@ -35,6 +35,12 @@ export default function Section() {
   const cartManager = new CartManager(selectedItemId, cartItems);
   const summary = new CartSummary(cartManager.selectedCartItems, CartPricing);
 
+  const onDelete = (itemId: string) => {
+    removeItem(itemId);
+    // 아이템이 선택된 상태로 제거되면 선택상태또한 제거됩니다.
+    onChangeSelected(false, itemId);
+  };
+
   const goToOrderCheckPage = () => {
     navigate("/cart/check/", {
       state: {
@@ -83,7 +89,7 @@ export default function Section() {
               <CartItemList
                 cartItems={cartItems}
                 updateItem={updateItem}
-                removeItem={removeItem}
+                onDelete={onDelete}
                 onChangeSelected={onChangeSelected}
                 selectedItemId={selectedItemId}
               />

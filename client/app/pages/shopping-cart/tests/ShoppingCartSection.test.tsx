@@ -149,6 +149,49 @@ describe("ShoppingCartSection", () => {
     expect(screen.queryByText("치킨")).not.toBeInTheDocument();
   });
 
+  test("삭제 버튼을 클랙하면 해당 상품의 ID가 로컬스토리지에서 제거된다.", async () => {
+    const existingItems = ["bbq-1", "bbq-2"];
+    localStorage.setItem("cart-selected-items", JSON.stringify(existingItems));
+
+    server.use(
+      http.get(`${BASE_URL}/api/cart/`, () =>
+        HttpResponse.json([
+          {
+            product_id: "bbq-1",
+            quantity: 1,
+            product: { name: "황금올리브", price: 25000, thumbnail: "" },
+          },
+          {
+            product_id: "bbq-2",
+            quantity: 2,
+            product: {
+              name: "황올반반 + 웨지감자",
+              price: 30000,
+              thumbnail: "",
+            },
+          },
+        ]),
+      ),
+    );
+    render(
+      <MemoryRouter>
+        <ShoppingCartSection />
+      </MemoryRouter>,
+    );
+
+    const item = await screen.findByText("황금올리브");
+    const listItem = item.closest("li")!;
+    const deleteButton = within(listItem).getByRole("button", { name: "삭제" });
+
+    fireEvent.click(deleteButton);
+    await waitForElementToBeRemoved(() => screen.queryByText("황금올리브"));
+    const selectedItems = JSON.parse(
+      localStorage.getItem("cart-selected-items") ?? "[]",
+    );
+
+    expect(selectedItems).toEqual(["bbq-2"]);
+  });
+
   test("상품이 전부 삭제되었을때 상품이 없을때의 UI가 렌더링 된다.", async () => {
     let getCallCount = 0;
     server.use(
