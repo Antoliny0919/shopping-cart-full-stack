@@ -20,17 +20,6 @@ export default function useCartItems() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [fetchStatus, setFetchStatus] = useState<FetchStatus>("idle");
 
-  const getItems = async () => {
-    setFetchStatus("loading");
-    try {
-      const data = await getCartItems();
-      setItems(data);
-      setFetchStatus("success");
-    } catch {
-      setFetchStatus("error");
-    }
-  };
-
   const removeItem: RemoveCartItem = async (itemId) => {
     try {
       await deleteCartItem(itemId);
@@ -60,8 +49,17 @@ export default function useCartItems() {
   };
 
   useEffect(function initialCartItems() {
-    getItems();
-    return;
+    async function fetchItems() {
+      setFetchStatus("loading");
+      try {
+        const data = await getCartItems();
+        setItems(data);
+        setFetchStatus("success");
+      } catch {
+        setFetchStatus("error");
+      }
+    }
+    fetchItems();
   }, []);
 
   return {

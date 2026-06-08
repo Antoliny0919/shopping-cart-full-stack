@@ -3,7 +3,7 @@ import CartSummary from "../domain/CartSummary";
 import { CartItem } from "../types";
 
 class StubPricing {
-  constructor(_items: CartItem[]) {}
+  constructor(_: CartItem[]) {}
   get total() {
     return 999;
   }

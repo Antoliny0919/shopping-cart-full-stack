@@ -141,7 +141,7 @@ export default function Section() {
             </EmptyCart>
           )}
           <Button
-            disabled={!Boolean(summary.totalItems)}
+            disabled={!summary.totalItems}
             onClick={goToOrderCheckPage}
           >
             주문 확인
