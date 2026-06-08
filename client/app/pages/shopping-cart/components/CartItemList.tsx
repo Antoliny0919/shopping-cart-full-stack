@@ -28,9 +28,7 @@ export default function CartItemList({
             key={product_id}
             itemId={product_id}
             checked={selectedItemId?.includes(product_id) ?? false}
-            name={product.name}
-            price={product.price}
-            thumbnail={product.thumbnail}
+            product={product}
             quantity={quantity}
             onUpdateQuantity={onUpdateQuantity}
             onDeleteItem={onDeleteItem}

@@ -3,15 +3,14 @@ import Minus from "../../../commons/images/minus.svg?react";
 import Plus from "../../../commons/images/plus.svg?react";
 import { formatToKoreanPrice } from "../../../commons/utils";
 import useCartItemQuantity from "../hooks/useCartItemQuantity";
+import { Product } from "../types";
 import Checkbox from "../../../commons/components/Checkbox";
 
 interface Props {
   itemId: string;
-  name: string;
-  price: number;
-  thumbnail: string;
   quantity: number;
   checked: boolean;
+  product: Product;
   onUpdateQuantity: (
     itemId: string,
     body: { quantity: number },
@@ -22,11 +21,9 @@ interface Props {
 
 export default function CartItem({
   itemId,
-  name,
-  price,
-  thumbnail,
   quantity,
   checked,
+  product,
   onUpdateQuantity,
   onDeleteItem,
   onChangeSelected,
@@ -52,12 +49,12 @@ export default function CartItem({
         <Content>
           <img
             className="thumbnail"
-            src={`${import.meta.env.VITE_API_BASE_URL}${thumbnail}`}
+            src={`${import.meta.env.VITE_API_BASE_URL}${product.thumbnail}`}
             alt="상품 이미지"
           />
           <Info>
-            <p className="name">{name}</p>
-            <p className="price">{formatToKoreanPrice(price)}</p>
+            <p className="name">{product.name}</p>
+            <p className="price">{formatToKoreanPrice(product.price)}</p>
             <Quantity>
               <button
                 type="button"
