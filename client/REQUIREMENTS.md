@@ -1,0 +1,43 @@
+## 기능 요구 사항
+
+- [x] API 호출
+  - [x] 장바구니내 아이템 리스트를 가져온다.
+  - [x] 장바구니내 아이템 수량을 수정한다.
+  - [x] 장바구니내 아이템을 제거한다.
+
+- [] 상태
+  - [x] 상품
+  - [] 선택된 상품(상품 id)
+  - [x] 결제 금액(파생 -> 선택된 상품)
+  - [x] 배송비(파생 -> 선택된 상품)
+
+- [] API 상태
+  - [x] idle | loading | success | error
+  - [] 에러시 사용자에게 보여준다
+  - [x] 스켈레톤 UI
+
+- [x] 로컬스토리지
+  - [x] 선택된 상품을 로컬스토리지에 저장한다.
+
+- [x] 새로고침
+  - [x] 새로고침 시에도 선택된 상품은 유지되어야 한다. (useEffect of useSyncExternalStore, 부모/자식 컴포넌트 렌더링, 초기값 localStorage로부터)
+
+- [x] 컴포넌트
+  - [x] ShoppingCartPage
+    - [x] ShoppingCartNavigation
+    - [x] ShoppingCartSection
+    - [x] CartItemList
+    - [x] CartItem
+    - [x] OrderCheckButton
+  - [x] OrderCheckPage
+    - [x] OrderCheckNavigation
+    - [x] OrderCheckSection
+    - [x] OrderSubmitButton
+
+- [x] 라이브러리
+  - [x] Storybook
+  - [x] MSW
+  - [x] RTL
+  - [x] Jest -> Vitest
+  - [x] React-Router
+  - [x] Emotion
