@@ -6,7 +6,8 @@ import { mutate } from "../../../commons/utils";
 
 export default function useCartItems() {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [fetchStatus, setFetchStatus] = useState<FetchStatus>("idle");
+  const [initialLoadStatus, setInitialLoadStatus] =
+    useState<FetchStatus>("idle");
 
   async function removeItem(
     itemId: string,
@@ -43,13 +44,13 @@ export default function useCartItems() {
 
   useEffect(function initialCartItems() {
     async function fetchItems() {
-      setFetchStatus("loading");
+      setInitialLoadStatus("loading");
       try {
         const data = await getCartItems();
         setItems(data);
-        setFetchStatus("success");
+        setInitialLoadStatus("success");
       } catch {
-        setFetchStatus("error");
+        setInitialLoadStatus("error");
       }
     }
     fetchItems();
@@ -57,7 +58,7 @@ export default function useCartItems() {
 
   return {
     items,
-    fetchStatus,
+    initialLoadStatus,
     removeItem,
     updateItem,
   };

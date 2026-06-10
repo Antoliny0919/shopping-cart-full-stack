@@ -23,7 +23,7 @@ export default function Section() {
 
   const {
     items: cartItems,
-    fetchStatus,
+    initialLoadStatus,
     removeItem,
     updateItem,
   } = useCartItems();
@@ -91,17 +91,17 @@ export default function Section() {
 
   useEffect(
     function isFirstVisit() {
-      if (fetchStatus === "success") {
+      if (initialLoadStatus === "success") {
         allSelect();
       }
     },
-    [fetchStatus],
+    [initialLoadStatus],
   );
 
   return (
     <SectionLayout>
-      {fetchStatus === "loading" && <Loading />}
-      {fetchStatus === "success" && (
+      {initialLoadStatus === "loading" && <Loading />}
+      {initialLoadStatus === "success" && (
         <>
           <Header>
             <Title>장바구니</Title>
@@ -148,7 +148,7 @@ export default function Section() {
           </Button>
         </>
       )}
-      {(fetchStatus === "error" || networkError) && <NetworkError />}
+      {(initialLoadStatus === "error" || networkError) && <NetworkError />}
       {error && <Toast message={error} onClose={clearError} />}
     </SectionLayout>
   );
