@@ -1,31 +1,28 @@
 import styled from "@emotion/styled";
 import { formatToKoreanPrice } from "../../../commons/utils";
+import { PriceSummary } from "../domain/CartPricing";
 
 export default function OrderSummary({
-  total,
-  delivery,
-  grandTotal,
+  orderSummary,
 }: {
-  total: number;
-  delivery: number;
-  grandTotal: number;
+  orderSummary: PriceSummary;
 }) {
   return (
     <OrderSummaryContainer>
       <ShoppingCartOrderSummaryList>
         <div className="receipt-item">
           <dt>주문 금액</dt>
-          <dd>{formatToKoreanPrice(total)}</dd>
+          <dd>{formatToKoreanPrice(orderSummary.price)}</dd>
         </div>
         <div className="receipt-item">
           <dt>배송비</dt>
-          <dd>{formatToKoreanPrice(delivery)}</dd>
+          <dd>{formatToKoreanPrice(orderSummary.delivery)}</dd>
         </div>
       </ShoppingCartOrderSummaryList>
       <ShoppingCartOrderSummaryResult>
         <div className="receipt-item">
           <dt>총 결제 금액</dt>
-          <dd>{formatToKoreanPrice(grandTotal)}</dd>
+          <dd>{formatToKoreanPrice(orderSummary.totalPrice)}</dd>
         </div>
       </ShoppingCartOrderSummaryResult>
     </OrderSummaryContainer>

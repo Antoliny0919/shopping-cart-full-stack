@@ -4,9 +4,10 @@ import Info from "../../../commons/images/info.svg?react";
 import Checkbox from "../../../commons/components/Checkbox";
 import CartItemList from "./CartItemList";
 import OrderSummary from "./OrderSummary";
-import CartSummary from "../domain/CartSummary";
-import CartManager from "../domain/CartManager";
-import { CartPricing } from "../domain/CartPricing";
+import Cart from "../domain/Cart";
+import CartPricing from "../domain/CartPricing";
+import DeliveryFee from "../domain/DeliveryFee";
+import { FREE_THRESHOLD, DELIVERY_FEE } from "../constants";
 import { Button } from "../../../commons/styles/Button";
 import { SelectedItemsLocalStorage } from "../storages/SelectedItemsStorage";
 import useCartItems from "../hooks/useCartItems";
@@ -37,14 +38,15 @@ export default function Section() {
 
   const { networkError, error, handleError, clearError } = useError();
 
-  const cartManager = useMemo(
-    () => new CartManager(selectedItemId, cartItems),
+  const cart = useMemo(
+    () => new Cart(cartItems, selectedItemId),
     [selectedItemId, cartItems],
   );
-  const summary = useMemo(
-    () => new CartSummary(cartManager.selectedCartItems, CartPricing),
-    [cartManager.selectedCartItems],
+  const cartPricing = useMemo(
+    () => new CartPricing(cart, new DeliveryFee(DELIVERY_FEE, FREE_THRESHOLD)),
+    [cart],
   );
+  const priceSummary = cartPricing.calculatePriceSummary();
 
   const onUpdateQuantity = async (
     itemId: string,
@@ -76,9 +78,9 @@ export default function Section() {
   const goToOrderCheckPage = () => {
     navigate("/cart/check/", {
       state: {
-        totalItems: summary.totalItems,
-        totalQuantity: summary.totalQuantity,
-        totalPrice: summary.grandTotal,
+        totalItems: cart.selectedItemCount(),
+        totalQuantity: cart.selectedItemTotalQuantity(),
+        totalPrice: priceSummary.totalPrice,
       },
     });
   };
@@ -114,9 +116,11 @@ export default function Section() {
           {cartItems.length ? (
             <>
               <Checkbox
-                checked={cartManager.allItemsSelected}
+                checked={cart.isItemAllSelected()}
                 labelText={"전체선택"}
-                onChange={() => onChangeAllSelected(cartManager.allItemsId)}
+                onChange={() =>
+                  onChangeAllSelected(cartItems.map((item) => item.product_id))
+                }
               ></Checkbox>
               <CartItemList
                 cartItems={cartItems}
@@ -130,9 +134,7 @@ export default function Section() {
                 무료 배송됩니다.
               </SubText>
               <OrderSummary
-                total={summary.total}
-                delivery={summary.delivery}
-                grandTotal={summary.grandTotal}
+                orderSummary={cartPricing.calculatePriceSummary()}
               />
             </>
           ) : (
@@ -141,7 +143,7 @@ export default function Section() {
             </EmptyCart>
           )}
           <Button
-            disabled={!summary.totalItems}
+            disabled={!cart.selectedItemCount()}
             onClick={goToOrderCheckPage}
           >
             주문 확인
