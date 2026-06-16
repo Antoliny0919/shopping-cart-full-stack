@@ -164,7 +164,10 @@ describe("카트 API 테스트", () => {
     productRepository,
     cartRepository,
   });
-  const cartController = createCartController({ cartRepository, productRepository });
+  const cartController = createCartController({
+    cartRepository,
+    productRepository,
+  });
   const app = createApp({ productController, cartController });
   const cart = cartRepository.get();
 
@@ -236,6 +239,131 @@ describe("카트 API 테스트", () => {
     expect(res.body).toEqual({
       code: "RESOURCE_NOT_FOUND",
       message: "요청한 리소스를 찾을 수 없습니다.",
+    });
+  });
+});
+
+describe("임시 주문서 API 테스트", () => {
+  const tempOrderRepository = new InMemoryTempOrderRepository();
+  const tempOrderController = createTempOrderController({
+    tempOrderRepository,
+  });
+  const app = createApp({ tempOrderController });
+  const tempOrder = new TempOrder({
+    products: [
+      { product_id: "777", quantity: 3 },
+      { product_id: "555", quantity: 10 },
+    ],
+  });
+
+  beforeEach(() => {
+    tempOrderRepository.save(tempOrder.getId(), tempOrder);
+  });
+
+  afterEach(() => {
+    tempOrderRepository.clearAll();
+  });
+
+  test("임시 주문서를 생성한다.", async () => {
+    const res = await request(app)
+      .post("/api/orders/")
+      .send([
+        { product_id: "123", quantity: 2 },
+        { product_id: "456", quantity: 5 },
+      ])
+      .set("Accept", "application/json");
+    res.body.id = "fixed id";
+    expect(res.status).toBe(201);
+    expect(res.body).toEqual({ order_id: "fixed id" });
+    const tempOrder = tempOrderRepository.findAll();
+    expect(tempOrder.length).toBe(1);
+  });
+
+  test("특정 임시 주문서를 가져온다.", async () => {
+    const res = await request(app).get(`/api/orders/${tempOrder.id}/`);
+    expect(res.status).toBe(200);
+    res.body.selected_coupons = ["SOME_COUPON1", "SOME_COUPON2"];
+    res.body.price_summary = {
+      order_price: 30500,
+      discout_price: 6000,
+      delivery_price: 3000,
+      total_price: 21500,
+    };
+    expect(res.body).toEqual({
+      id: tempOrder.id,
+      hard_delivery_place: false,
+      selected_coupons: ["SOME_COUPON1", "SOME_COUPON2"],
+      selected_items: [
+        {
+          product_id: "123",
+          quantity: 2,
+          product: {
+            name: "투썸 아이스크림",
+            price: 4000,
+            thumbnail: "ice.png",
+          },
+        },
+        {
+          product_id: "456",
+          quantity: 5,
+          product: {
+            name: "투썸 초코 아이스크림",
+            price: 4500,
+            thumbnail: "ice-choco.png",
+          },
+        },
+      ],
+      price_summary: {
+        order_price: 30500,
+        discout_price: 6000,
+        delivery_price: 3000,
+        total_price: 21500,
+      },
+    });
+  });
+
+  test("특정 임시 주문서를 수정한다.", async () => {
+    const res = await request(app)
+      .patch(`/api/orders/${tempOrder.id}/`)
+      .send({ seelcted_coupons: ["FREESHIPPING, MIRACLESALE"] })
+      .set("Accept", "application/json");
+    expect(res.status).toBe(201);
+    res.body.price_summary = {
+      order_price: 30500,
+      discount_price: 4000,
+      delivery_price: 0,
+      total_price: 26500,
+    };
+    expect(res.body).toEqual({
+      id: tempOrder.id,
+      hard_delivery_place: false,
+      selected_coupons: ["FREESHIPPING, MIRACLESALE"],
+      selected_items: [
+        {
+          product_id: "123",
+          quantity: 2,
+          product: {
+            name: "투썸 아이스크림",
+            price: 4000,
+            thumbnail: "ice.png",
+          },
+        },
+        {
+          product_id: "456",
+          quantity: 5,
+          product: {
+            name: "투썸 초코 아이스크림",
+            price: 4500,
+            thumbnail: "ice-choco.png",
+          },
+        },
+      ],
+      price_summary: {
+        order_price: 30500,
+        discout_price: 4000,
+        delivery_price: 0,
+        total_price: 26500,
+      },
     });
   });
 });
