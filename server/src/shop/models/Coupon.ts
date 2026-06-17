@@ -1,6 +1,6 @@
 import { DiscountPolicy } from "./DiscountPolicy.js";
 
-abstract class Coupon {
+export abstract class Coupon {
   private readonly policies: DiscountPolicy[];
 
   constructor(policies: DiscountPolicy[]) {

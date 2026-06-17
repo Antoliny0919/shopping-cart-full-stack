@@ -1,6 +1,7 @@
 import Cart from "../models/Cart.js";
 import Product from "../models/Product.js";
 import TempOrder from "../models/TempOrder.js";
+import { Coupon } from "../models/Coupon.js";
 
 export interface CartRepository {
   get: () => Cart;
@@ -19,6 +20,10 @@ export interface ProductRepository {
 export interface TempOrderRepository {
   save: (id: string, obj: TempOrder) => void;
   findAll: () => TempOrder[];
+}
+
+export interface CouponRepository {
+  save: (id: string, obj: Coupon) => void;
 }
 
 export class InMemoryCartRepository implements CartRepository {
@@ -70,5 +75,13 @@ export class InMemoryTempOrderRepository implements TempOrderRepository {
 
   findAll() {
     return [...this.tempOrders.values()];
+  }
+}
+
+export class InMemoryCouponRepository implements CouponRepository {
+  private coupons = new Map<string, Coupon>();
+
+  save(id: string, obj: Coupon) {
+    this.coupons.set(id, obj);
   }
 }
