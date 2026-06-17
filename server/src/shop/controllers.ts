@@ -4,6 +4,7 @@ import Product from "./models/Product.js";
 import TempOrder from "./models/TempOrder.js";
 import {
   CartRepository,
+  CouponRepository,
   ProductRepository,
   TempOrderRepository,
 } from "./repositories/InMemoryRepositories.js";
@@ -126,9 +127,11 @@ export function createCartController({
 export function createTempOrderController({
   tempOrderRepository,
   productRepository,
+  couponRepository,
 }: {
   tempOrderRepository: TempOrderRepository;
   productRepository: ProductRepository;
+  couponRepository: CouponRepository;
 }): tempOrderController {
   return {
     post: (req, res, next) => {
@@ -142,6 +145,7 @@ export function createTempOrderController({
             };
           },
         );
+        const coupons = couponRepository.findAll();
         const tempOrder = new TempOrder(items);
         const id = tempOrder.getId();
         tempOrderRepository.save(id, tempOrder);
