@@ -45,7 +45,6 @@ export class BonusCoupon extends Coupon {
   }: {
     policies: DiscountPolicy[];
     bonusCount: number;
-    targetProductPrice: number;
   }) {
     super(policies);
     this.bonusCount = bonusCount;

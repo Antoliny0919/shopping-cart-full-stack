@@ -42,9 +42,9 @@ const seedData = {
   ],
   coupons: [
     new AmountDiscountCoupon({ policies: [], discountPrice: 5000 }),
-    // new BonusCoupon(),
-    // new FreeShippingCoupon(),
-    // new RateDiscountCoupon(),
+    new BonusCoupon({ policies: [], bonusCount: 1 }),
+    new FreeShippingCoupon({ policies: [] }),
+    new RateDiscountCoupon({ policies: [], discountRate: 30 }),
   ],
 };
 
