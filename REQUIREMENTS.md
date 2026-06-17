@@ -98,11 +98,13 @@
   - [] 주문서 생성
     - API POST /api/payment/
 
+- [] 임시 주문서
+
 - [] 쿠폰
-  - [] 5000원 할인 쿠폰(FIXED5000)
-  - [] 2+1 쿠폰(BOGO)
-  - [] 무료 배송 쿠폰(FREESHIPPING)
-  - [] 30% 시간제 할인 쿠폰(MIRACLESALE)
+  - [x] 5000원 할인 쿠폰(FIXED5000)
+  - [x] 2+1 쿠폰(BOGO)
+  - [x] 무료 배송 쿠폰(FREESHIPPING)
+  - [x] 30% 시간제 할인 쿠폰(MIRACLESALE)
   - [] 검증
     - [] 최대 2개 쿠폰 사용(수량제한)
     - [] 만료일
