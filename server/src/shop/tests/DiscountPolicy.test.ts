@@ -2,7 +2,7 @@ import {
   ExpireDateDiscountPolicy,
   HotTimeDiscountPolicy,
   MinimumOrderPriceDiscountPolicy,
-} from "../models/DiscountPolicy.js";
+} from "../models/DiscountCondition.js";
 
 describe("DiscountPolicy Tests", () => {
   describe("ExpireDateDiscountPolicy Tests", () => {

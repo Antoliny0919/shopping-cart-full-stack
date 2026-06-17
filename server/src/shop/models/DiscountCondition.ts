@@ -1,8 +1,8 @@
-export interface DiscountPolicy {
+export interface DiscountCondition {
   isAvailable: () => boolean;
 }
 
-export class ExpireDateDiscountPolicy implements DiscountPolicy {
+export class ExpireDateDiscountCondition implements DiscountCondition {
   private readonly expirationDate: Date;
 
   constructor(expirationDate: Date) {
@@ -14,10 +14,10 @@ export class ExpireDateDiscountPolicy implements DiscountPolicy {
   }
 }
 
-export class MinimumOrderPriceDiscountPolicy implements DiscountPolicy {
+export class MinimumOrderPriceDiscountCondition implements DiscountCondition {
   private readonly threshold: number;
 
-  constructor(threshold: number, orderPrice: number) {
+  constructor(threshold: number) {
     this.threshold = threshold;
   }
 
@@ -26,7 +26,7 @@ export class MinimumOrderPriceDiscountPolicy implements DiscountPolicy {
   }
 }
 
-export class HotTimeDiscountPolicy implements DiscountPolicy {
+export class HotTimeDiscountCondition implements DiscountCondition {
   private readonly startHour: number;
   private readonly endHour: number;
 

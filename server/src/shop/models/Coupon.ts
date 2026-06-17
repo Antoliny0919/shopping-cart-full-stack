@@ -1,15 +1,13 @@
-import { DiscountPolicy } from "./DiscountPolicy.js";
+import { DiscountCondition } from "./DiscountCondition.js";
+import TempOrder from "./TempOrder.js";
 
 export abstract class Coupon {
   private readonly id: string;
-  private readonly policies: DiscountPolicy[];
+  private readonly conditions: DiscountCondition[];
 
-  constructor(policies: DiscountPolicy[]) {
+  constructor(conditions: DiscountCondition[]) {
     this.id = crypto.randomUUID();
-    this.policies = policies;
-    if (!this.isAvailable()) {
-      throw new Error("사용할 수 없는 쿠폰입니다.");
-    }
+    this.conditions = conditions;
   }
 
   public getId() {
@@ -17,75 +15,78 @@ export abstract class Coupon {
   }
 
   private isAvailable() {
-    return this.policies.every((policy) => policy.isAvailable());
+    return this.conditions.every((policy) => policy.isAvailable());
   }
 
-  // abstract calculateDiscountPrice(): number;
+  abstract calculateDiscountPrice(tempOrder?: TempOrder): number;
 }
 
 export class AmountDiscountCoupon extends Coupon {
   private readonly discountPrice: number;
 
   constructor({
-    policies,
+    conditions,
     discountPrice,
   }: {
-    policies: DiscountPolicy[];
+    conditions: DiscountCondition[];
     discountPrice: number;
   }) {
-    super(policies);
+    super(conditions);
     this.discountPrice = discountPrice;
   }
 
-  // public calculateDiscountPrice() {
-  //   return this.discountPrice;
-  // }
+  public calculateDiscountPrice() {
+    return this.discountPrice;
+  }
 }
 
 export class BonusCoupon extends Coupon {
   private readonly bonusCount: number;
 
   constructor({
-    policies,
+    conditions,
     bonusCount,
   }: {
-    policies: DiscountPolicy[];
+    conditions: DiscountCondition[];
     bonusCount: number;
   }) {
-    super(policies);
+    super(conditions);
     this.bonusCount = bonusCount;
   }
 
-  // public calculateDiscountPrice(bonusProductPrice: number) {
-  //   return bonusProductPrice * this.bonusCount;
-  // }
+  public calculateDiscountPrice(tempOrder: TempOrder) {
+    // TODO: 가장 비싼 금액 + 2개 이상인 상품을 대상으로
+    return 10000 * this.bonusCount;
+  }
 }
 
 export class FreeShippingCoupon extends Coupon {
-  constructor({ policies }: { policies: DiscountPolicy[] }) {
-    super(policies);
+  constructor({ conditions }: { conditions: DiscountCondition[] }) {
+    super(conditions);
   }
 
-  // public calculateDiscountPrice(deliveryFee: number) {
-  //   return deliveryFee;
-  // }
+  public calculateDiscountPrice(tempOrder: TempOrder) {
+    // TODO: 주문서에 존재하는 배송비 기준
+    return 10000;
+  }
 }
 
 export class RateDiscountCoupon extends Coupon {
   private readonly discountRate: number;
 
   constructor({
-    policies,
+    conditions,
     discountRate,
   }: {
-    policies: DiscountPolicy[];
+    conditions: DiscountCondition[];
     discountRate: number;
   }) {
-    super(policies);
+    super(conditions);
     this.discountRate = discountRate;
   }
 
-  // public calculateDiscountPrice(price: number) {
-  //   return price * (this.discountRate / 100);
-  // }
+  public calculateDiscountPrice(tempOrder: TempOrder) {
+    // TODO: 주문서 총 가격 기준으로
+    return 10000 * (this.discountRate / 100);
+  }
 }

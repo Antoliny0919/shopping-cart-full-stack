@@ -4,7 +4,7 @@ import {
   FreeShippingCoupon,
   RateDiscountCoupon,
 } from "../models/Coupon.js";
-import { DiscountPolicy } from "../models/DiscountPolicy.js";
+import { DiscountPolicy } from "../models/DiscountCondition.js";
 
 describe("Coupon Test", () => {
   test("정책이 하나라도 허용되지 않으면 에러가 반환된다.", () => {

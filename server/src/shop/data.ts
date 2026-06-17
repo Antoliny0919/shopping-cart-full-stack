@@ -5,10 +5,10 @@ import {
   RateDiscountCoupon,
 } from "./models/Coupon.js";
 import {
-  ExpireDateDiscountPolicy,
-  MinimumOrderPriceDiscountPolicy,
-  HotTimeDiscountPolicy,
-} from "./models/DiscountPolicy.js";
+  ExpireDateDiscountCondition,
+  MinimumOrderPriceDiscountCondition,
+  HotTimeDiscountCondition,
+} from "./models/DiscountCondition.js";
 
 export const SEED_DATA = {
   products: [
@@ -29,26 +29,28 @@ export const SEED_DATA = {
   ],
   coupons: [
     new AmountDiscountCoupon({
-      policies: [
-        new ExpireDateDiscountPolicy(new Date("2026-11-30T23:59:59")),
-        new MinimumOrderPriceDiscountPolicy(100_000),
+      conditions: [
+        new ExpireDateDiscountCondition(new Date("2026-11-30T23:59:59")),
+        new MinimumOrderPriceDiscountCondition(100_000),
       ],
       discountPrice: 5000,
     }),
     new BonusCoupon({
-      policies: [new ExpireDateDiscountPolicy(new Date("2026-06-30T23:59:59"))],
+      conditions: [
+        new ExpireDateDiscountCondition(new Date("2026-06-30T23:59:59")),
+      ],
       bonusCount: 1,
     }),
     new FreeShippingCoupon({
-      policies: [
-        new ExpireDateDiscountPolicy(new Date("2026-08-31T23:59:59")),
-        new MinimumOrderPriceDiscountPolicy(50_000),
+      conditions: [
+        new ExpireDateDiscountCondition(new Date("2026-08-31T23:59:59")),
+        new MinimumOrderPriceDiscountCondition(50_000),
       ],
     }),
     new RateDiscountCoupon({
-      policies: [
-        new ExpireDateDiscountPolicy(new Date("2026-07-31T23:59:59")),
-        new HotTimeDiscountPolicy(4, 7),
+      conditions: [
+        new ExpireDateDiscountCondition(new Date("2026-07-31T23:59:59")),
+        new HotTimeDiscountCondition(4, 7),
       ],
       discountRate: 30,
     }),
