@@ -3,6 +3,7 @@ import { createApp } from "../../route.js";
 import {
   InMemoryCartRepository,
   InMemoryProductRepository,
+  InMemoryTempOrderRepository,
 } from "../repositories/InMemoryRepositories.js";
 import Product from "../models/Product.js";
 import request from "supertest";

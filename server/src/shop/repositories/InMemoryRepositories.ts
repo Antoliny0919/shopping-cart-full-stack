@@ -1,5 +1,6 @@
 import Cart from "../models/Cart.js";
 import Product from "../models/Product.js";
+import TempOrder from "../models/TempOrder.js";
 
 export interface CartRepository {
   get: () => Cart;
@@ -52,5 +53,17 @@ export class InMemoryProductRepository implements ProductRepository {
 
   clearAll() {
     return (this.products = new Map());
+  }
+}
+
+export interface TempOrderRepository {
+  save: (id: string, obj: TempOrder) => void;
+}
+
+export class InMemoryTempOrderRepository implements TempOrderRepository {
+  private tempOrders = new Map<string, TempOrder>();
+
+  save(id: string, obj: TempOrder) {
+    this.tempOrders.set(id, obj);
   }
 }
