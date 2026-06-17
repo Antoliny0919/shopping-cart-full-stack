@@ -10,6 +10,11 @@ import {
   InMemoryTempOrderRepository,
   InMemoryCouponRepository,
 } from "./shop/repositories/InMemoryRepositories.js";
+import {
+  ExpireDateDiscountPolicy,
+  MinimumOrderPriceDiscountPolicy,
+  HotTimeDiscountPolicy,
+} from "./shop/models/DiscountPolicy.js";
 import Product from "./shop/models/Product.js";
 import {
   AmountDiscountCoupon,
@@ -43,10 +48,30 @@ const seedData = {
     },
   ],
   coupons: [
-    new AmountDiscountCoupon({ policies: [], discountPrice: 5000 }),
-    new BonusCoupon({ policies: [], bonusCount: 1 }),
-    new FreeShippingCoupon({ policies: [] }),
-    new RateDiscountCoupon({ policies: [], discountRate: 30 }),
+    new AmountDiscountCoupon({
+      policies: [
+        new ExpireDateDiscountPolicy(new Date("2026-11-30T23:59:59")),
+        new MinimumOrderPriceDiscountPolicy(100_000),
+      ],
+      discountPrice: 5000,
+    }),
+    new BonusCoupon({
+      policies: [new ExpireDateDiscountPolicy(new Date("2026-06-30T23:59:59"))],
+      bonusCount: 1,
+    }),
+    new FreeShippingCoupon({
+      policies: [
+        new ExpireDateDiscountPolicy(new Date("2026-08-31T23:59:59")),
+        new MinimumOrderPriceDiscountPolicy(50_000),
+      ],
+    }),
+    new RateDiscountCoupon({
+      policies: [
+        new ExpireDateDiscountPolicy(new Date("2026-07-31T23:59:59")),
+        new HotTimeDiscountPolicy(4, 7),
+      ],
+      discountRate: 30,
+    }),
   ],
 };
 

@@ -16,29 +16,28 @@ export class ExpireDateDiscountPolicy implements DiscountPolicy {
 
 export class MinimumOrderPriceDiscountPolicy implements DiscountPolicy {
   private readonly threshold: number;
-  private readonly orderPrice: number;
 
   constructor(threshold: number, orderPrice: number) {
     this.threshold = threshold;
-    this.orderPrice = orderPrice;
   }
 
-  isAvailable() {
-    return this.threshold <= this.orderPrice;
+  isAvailable(orderPrice: number) {
+    return this.threshold <= orderPrice;
   }
 }
 
 export class HotTimeDiscountPolicy implements DiscountPolicy {
-  private readonly startTime: Date;
-  private readonly endTime: Date;
+  private readonly startHour: number;
+  private readonly endHour: number;
 
-  constructor(startTime: Date, endTime: Date) {
-    this.startTime = startTime;
-    this.endTime = endTime;
+  constructor(startHour: number, endHour: number) {
+    this.startHour = startHour;
+    this.endHour = endHour;
   }
 
   isAvailable() {
     const now = new Date();
-    return this.startTime <= now && this.endTime >= now;
+    const currentHour = now.getHours();
+    return currentHour >= this.startHour && currentHour < this.endHour;
   }
 }
