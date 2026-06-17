@@ -38,12 +38,10 @@ export class AmountDiscountCoupon extends Coupon {
 
 export class BonusCoupon extends Coupon {
   private readonly bonusCount: number;
-  private readonly targetProductPrice: number;
 
   constructor({
     policies,
     bonusCount,
-    targetProductPrice,
   }: {
     policies: DiscountPolicy[];
     bonusCount: number;
@@ -51,52 +49,38 @@ export class BonusCoupon extends Coupon {
   }) {
     super(policies);
     this.bonusCount = bonusCount;
-    this.targetProductPrice = targetProductPrice;
   }
 
-  public calculateDiscountPrice() {
-    return this.targetProductPrice * this.bonusCount;
+  public calculateDiscountPrice(bonusProductPrice: number) {
+    return bonusProductPrice * this.bonusCount;
   }
 }
 
 export class FreeShippingCoupon extends Coupon {
-  private readonly deliveryFee: number;
-
-  constructor({
-    policies,
-    deliveryFee,
-  }: {
-    policies: DiscountPolicy[];
-    deliveryFee: number;
-  }) {
+  constructor({ policies }: { policies: DiscountPolicy[] }) {
     super(policies);
-    this.deliveryFee = deliveryFee;
   }
 
-  public calculateDiscountPrice() {
-    return this.deliveryFee;
+  public calculateDiscountPrice(deliveryFee: number) {
+    return deliveryFee;
   }
 }
 
 export class RateDiscountCoupon extends Coupon {
   private readonly discountRate: number;
-  private readonly targetPrice: number;
 
   constructor({
     policies,
-    targetPrice,
     discountRate,
   }: {
     policies: DiscountPolicy[];
-    targetPrice: number;
     discountRate: number;
   }) {
     super(policies);
-    this.targetPrice = targetPrice;
     this.discountRate = discountRate;
   }
 
-  public calculateDiscountPrice() {
-    return this.targetPrice * (this.discountRate / 100);
+  public calculateDiscountPrice(price: number) {
+    return price * (this.discountRate / 100);
   }
 }
