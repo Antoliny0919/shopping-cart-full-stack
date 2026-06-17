@@ -16,6 +16,11 @@ export interface ProductRepository {
   clearAll: () => void;
 }
 
+export interface TempOrderRepository {
+  save: (id: string, obj: TempOrder) => void;
+  findAll: () => TempOrder[];
+}
+
 export class InMemoryCartRepository implements CartRepository {
   private cart = new Cart();
 
@@ -54,10 +59,6 @@ export class InMemoryProductRepository implements ProductRepository {
   clearAll() {
     return (this.products = new Map());
   }
-}
-
-export interface TempOrderRepository {
-  save: (id: string, obj: TempOrder) => void;
 }
 
 export class InMemoryTempOrderRepository implements TempOrderRepository {
