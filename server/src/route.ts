@@ -2,16 +2,22 @@ import express from "express";
 import cors from "cors";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-import { ProductController, CartController } from "./shop/controllers.js";
+import {
+  ProductController,
+  CartController,
+  tempOrderController,
+} from "./shop/controllers.js";
 import { createShopRouter } from "./shop/route.js";
 import { handleErrors } from "./errors.js";
 
 export function createApp({
   productController,
   cartController,
+  tempOrderController,
 }: {
   productController: ProductController;
   cartController: CartController;
+  tempOrderController: tempOrderController;
 }) {
   const app = express();
   const router = app.router;
@@ -25,7 +31,13 @@ export function createApp({
     }),
   );
   router.use(express.static(join(__dirname, "../public/images")));
-  router.use(createShopRouter({ productController, cartController }));
+  router.use(
+    createShopRouter({
+      productController,
+      cartController,
+      tempOrderController,
+    }),
+  );
 
   router.use(
     (

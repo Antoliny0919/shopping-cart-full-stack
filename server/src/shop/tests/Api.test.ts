@@ -10,12 +10,16 @@ import request from "supertest";
 import {
   createCartController,
   createProductController,
+  createTempOrderController,
 } from "../controllers.js";
 import { ProductType } from "../models/Product.js";
 
 describe("프로덕트 API 테스트", () => {
+  // TODO: 매 테스트마다 controller와 리포지토리를 생성해야한다.
+  // 독립성은 보장되지만 굳이 불필요한 선에서는 중복을 제거해야할거 같다..
   const cartRepository = new InMemoryCartRepository();
   const productRepository = new InMemoryProductRepository();
+  const tempOrderRepository = new InMemoryTempOrderRepository();
 
   const cartController = createCartController({
     cartRepository,
@@ -23,6 +27,10 @@ describe("프로덕트 API 테스트", () => {
   });
   const productController = createProductController({
     cartRepository,
+    productRepository,
+  });
+  const tempOrderController = createTempOrderController({
+    tempOrderRepository,
     productRepository,
   });
   const product1 = new Product({
@@ -36,7 +44,11 @@ describe("프로덕트 API 테스트", () => {
     thumbnail: "chicken.png",
   });
 
-  const app = createApp({ productController, cartController });
+  const app = createApp({
+    productController,
+    cartController,
+    tempOrderController,
+  });
 
   beforeEach(() => {
     productRepository.save(product1.getId(), product1);
@@ -161,6 +173,8 @@ describe("프로덕트 API 테스트", () => {
 describe("카트 API 테스트", () => {
   const productRepository = new InMemoryProductRepository();
   const cartRepository = new InMemoryCartRepository();
+  const tempOrderRepository = new InMemoryTempOrderRepository();
+
   const productController = createProductController({
     productRepository,
     cartRepository,
@@ -169,7 +183,16 @@ describe("카트 API 테스트", () => {
     cartRepository,
     productRepository,
   });
-  const app = createApp({ productController, cartController });
+  const tempOrderController = createTempOrderController({
+    tempOrderRepository,
+    productRepository,
+  });
+
+  const app = createApp({
+    productController,
+    cartController,
+    tempOrderController,
+  });
   const cart = cartRepository.get();
 
   beforeEach(() => {
@@ -245,25 +268,43 @@ describe("카트 API 테스트", () => {
 });
 
 describe("임시 주문서 API 테스트", () => {
+  const cartRepository = new InMemoryCartRepository();
+  const productRepository = new InMemoryProductRepository();
   const tempOrderRepository = new InMemoryTempOrderRepository();
+
+  const cartController = createCartController({
+    cartRepository,
+    productRepository,
+  });
+  const productController = createProductController({
+    cartRepository,
+    productRepository,
+  });
   const tempOrderController = createTempOrderController({
     tempOrderRepository,
+    productRepository,
   });
-  const app = createApp({ tempOrderController });
-  const tempOrder = new TempOrder({
-    products: [
-      { product_id: "777", quantity: 3 },
-      { product_id: "555", quantity: 10 },
-    ],
-  });
-
-  beforeEach(() => {
-    tempOrderRepository.save(tempOrder.getId(), tempOrder);
+  const app = createApp({
+    cartController,
+    productController,
+    tempOrderController,
   });
 
-  afterEach(() => {
-    tempOrderRepository.clearAll();
-  });
+  // TODO: PATCH, GET 에서 활성화
+  // const tempOrder = new TempOrder({
+  //   products: [
+  //     { product_id: "777", quantity: 3 },
+  //     { product_id: "555", quantity: 10 },
+  //   ],
+  // });
+
+  // beforeEach(() => {
+  //   tempOrderRepository.save(tempOrder.getId(), tempOrder);
+  // });
+
+  // afterEach(() => {
+  //   tempOrderRepository.clearAll();
+  // });
 
   test("임시 주문서를 생성한다.", async () => {
     const res = await request(app)
@@ -273,7 +314,7 @@ describe("임시 주문서 API 테스트", () => {
         { product_id: "456", quantity: 5 },
       ])
       .set("Accept", "application/json");
-    res.body.id = "fixed id";
+    res.body.order_id = "fixed id";
     expect(res.status).toBe(201);
     expect(res.body).toEqual({ order_id: "fixed id" });
     const tempOrder = tempOrderRepository.findAll();

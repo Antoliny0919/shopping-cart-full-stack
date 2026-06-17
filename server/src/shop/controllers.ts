@@ -1,9 +1,11 @@
 import express from "express";
 import { NotFoundError } from "../errors.js";
 import Product from "./models/Product.js";
+import TempOrder from "./models/TempOrder.js";
 import {
   CartRepository,
   ProductRepository,
+  TempOrderRepository,
 } from "./repositories/InMemoryRepositories.js";
 
 export interface ProductController {
@@ -16,6 +18,10 @@ export interface CartController {
   get: express.RequestHandler;
   update: express.RequestHandler<{ id: string }>;
   delete: express.RequestHandler<{ id: string }>;
+}
+
+export interface tempOrderController {
+  post: express.RequestHandler;
 }
 
 export function createProductController({
@@ -110,6 +116,36 @@ export function createCartController({
         }
         cart.deleteItemByProductId(id);
         res.status(204).send();
+      } catch (err) {
+        next(err);
+      }
+    },
+  };
+}
+
+export function createTempOrderController({
+  tempOrderRepository,
+  productRepository,
+}: {
+  tempOrderRepository: TempOrderRepository;
+  productRepository: ProductRepository;
+}): tempOrderController {
+  return {
+    post: (req, res, next) => {
+      try {
+        // TODO : Service 로 분리
+        const items = req.body.map(
+          (item: { product_id: string; quantity: number }) => {
+            return {
+              ...item,
+              product: productRepository.findById(item.product_id),
+            };
+          },
+        );
+        const tempOrder = new TempOrder(items);
+        const id = tempOrder.getId();
+        tempOrderRepository.save(id, tempOrder);
+        res.status(201).send({ order_id: id });
       } catch (err) {
         next(err);
       }

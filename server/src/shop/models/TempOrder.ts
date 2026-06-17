@@ -26,6 +26,10 @@ class TempOrder {
       order_price: this.calculateOrderPrice(),
     };
   }
+
+  public getId() {
+    return this.id;
+  }
 }
 
 export default TempOrder;

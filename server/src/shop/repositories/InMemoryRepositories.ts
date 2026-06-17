@@ -66,4 +66,8 @@ export class InMemoryTempOrderRepository implements TempOrderRepository {
   save(id: string, obj: TempOrder) {
     this.tempOrders.set(id, obj);
   }
+
+  findAll() {
+    return [...this.tempOrders.values()];
+  }
 }

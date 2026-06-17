@@ -3,14 +3,20 @@ import {
   productBodyValidateMiddelware,
   cartBodyValidateMiddelware,
 } from "./middlewares/BodyValiadateMiddleware.js";
-import { ProductController, CartController } from "./controllers.js";
+import {
+  ProductController,
+  CartController,
+  tempOrderController,
+} from "./controllers.js";
 
 export function createShopRouter({
   productController,
   cartController,
+  tempOrderController,
 }: {
   productController: ProductController;
   cartController: CartController;
+  tempOrderController: tempOrderController;
 }) {
   const router = Router();
 
@@ -27,6 +33,8 @@ export function createShopRouter({
     .route("/api/cart/items/:id/")
     .patch(cartBodyValidateMiddelware, cartController.update)
     .delete(cartController.delete);
+
+  router.route("/api/orders/").post(tempOrderController.post);
 
   return router;
 }
