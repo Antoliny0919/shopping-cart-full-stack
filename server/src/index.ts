@@ -8,6 +8,7 @@ import {
   InMemoryCartRepository,
   InMemoryProductRepository,
   InMemoryTempOrderRepository,
+  InMemoryCouponRepository,
 } from "./shop/repositories/InMemoryRepositories.js";
 import Product from "./shop/models/Product.js";
 import {
@@ -22,6 +23,7 @@ const PORT = process.env.PORT ?? 3000;
 const productRepository = new InMemoryProductRepository();
 const cartRepository = new InMemoryCartRepository();
 const tempOrderRepository = new InMemoryTempOrderRepository();
+const CouponRepository = new InMemoryCouponRepository();
 
 const seedData = {
   products: [
@@ -54,6 +56,11 @@ for (const { quantity, ...productData } of seedData["products"]) {
   productRepository.save(product.getId(), product);
   cart.updateItemByProductId(product.getId(), quantity);
 }
+
+for (const coupon of seedData["coupons"]) {
+  CouponRepository.save(coupon.getId(), coupon);
+}
+
 const productController = createProductController({
   productRepository,
   cartRepository,

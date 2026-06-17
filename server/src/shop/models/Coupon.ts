@@ -1,20 +1,26 @@
 import { DiscountPolicy } from "./DiscountPolicy.js";
 
 export abstract class Coupon {
+  private readonly id: string;
   private readonly policies: DiscountPolicy[];
 
   constructor(policies: DiscountPolicy[]) {
+    this.id = crypto.randomUUID();
     this.policies = policies;
     if (!this.isAvailable()) {
       throw new Error("사용할 수 없는 쿠폰입니다.");
     }
   }
 
+  public getId() {
+    return this.id;
+  }
+
   private isAvailable() {
     return this.policies.every((policy) => policy.isAvailable());
   }
 
-  abstract calculateDiscountPrice(): number;
+  // abstract calculateDiscountPrice(): number;
 }
 
 export class AmountDiscountCoupon extends Coupon {
@@ -31,9 +37,9 @@ export class AmountDiscountCoupon extends Coupon {
     this.discountPrice = discountPrice;
   }
 
-  public calculateDiscountPrice() {
-    return this.discountPrice;
-  }
+  // public calculateDiscountPrice() {
+  //   return this.discountPrice;
+  // }
 }
 
 export class BonusCoupon extends Coupon {
@@ -50,9 +56,9 @@ export class BonusCoupon extends Coupon {
     this.bonusCount = bonusCount;
   }
 
-  public calculateDiscountPrice(bonusProductPrice: number) {
-    return bonusProductPrice * this.bonusCount;
-  }
+  // public calculateDiscountPrice(bonusProductPrice: number) {
+  //   return bonusProductPrice * this.bonusCount;
+  // }
 }
 
 export class FreeShippingCoupon extends Coupon {
@@ -60,9 +66,9 @@ export class FreeShippingCoupon extends Coupon {
     super(policies);
   }
 
-  public calculateDiscountPrice(deliveryFee: number) {
-    return deliveryFee;
-  }
+  // public calculateDiscountPrice(deliveryFee: number) {
+  //   return deliveryFee;
+  // }
 }
 
 export class RateDiscountCoupon extends Coupon {
@@ -79,7 +85,7 @@ export class RateDiscountCoupon extends Coupon {
     this.discountRate = discountRate;
   }
 
-  public calculateDiscountPrice(price: number) {
-    return price * (this.discountRate / 100);
-  }
+  // public calculateDiscountPrice(price: number) {
+  //   return price * (this.discountRate / 100);
+  // }
 }
