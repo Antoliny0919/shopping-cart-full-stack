@@ -93,7 +93,6 @@ export class RateDiscountCoupon extends Coupon {
   }
 
   public getDiscountPrice(tempOrder: TempOrder) {
-    // TODO: 주문서 총 가격 기준으로
-    return 10000 * (this.discountRate / 100);
+    return tempOrder.calculateOrderPrice() * (this.discountRate / 100);
   }
 }

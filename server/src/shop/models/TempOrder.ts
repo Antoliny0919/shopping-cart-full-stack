@@ -14,7 +14,7 @@ class TempOrder {
     this.items = items;
   }
 
-  private calculateOrderPrice() {
+  public calculateOrderPrice() {
     return this.items.reduce(
       (price, item) => price + item.quantity * item.product.price,
       0,
