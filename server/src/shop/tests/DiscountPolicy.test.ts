@@ -3,8 +3,29 @@ import {
   HotTimeDiscountCondition,
   MinimumOrderPriceDiscountCondition,
 } from "../models/DiscountCondition.js";
+import TempOrder from "../models/TempOrder.js";
 
 describe("DiscountCondition Tests", () => {
+  const tempOrder = new TempOrder([
+    {
+      product_id: "123",
+      quantity: 5,
+      product: {
+        name: "말차라떼",
+        price: 4000,
+        thumbnail: "matcha-latte.png",
+      },
+    },
+    {
+      product_id: "456",
+      quantity: 2,
+      product: {
+        name: "블루 레모네이드",
+        price: 5000,
+        thumbnail: "blue-lemonade.png",
+      },
+    },
+  ]);
   describe("ExpireDateDiscountCondition Tests", () => {
     beforeEach(() => {
       jest.useFakeTimers();
@@ -23,15 +44,15 @@ describe("DiscountCondition Tests", () => {
 
   describe("MinimumOrderPriceDiscountCondition Tests", () => {
     test("특정 금액 이상이면 사용 가능하다.", () => {
-      const condition1 = new MinimumOrderPriceDiscountCondition(1000);
-      expect(condition1.isAvailable(undefined as any)).toBeTruthy();
-      const condition2 = new MinimumOrderPriceDiscountCondition(10000);
-      expect(condition2.isAvailable(undefined as any)).toBeTruthy();
+      const condition1 = new MinimumOrderPriceDiscountCondition(20000);
+      expect(condition1.isAvailable(tempOrder)).toBeTruthy();
+      const condition2 = new MinimumOrderPriceDiscountCondition(30000);
+      expect(condition2.isAvailable(tempOrder)).toBeTruthy();
     });
 
     test("특정 금액 미만이면 사용 불가능하다.", () => {
-      const condition = new MinimumOrderPriceDiscountCondition(10001);
-      expect(condition.isAvailable(undefined as any)).toBeFalsy();
+      const condition = new MinimumOrderPriceDiscountCondition(30001);
+      expect(condition.isAvailable(tempOrder)).toBeFalsy();
     });
   });
 

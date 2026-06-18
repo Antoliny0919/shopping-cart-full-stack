@@ -24,8 +24,7 @@ export class MinimumOrderPriceDiscountCondition implements DiscountCondition {
   }
 
   isAvailable(tempOrder: TempOrder) {
-    // TODO: 10000 -> tempOrder의 총 주문금액
-    return this.threshold <= 10000;
+    return this.threshold <= tempOrder.calculateOrderPrice();
   }
 }
 
