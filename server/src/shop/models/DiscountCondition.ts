@@ -1,5 +1,7 @@
+import TempOrder from "./TempOrder.js";
+
 export interface DiscountCondition {
-  isAvailable: () => boolean;
+  isAvailable: (tempOrder: TempOrder) => boolean;
 }
 
 export class ExpireDateDiscountCondition implements DiscountCondition {
@@ -21,8 +23,9 @@ export class MinimumOrderPriceDiscountCondition implements DiscountCondition {
     this.threshold = threshold;
   }
 
-  isAvailable(orderPrice: number) {
-    return this.threshold <= orderPrice;
+  isAvailable(tempOrder: TempOrder) {
+    // TODO: 10000 -> tempOrder의 총 주문금액
+    return this.threshold <= 10000;
   }
 }
 
