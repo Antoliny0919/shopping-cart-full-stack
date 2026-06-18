@@ -62,8 +62,9 @@ export class BonusCoupon extends Coupon {
   }
 
   public getDiscountPrice(tempOrder: TempOrder): number {
-    // TODO: 가장 비싼 금액 + 2개 이상인 상품을 대상으로
-    return 10000 * this.bonusCount;
+    const price = tempOrder.findMostExpensiveItemPrice(2);
+    if (!price) return 0;
+    return price * this.bonusCount;
   }
 }
 

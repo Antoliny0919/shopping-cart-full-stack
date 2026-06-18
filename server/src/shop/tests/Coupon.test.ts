@@ -43,7 +43,7 @@ describe("Coupon Test", () => {
         conditions: [],
         bonusCount: 2,
       });
-      expect(coupon.getDiscountPrice(undefined as any)).toBe(20000);
+      expect(coupon.getDiscountPrice(tempOrder)).toBe(10000);
     });
   });
 

@@ -21,6 +21,12 @@ class TempOrder {
     );
   }
 
+  public findMostExpensiveItemPrice(minQuantity: number): number | undefined {
+    const items = this.items.filter((item) => item.quantity >= minQuantity);
+    return items.sort((a, b) => b.product.price - a.product.price)[0]?.product
+      .price;
+  }
+
   public priceSummary() {
     return {
       order_price: this.calculateOrderPrice(),
