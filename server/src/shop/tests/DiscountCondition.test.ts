@@ -4,29 +4,33 @@ import {
   HotTimeDiscountCondition,
   MinimumOrderPriceDiscountCondition,
 } from "../models/DiscountCondition.js";
+import { DeliveryFee } from "../models/DeliveryFee.js";
 import TempOrder from "../models/TempOrder.js";
 
 describe("DiscountCondition Tests", () => {
-  const tempOrder = new TempOrder([
-    {
-      product_id: "123",
-      quantity: 5,
-      product: {
-        name: "말차라떼",
-        price: 4000,
-        thumbnail: "matcha-latte.png",
+  const tempOrder = new TempOrder(
+    [
+      {
+        product_id: "123",
+        quantity: 5,
+        product: {
+          name: "말차라떼",
+          price: 4000,
+          thumbnail: "matcha-latte.png",
+        },
       },
-    },
-    {
-      product_id: "456",
-      quantity: 2,
-      product: {
-        name: "블루 레모네이드",
-        price: 5000,
-        thumbnail: "blue-lemonade.png",
+      {
+        product_id: "456",
+        quantity: 2,
+        product: {
+          name: "블루 레모네이드",
+          price: 5000,
+          thumbnail: "blue-lemonade.png",
+        },
       },
-    },
-  ]);
+    ],
+    new DeliveryFee(3000),
+  );
   describe("ExpireDateDiscountCondition Tests", () => {
     beforeEach(() => {
       jest.useFakeTimers();

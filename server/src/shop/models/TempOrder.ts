@@ -1,4 +1,5 @@
 import { ProductType } from "./Product.js";
+import { DeliveryFee } from "./DeliveryFee.js";
 
 type OrderItem = {
   product_id: string;
@@ -8,10 +9,19 @@ type OrderItem = {
 
 class TempOrder {
   private readonly id: string;
+  private readonly deliveryFee: DeliveryFee;
 
-  constructor(private readonly items: OrderItem[]) {
+  constructor(
+    private readonly items: OrderItem[],
+    deliveryFee: DeliveryFee,
+  ) {
     this.id = crypto.randomUUID();
     this.items = items;
+    this.deliveryFee = deliveryFee;
+  }
+
+  public calculateDeliveryFee() {
+    return this.deliveryFee.getDeliveryFee();
   }
 
   public calculateOrderPrice() {

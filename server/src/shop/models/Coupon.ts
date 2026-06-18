@@ -78,8 +78,7 @@ export class FreeShippingCoupon extends Coupon {
   }
 
   public getDiscountPrice(tempOrder: TempOrder) {
-    // TODO: 주문서에 존재하는 배송비 기준
-    return 10000;
+    return tempOrder.calculateDeliveryFee();
   }
 }
 

@@ -5,28 +5,32 @@ import {
   RateDiscountCoupon,
 } from "../models/Coupon.js";
 import TempOrder from "../models/TempOrder.js";
+import { DeliveryFee } from "../models/DeliveryFee.js";
 
 describe("Coupon Test", () => {
-  const tempOrder = new TempOrder([
-    {
-      product_id: "123",
-      quantity: 5,
-      product: {
-        name: "말차라떼",
-        price: 4000,
-        thumbnail: "matcha-latte.png",
+  const tempOrder = new TempOrder(
+    [
+      {
+        product_id: "123",
+        quantity: 5,
+        product: {
+          name: "말차라떼",
+          price: 4000,
+          thumbnail: "matcha-latte.png",
+        },
       },
-    },
-    {
-      product_id: "456",
-      quantity: 2,
-      product: {
-        name: "블루 레모네이드",
-        price: 5000,
-        thumbnail: "blue-lemonade.png",
+      {
+        product_id: "456",
+        quantity: 2,
+        product: {
+          name: "블루 레모네이드",
+          price: 5000,
+          thumbnail: "blue-lemonade.png",
+        },
       },
-    },
-  ]);
+    ],
+    new DeliveryFee(10000),
+  );
   describe("AmountDiscountCoupon Tests", () => {
     test("금액할인 쿠폰은 정해진 금액을 할인금액으로 반환한다.", () => {
       const coupon = new AmountDiscountCoupon({
@@ -53,7 +57,7 @@ describe("Coupon Test", () => {
       const coupon = new FreeShippingCoupon({
         conditions: [],
       });
-      expect(coupon.getDiscountPrice(undefined as any)).toBe(10000);
+      expect(coupon.getDiscountPrice(tempOrder)).toBe(10000);
     });
   });
 
