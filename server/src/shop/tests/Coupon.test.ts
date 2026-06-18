@@ -41,6 +41,7 @@ describe("Coupon Test", () => {
     test("보너스 쿠폰은 보너스로 제공되는 상품의 금액만큼 할인금액으로 반환한다.", () => {
       const coupon = new BonusCoupon({
         conditions: [],
+        minQuantity: 2,
         bonusCount: 2,
       });
       expect(coupon.getDiscountPrice(tempOrder)).toBe(10000);

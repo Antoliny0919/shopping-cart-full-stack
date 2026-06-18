@@ -39,6 +39,7 @@ export const SEED_DATA = {
       conditions: [
         new ExpireDateDiscountCondition(new Date("2026-06-30T23:59:59")),
       ],
+      minQuantity: 2,
       bonusCount: 1,
     }),
     new FreeShippingCoupon({

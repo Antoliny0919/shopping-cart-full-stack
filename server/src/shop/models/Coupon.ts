@@ -49,20 +49,24 @@ export class AmountDiscountCoupon extends Coupon {
 
 export class BonusCoupon extends Coupon {
   private readonly bonusCount: number;
+  private readonly minQuantity: number;
 
   constructor({
     conditions,
+    minQuantity,
     bonusCount,
   }: {
     conditions: DiscountCondition[];
+    minQuantity: number;
     bonusCount: number;
   }) {
     super(conditions);
+    this.minQuantity = minQuantity;
     this.bonusCount = bonusCount;
   }
 
   public getDiscountPrice(tempOrder: TempOrder): number {
-    const price = tempOrder.findMostExpensiveItemPrice(2);
+    const price = tempOrder.findMostExpensiveItemPrice(this.minQuantity);
     if (!price) return 0;
     return price * this.bonusCount;
   }
