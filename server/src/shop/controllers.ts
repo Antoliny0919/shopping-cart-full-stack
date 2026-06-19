@@ -148,7 +148,7 @@ export function createTempOrderController({
             };
           },
         );
-        // TODO: Service 로 분리
+        // TODO: Service 로 분리 + 캡슐화 필요
         const coupons = couponRepository.findAll();
         const delivery = new DeliveryFee(DELIVERY_PRICE_POLICY.default, [
           new HardPlacePolicy(DELIVERY_PRICE_POLICY.hardPlace),
