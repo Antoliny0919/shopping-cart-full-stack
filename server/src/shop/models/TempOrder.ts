@@ -1,5 +1,6 @@
 import { ProductType } from "./Product.js";
 import { DeliveryFee } from "./DeliveryFee.js";
+import { Coupon } from "./Coupon.js";
 
 type OrderItem = {
   product_id: string;
@@ -10,14 +11,17 @@ type OrderItem = {
 class TempOrder {
   private readonly id: string;
   private readonly deliveryFee: DeliveryFee;
+  private readonly selectedCoupons: Coupon[];
 
   constructor(
     private readonly items: OrderItem[],
     deliveryFee: DeliveryFee,
+    selectedCoupons: Coupon[],
   ) {
     this.id = crypto.randomUUID();
     this.items = items;
     this.deliveryFee = deliveryFee;
+    this.selectedCoupons = [];
   }
 
   public calculateDeliveryFee() {

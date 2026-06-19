@@ -41,7 +41,7 @@ const CouponService = {
       }
     }
 
-    return { combinations: bestCombination, discountPrice: bestDiscount };
+    return bestCombination;
   },
 };
 

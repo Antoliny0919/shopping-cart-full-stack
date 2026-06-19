@@ -31,6 +31,7 @@ describe("CouponService Tests", () => {
       },
     ],
     new DeliveryFee(3000),
+    [],
   );
   const amountDiscountCoupon = new AmountDiscountCoupon({
     conditions: [],
@@ -93,18 +94,12 @@ describe("CouponService Tests", () => {
       rateDiscountCoupon,
       deliveryFeeDiscountCoupon,
     ]);
-    expect(result).toEqual({
-      combinations: [amountDiscountCoupon, rateDiscountCoupon],
-      discountPrice: 14000,
-    });
+    expect(result).toEqual([amountDiscountCoupon, rateDiscountCoupon]);
     result = CouponService.calculateBestCouponCombination(tempOrder, [
       bonusCoupon,
       rateDiscountCoupon,
       deliveryFeeDiscountCoupon,
     ]);
-    expect(result).toEqual({
-      combinations: [bonusCoupon, rateDiscountCoupon],
-      discountPrice: 13200,
-    });
+    expect(result).toEqual([bonusCoupon, rateDiscountCoupon]);
   });
 });

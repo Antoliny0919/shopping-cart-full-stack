@@ -8,6 +8,7 @@ import {
   ProductRepository,
   TempOrderRepository,
 } from "./repositories/InMemoryRepositories.js";
+import CouponService from "./services/CouponService.js";
 import { DELIVERY_PRICE_POLICY } from "./constants.js";
 import { DeliveryFee, HardPlacePolicy } from "./models/DeliveryFee.js";
 
@@ -147,13 +148,18 @@ export function createTempOrderController({
             };
           },
         );
+        // TODO: Service 로 분리
         const coupons = couponRepository.findAll();
-        const tempOrder = new TempOrder(
-          items,
-          new DeliveryFee(DELIVERY_PRICE_POLICY.default, [
-            new HardPlacePolicy(DELIVERY_PRICE_POLICY.hardPlace),
-          ]),
-        );
+        const delivery = new DeliveryFee(DELIVERY_PRICE_POLICY.default, [
+          new HardPlacePolicy(DELIVERY_PRICE_POLICY.hardPlace),
+        ]);
+        const incompleteOrder = new TempOrder(items, delivery, []);
+        const bestCouponCombination =
+          CouponService.calculateBestCouponCombination(
+            incompleteOrder,
+            coupons,
+          );
+        const tempOrder = new TempOrder(items, delivery, bestCouponCombination);
         const id = tempOrder.getId();
         tempOrderRepository.save(id, tempOrder);
         res.status(201).send({ order_id: id });
