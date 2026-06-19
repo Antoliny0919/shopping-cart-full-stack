@@ -1,9 +1,15 @@
 import { DiscountCondition } from "./DiscountCondition.js";
 import TempOrder from "./TempOrder.js";
 
+export enum CouponPhase {
+  FIXED = 1,
+  RATE = 2,
+}
+
 export abstract class Coupon {
   private readonly id: string;
   private readonly conditions: DiscountCondition[];
+  abstract readonly phase: CouponPhase;
 
   constructor(conditions: DiscountCondition[]) {
     this.id = crypto.randomUUID();
@@ -14,21 +20,15 @@ export abstract class Coupon {
     return this.id;
   }
 
-  private isAvailable(tempOrder: TempOrder) {
+  public isAvailable(tempOrder: TempOrder) {
     return this.conditions.every((policy) => policy.isAvailable(tempOrder));
   }
 
-  protected calculateDiscountPrice(tempOrder: TempOrder): number {
-    if (this.isAvailable(tempOrder)) {
-      return this.getDiscountPrice(tempOrder);
-    }
-    return 0;
-  }
-
-  public abstract getDiscountPrice(tempOrder?: TempOrder | undefined): number;
+  public abstract getDiscountPrice(tempOrder: TempOrder, basePrice?: number): number;
 }
 
 export class AmountDiscountCoupon extends Coupon {
+  public readonly phase = CouponPhase.FIXED;
   private readonly discountPrice: number;
 
   constructor({
@@ -48,6 +48,7 @@ export class AmountDiscountCoupon extends Coupon {
 }
 
 export class BonusCoupon extends Coupon {
+  public readonly phase = CouponPhase.FIXED;
   private readonly bonusCount: number;
   private readonly minQuantity: number;
 
@@ -73,6 +74,8 @@ export class BonusCoupon extends Coupon {
 }
 
 export class FreeShippingCoupon extends Coupon {
+  public readonly phase = CouponPhase.FIXED;
+
   constructor({ conditions }: { conditions: DiscountCondition[] }) {
     super(conditions);
   }
@@ -83,6 +86,7 @@ export class FreeShippingCoupon extends Coupon {
 }
 
 export class RateDiscountCoupon extends Coupon {
+  public readonly phase = CouponPhase.RATE;
   private readonly discountRate: number;
 
   constructor({
@@ -96,7 +100,8 @@ export class RateDiscountCoupon extends Coupon {
     this.discountRate = discountRate;
   }
 
-  public getDiscountPrice(tempOrder: TempOrder) {
-    return tempOrder.calculateOrderPrice() * (this.discountRate / 100);
+  public getDiscountPrice(tempOrder: TempOrder, basePrice?: number) {
+    const price = basePrice ?? tempOrder.calculateOrderPrice();
+    return price * (this.discountRate / 100);
   }
 }

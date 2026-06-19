@@ -8,6 +8,8 @@ import {
   ProductRepository,
   TempOrderRepository,
 } from "./repositories/InMemoryRepositories.js";
+import { DELIVERY_PRICE_POLICY } from "./constants.js";
+import { DeliveryFee, HardPlacePolicy } from "./models/DeliveryFee.js";
 
 export interface ProductController {
   get: express.RequestHandler;
@@ -146,7 +148,12 @@ export function createTempOrderController({
           },
         );
         const coupons = couponRepository.findAll();
-        const tempOrder = new TempOrder(items);
+        const tempOrder = new TempOrder(
+          items,
+          new DeliveryFee(DELIVERY_PRICE_POLICY.default, [
+            new HardPlacePolicy(DELIVERY_PRICE_POLICY.hardPlace),
+          ]),
+        );
         const id = tempOrder.getId();
         tempOrderRepository.save(id, tempOrder);
         res.status(201).send({ order_id: id });
