@@ -535,6 +535,20 @@ describe("임시 주문서 API 테스트", () => {
       },
     });
   });
+
+  test("존재하지 않은 임시주문서를 수정하려고 하면 404 에러가 발생한다.", async () => {
+    const res = await request(app)
+      .patch(`/api/orders/unknown/`)
+      .send({
+        selected_coupons: [freeShippingCoupon.getId(), bonusCoupon.getId()],
+      })
+      .set("Accept", "application/json");
+    expect(res.status).toBe(404);
+    expect(res.body).toEqual({
+      code: "RESOURCE_NOT_FOUND",
+      message: "요청한 리소스를 찾을 수 없습니다.",
+    });
+  });
 });
 
 describe("쿠폰 API 테스트", () => {
