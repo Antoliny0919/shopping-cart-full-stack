@@ -3,15 +3,11 @@ export interface DeliveryFeePolicy {
 }
 
 export class DeliveryFee {
-  private readonly baseFee: number;
-  private readonly policies: DeliveryFeePolicy[];
-  private readonly hardPlace: boolean;
-
-  constructor(baseFee: number, policies: DeliveryFeePolicy[], hardPlace: boolean = false) {
-    this.baseFee = baseFee;
-    this.policies = policies;
-    this.hardPlace = hardPlace;
-  }
+  constructor(
+    private readonly baseFee: number,
+    private readonly policies: DeliveryFeePolicy[],
+    private readonly hardPlace: boolean = false,
+  ) {}
 
   getDeliveryFee(orderPrice: number) {
     return this.policies.reduce(
@@ -26,11 +22,7 @@ export class DeliveryFee {
 }
 
 export class HardPlacePolicy implements DeliveryFeePolicy {
-  private readonly hardPlaceExtraFee: number;
-
-  constructor(hardPlaceExtraFee: number) {
-    this.hardPlaceExtraFee = hardPlaceExtraFee;
-  }
+  constructor(private readonly hardPlaceExtraFee: number) {}
 
   calculate() {
     return this.hardPlaceExtraFee;
@@ -38,11 +30,7 @@ export class HardPlacePolicy implements DeliveryFeePolicy {
 }
 
 export class FreeDeliveryPolicy implements DeliveryFeePolicy {
-  private readonly threshold: number;
-
-  constructor(threshold: number) {
-    this.threshold = threshold;
-  }
+  constructor(private readonly threshold: number) {}
 
   calculate(fee: number, orderPrice: number) {
     if (orderPrice >= this.threshold) {

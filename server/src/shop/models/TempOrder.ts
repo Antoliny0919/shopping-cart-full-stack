@@ -10,21 +10,12 @@ type OrderItem = {
 };
 
 class TempOrder {
-  private readonly id: string;
-  private readonly deliveryFee: DeliveryFee;
-  private readonly selectedCoupons: Coupon[];
-
   constructor(
     private readonly items: OrderItem[],
-    deliveryFee: DeliveryFee,
-    selectedCoupons: Coupon[],
-    id: string = crypto.randomUUID(),
-  ) {
-    this.id = id;
-    this.items = items;
-    this.deliveryFee = deliveryFee;
-    this.selectedCoupons = selectedCoupons;
-  }
+    private readonly deliveryFee: DeliveryFee,
+    private readonly selectedCoupons: Coupon[],
+    private readonly id: string = crypto.randomUUID(),
+  ) {}
 
   public calculateDeliveryFee() {
     return this.deliveryFee.getDeliveryFee(this.calculateOrderPrice());

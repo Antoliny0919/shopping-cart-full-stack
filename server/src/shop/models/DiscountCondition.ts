@@ -6,11 +6,7 @@ export interface DiscountCondition {
 }
 
 export class ExpireDateDiscountCondition implements DiscountCondition {
-  private readonly expirationDate: Date;
-
-  constructor(expirationDate: Date) {
-    this.expirationDate = expirationDate;
-  }
+  constructor(private readonly expirationDate: Date) {}
 
   isAvailable() {
     return this.expirationDate >= new Date();
@@ -22,11 +18,7 @@ export class ExpireDateDiscountCondition implements DiscountCondition {
 }
 
 export class MinimumOrderPriceDiscountCondition implements DiscountCondition {
-  private readonly threshold: number;
-
-  constructor(threshold: number) {
-    this.threshold = threshold;
-  }
+  constructor(private readonly threshold: number) {}
 
   isAvailable(tempOrder: TempOrder) {
     return this.threshold <= tempOrder.calculateOrderPrice();
@@ -38,13 +30,10 @@ export class MinimumOrderPriceDiscountCondition implements DiscountCondition {
 }
 
 export class HotTimeDiscountCondition implements DiscountCondition {
-  private readonly startHour: number;
-  private readonly endHour: number;
-
-  constructor(startHour: number, endHour: number) {
-    this.startHour = startHour;
-    this.endHour = endHour;
-  }
+  constructor(
+    private readonly startHour: number,
+    private readonly endHour: number,
+  ) {}
 
   isAvailable() {
     const now = new Date();
