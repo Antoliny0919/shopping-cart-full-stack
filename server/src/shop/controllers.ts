@@ -12,6 +12,7 @@ import { findBestCouponCombination } from "./couponCalculator.js";
 import { DELIVERY_PRICE_POLICY } from "./constants.js";
 import { DeliveryFee, HardPlacePolicy } from "./models/DeliveryFee.js";
 import { Coupon } from "./models/Coupon.js";
+import { ProductService } from "./services/ProductService.js";
 
 export interface ProductController {
   get: express.RequestHandler;
@@ -46,39 +47,25 @@ export function createProductController({
   productRepository: ProductRepository;
   cartRepository: CartRepository;
 }): ProductController {
+  const service = new ProductService(productRepository, cartRepository);
   return {
     get: (_req, res, next) => {
       try {
-        res.send(
-          productRepository
-            .findAll()
-            .map((product: Product) => product.toObject()),
-        );
+        res.send(service.getAll());
       } catch (err) {
         next(err);
       }
     },
     add: (req, res, next) => {
       try {
-        const product = new Product(req.body);
-        productRepository.save(product.getId(), product);
-        const post = { id: product.toObject().id };
-
-        res.status(201).send(post);
+        res.status(201).send(service.add(req.body));
       } catch (err) {
         next(err);
       }
     },
     delete: (req, res, next) => {
       try {
-        const id = req.params.id as string;
-        const hasItem = productRepository.exists(id);
-        if (!hasItem) {
-          throw new NotFoundError();
-        }
-        productRepository.delete(id);
-        const cart = cartRepository.get();
-        cart.deleteItemByProductId(id);
+        service.delete(req.params.id as string);
         res.status(204).send();
       } catch (err) {
         next(err);
