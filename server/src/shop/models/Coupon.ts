@@ -1,4 +1,7 @@
-import { DiscountCondition } from "./DiscountCondition.js";
+import {
+  DiscountCondition,
+  ExpireDateDiscountCondition,
+} from "./DiscountCondition.js";
 import TempOrder from "./TempOrder.js";
 
 export enum CouponPhase {
@@ -9,11 +12,15 @@ export enum CouponPhase {
 export abstract class Coupon {
   private readonly id: string;
   private readonly conditions: DiscountCondition[];
+  private readonly expirationDate: Date | null;
   abstract readonly phase: CouponPhase;
 
-  constructor(conditions: DiscountCondition[]) {
+  constructor(conditions: DiscountCondition[], expirationDate?: Date) {
     this.id = crypto.randomUUID();
-    this.conditions = conditions;
+    this.expirationDate = expirationDate ?? null;
+    this.conditions = this.expirationDate
+      ? [new ExpireDateDiscountCondition(this.expirationDate), ...conditions]
+      : conditions;
   }
 
   public getId() {
@@ -28,7 +35,19 @@ export abstract class Coupon {
     return false;
   }
 
-  public abstract getDiscountPrice(tempOrder: TempOrder, basePrice?: number): number;
+  public abstract getDiscountPrice(
+    tempOrder: TempOrder,
+    basePrice?: number,
+  ): number;
+
+  public toObject() {
+    return {
+      id: this.id,
+      name: "",
+      expiration_date: this.expirationDate?.toISOString() ?? null,
+      description: "",
+    };
+  }
 }
 
 export class AmountDiscountCoupon extends Coupon {
@@ -38,11 +57,13 @@ export class AmountDiscountCoupon extends Coupon {
   constructor({
     conditions,
     discountPrice,
+    expirationDate,
   }: {
     conditions: DiscountCondition[];
     discountPrice: number;
+    expirationDate?: Date;
   }) {
-    super(conditions);
+    super(conditions, expirationDate);
     this.discountPrice = discountPrice;
   }
 
@@ -60,12 +81,14 @@ export class BonusCoupon extends Coupon {
     conditions,
     minQuantity,
     bonusCount,
+    expirationDate,
   }: {
     conditions: DiscountCondition[];
     minQuantity: number;
     bonusCount: number;
+    expirationDate?: Date;
   }) {
-    super(conditions);
+    super(conditions, expirationDate);
     this.minQuantity = minQuantity;
     this.bonusCount = bonusCount;
   }
@@ -80,8 +103,14 @@ export class BonusCoupon extends Coupon {
 export class FreeShippingCoupon extends Coupon {
   public readonly phase = CouponPhase.FIXED;
 
-  constructor({ conditions }: { conditions: DiscountCondition[] }) {
-    super(conditions);
+  constructor({
+    conditions,
+    expirationDate,
+  }: {
+    conditions: DiscountCondition[];
+    expirationDate?: Date;
+  }) {
+    super(conditions, expirationDate);
   }
 
   public isDeliveryDiscount(): boolean {
@@ -100,11 +129,13 @@ export class RateDiscountCoupon extends Coupon {
   constructor({
     conditions,
     discountRate,
+    expirationDate,
   }: {
     conditions: DiscountCondition[];
     discountRate: number;
+    expirationDate?: Date;
   }) {
-    super(conditions);
+    super(conditions, expirationDate);
     this.discountRate = discountRate;
   }
 

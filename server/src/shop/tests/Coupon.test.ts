@@ -30,7 +30,19 @@ describe("Coupon Test", () => {
       },
     ],
     new DeliveryFee(10000),
+    [],
   );
+
+  test("만료일을 전달하면 만료일 정책이 적용된다.", () => {
+    const coupon = new AmountDiscountCoupon({
+      conditions: [],
+      expirationDate: new Date("2000-09-19"),
+      discountPrice: 10000,
+    });
+
+    expect(coupon.isAvailable(tempOrder)).toBeFalsy();
+  });
+
   describe("AmountDiscountCoupon Tests", () => {
     test("금액할인 쿠폰은 정해진 금액을 할인금액으로 반환한다.", () => {
       const coupon = new AmountDiscountCoupon({
