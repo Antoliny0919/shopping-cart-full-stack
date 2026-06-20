@@ -1,3 +1,10 @@
+export const PRODUCT_NAME_LENGTH = {
+  min: 0,
+  max: 100,
+};
+
+export const PRODUCT_PRICE_MIN = 0;
+
 export const CART_ITEM_QUANTITY = {
   min: 1,
   max: 99,
