@@ -2,6 +2,8 @@ import { useLocation } from "react-router";
 import styled from "@emotion/styled";
 import { Button } from "../../../commons/styles/Button";
 import OrderItemList from "./OrderItemList";
+import Checkbox from "../../../commons/components/Checkbox";
+import Info from "../../../commons/images/info.svg?react";
 
 export default function Section() {
   const { totalItems, totalQuantity, totalPrice } = useLocation().state;
@@ -34,6 +36,18 @@ export default function Section() {
       <SubText>최종 결제 금액을 확인해 주세요.</SubText>
       <OrderItemList items={items}></OrderItemList>
       <CouponApplyButton>쿠폰 적용</CouponApplyButton>
+      <DeliveryOption>
+        <p>배송 정보</p>
+        <Checkbox
+          labelText={"제주도 및 도서 산간 지역"}
+          checked={false}
+          onChange={() => {}}
+        ></Checkbox>
+      </DeliveryOption>
+      <SubText className="icon-text">
+        <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
+        배송됩니다.
+      </SubText>
       <Button type="button" disabled={true}>
         결제하기
       </Button>
@@ -48,6 +62,12 @@ const SectionLayout = styled.section`
   padding: 1.5rem;
   margin-bottom: 4rem;
   overflow: scroll;
+
+  .icon-text {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
 `;
 
 const Title = styled.h2`
@@ -68,12 +88,19 @@ const CouponApplyButton = styled.button`
   padding: 1rem 0;
   font-size: 16px;
   text-align: center;
-  margin: 8px 0;
   color: #333333bf;
   border: solid #333333bf 1px;
   border-radius: 5px;
   width: 100%;
   max-width: 768px;
+`;
+
+const DeliveryOption = styled.div`
+  padding: 2rem 0;
+  p {
+    font-weight: 700;
+    font-size: 16px;
+  }
 `;
 
 // const TotalPriceLabel = styled.p`
