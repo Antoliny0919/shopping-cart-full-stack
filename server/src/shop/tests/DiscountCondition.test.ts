@@ -29,7 +29,7 @@ describe("DiscountCondition Tests", () => {
         },
       },
     ],
-    new DeliveryFee(3000),
+    new DeliveryFee(3000, []),
     [],
   );
   describe("ExpireDateDiscountCondition Tests", () => {
