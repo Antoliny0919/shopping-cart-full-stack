@@ -33,6 +33,7 @@ export default function Section() {
       </SubText>
       <SubText>최종 결제 금액을 확인해 주세요.</SubText>
       <OrderItemList items={items}></OrderItemList>
+      <CouponApplyButton>쿠폰 적용</CouponApplyButton>
       <Button type="button" disabled={true}>
         결제하기
       </Button>
@@ -59,6 +60,20 @@ const SubText = styled.p`
   font-weight: 500;
   font-size: 12px;
   margin: 2px 0;
+`;
+
+const CouponApplyButton = styled.button`
+  background-color: transparent;
+  font-weight: 700;
+  padding: 1rem 0;
+  font-size: 16px;
+  text-align: center;
+  margin: 8px 0;
+  color: #333333bf;
+  border: solid #333333bf 1px;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 768px;
 `;
 
 // const TotalPriceLabel = styled.p`
