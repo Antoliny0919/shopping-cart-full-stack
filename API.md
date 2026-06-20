@@ -153,13 +153,12 @@ STATUS: 200
 
 STATUS: 200
 
-## `POST` `/api/coupons/discount-summary/` - 쿠폰 할인 예상 금액을 반환한다.
+## `POST` `/api/orders/{order-id}/discount-summary/ ` - 쿠폰 할인 예상 금액을 반환한다.
 
 ### Body
 
 ```
 {
-  order_id: "123-456-789",
   coupon_id: ["BOGO", "FREESHIPPING"]
 }
 ```

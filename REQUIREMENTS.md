@@ -70,7 +70,7 @@
     - [] 쿠폰을 가져와서 데이터 보여주기.(API GET /api/coupons/)
 
   - [] 사용자가 각 쿠폰을 적용하는 체크 버튼을 클릭했다.
-    - [] 쿠폰 할인금액을 계산하여 데이터를 보여주기.(API POST /api/coupons/discount-summary/)
+    - [] 쿠폰 할인금액을 계산하여 데이터를 보여주기.(API POST /api/orders/{order-id}/discount-summary/ )
       - [] 검증로직 수행.(BE)
 
   - [] 사용자가 총 xx원 할인 쿠폰 사용하기 버튼을 클릭했다.
@@ -92,7 +92,7 @@
   - [x] 쿠폰 가져오기
     - API GET /api/coupons/
   - [] 쿠폰 할인금액 계산
-    - API POST /api/coupons/discount-summary/
+    - API POST /api/orders/{order-id}/discount-summary/
   - [x] 쿠폰 적용, 제주 산간(배송지) 변경
     - API PATCH /api/order/{orderId}/
   - [] 주문서 생성
