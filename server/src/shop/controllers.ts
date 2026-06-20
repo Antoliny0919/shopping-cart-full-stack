@@ -162,9 +162,11 @@ export function createTempOrderController({
         // TODO : Service 로 분리
         const items = req.body.map(
           (item: { product_id: string; quantity: number }) => {
+            const product = productRepository.findById(item.product_id);
+            if (!product) throw new NotFoundError();
             return {
               ...item,
-              product: productRepository.findById(item.product_id),
+              product: product,
             };
           },
         );
