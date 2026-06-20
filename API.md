@@ -167,8 +167,7 @@ STATUS: 200
 
 ```
 {
-  selected_coupons: ["BOGO", "FREESHIPPING"],
-  coupon_discount_price: 5000
+  discount_price: 5000
 }
 ```
 
