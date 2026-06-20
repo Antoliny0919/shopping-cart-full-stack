@@ -1,6 +1,7 @@
 import { ProductType } from "./Product.js";
 import { DeliveryFee } from "./DeliveryFee.js";
-import { Coupon, CouponPhase } from "./Coupon.js";
+import { Coupon } from "./Coupon.js";
+import { calculateDiscount } from "../couponCalculator.js";
 
 type OrderItem = {
   product_id: string;
@@ -41,32 +42,15 @@ class TempOrder {
       .price;
   }
 
-  private calculateDiscount(coupons: Coupon[]): number {
-    const sorted = [...coupons].sort((a, b) => a.phase - b.phase);
-    const orderPrice = this.calculateOrderPrice();
-    let fixedDiscount = 0;
-    for (const coupon of sorted) {
-      if (coupon.phase === CouponPhase.FIXED)
-        fixedDiscount += coupon.getDiscountPrice(this);
-    }
-    let rateDiscount = 0;
-    for (const coupon of sorted) {
-      if (coupon.phase === CouponPhase.RATE)
-        rateDiscount += coupon.getDiscountPrice(
-          this,
-          orderPrice - fixedDiscount,
-        );
-    }
-    return fixedDiscount + rateDiscount;
-  }
-
   private priceSummary() {
     const order_price = this.calculateOrderPrice();
     const delivery_fee = this.calculateDeliveryFee();
-    const discount_price = this.calculateDiscount(
+    const discount_price = calculateDiscount(
+      this,
       this.selectedCoupons.filter((c) => !c.isDeliveryDiscount()),
     );
-    const delivery_discount = this.calculateDiscount(
+    const delivery_discount = calculateDiscount(
+      this,
       this.selectedCoupons.filter((c) => c.isDeliveryDiscount()),
     );
     const delivery_price = delivery_fee - delivery_discount;

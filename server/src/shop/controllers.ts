@@ -8,7 +8,7 @@ import {
   ProductRepository,
   TempOrderRepository,
 } from "./repositories/InMemoryRepositories.js";
-import CouponService from "./services/CouponService.js";
+import { findBestCouponCombination } from "./couponCalculator.js";
 import { DELIVERY_PRICE_POLICY } from "./constants.js";
 import { DeliveryFee, HardPlacePolicy } from "./models/DeliveryFee.js";
 
@@ -164,11 +164,10 @@ export function createTempOrderController({
           new HardPlacePolicy(DELIVERY_PRICE_POLICY.hardPlace),
         ]);
         const incompleteOrder = new TempOrder(items, delivery, []);
-        const bestCouponCombination =
-          CouponService.calculateBestCouponCombination(
-            incompleteOrder,
-            coupons,
-          );
+        const bestCouponCombination = findBestCouponCombination(
+          incompleteOrder,
+          coupons,
+        );
         const tempOrder = new TempOrder(items, delivery, bestCouponCombination);
         const id = tempOrder.getId();
         tempOrderRepository.save(id, tempOrder);
