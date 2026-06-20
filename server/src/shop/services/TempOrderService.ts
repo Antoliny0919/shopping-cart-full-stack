@@ -1,8 +1,15 @@
 import { NotFoundError } from "../../errors.js";
 import TempOrder from "../models/TempOrder.js";
-import { DeliveryFee, HardPlacePolicy } from "../models/DeliveryFee.js";
+import {
+  DeliveryFee,
+  HardPlacePolicy,
+  FreeDeliveryPolicy,
+} from "../models/DeliveryFee.js";
 import { findBestCouponCombination } from "../couponCalculator.js";
-import { DELIVERY_PRICE_POLICY } from "../constants.js";
+import {
+  DELIVERY_PRICE_POLICY,
+  FREE_DELIVERY_THRESHOLD,
+} from "../constants.js";
 import {
   CouponRepository,
   ProductRepository,
@@ -68,9 +75,13 @@ export class TempOrderService {
   }
 
   private buildDelivery(isHardPlace: boolean) {
+    const defaultPolicies = [new FreeDeliveryPolicy(FREE_DELIVERY_THRESHOLD)];
     const policies = isHardPlace
-      ? [new HardPlacePolicy(DELIVERY_PRICE_POLICY.hardPlace)]
-      : [];
+      ? [
+          new HardPlacePolicy(DELIVERY_PRICE_POLICY.hardPlace),
+          ...defaultPolicies,
+        ]
+      : [...defaultPolicies];
     return new DeliveryFee(DELIVERY_PRICE_POLICY.default, policies);
   }
 

@@ -27,7 +27,7 @@ class TempOrder {
   }
 
   public calculateDeliveryFee() {
-    return this.deliveryFee.getDeliveryFee();
+    return this.deliveryFee.getDeliveryFee(this.calculateOrderPrice());
   }
 
   public calculateOrderPrice() {

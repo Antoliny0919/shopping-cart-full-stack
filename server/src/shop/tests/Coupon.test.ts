@@ -33,7 +33,7 @@ describe("Coupon Test", () => {
         },
       },
     ],
-    new DeliveryFee(10000),
+    new DeliveryFee(10000, []),
     [],
   );
 
