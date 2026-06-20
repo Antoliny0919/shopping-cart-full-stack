@@ -1,12 +1,5 @@
 import { jest } from "@jest/globals";
-import { createApp } from "../../route.js";
 import { DeliveryFee, HardPlacePolicy } from "../models/DeliveryFee.js";
-import {
-  InMemoryCartRepository,
-  InMemoryProductRepository,
-  InMemoryTempOrderRepository,
-  InMemoryCouponRepository,
-} from "../repositories/InMemoryRepositories.js";
 import TempOrder from "../models/TempOrder.js";
 import {
   AmountDiscountCoupon,
@@ -16,47 +9,15 @@ import {
 } from "../models/Coupon.js";
 import Product from "../models/Product.js";
 import request from "supertest";
-import {
-  createCartController,
-  createCouponController,
-  createDiscountSummaryController,
-  createProductController,
-  createTempOrderController,
-} from "../controllers.js";
 import { ProductType } from "../models/Product.js";
 import {
   HotTimeDiscountCondition,
   MinimumOrderPriceDiscountCondition,
 } from "../models/DiscountCondition.js";
+import { createShopApp } from "../factory.js";
 
 describe("프로덕트 API 테스트", () => {
-  // TODO: 매 테스트마다 controller와 리포지토리를 생성해야한다.
-  // 독립성은 보장되지만 굳이 불필요한 선에서는 중복을 제거해야할거 같다..
-  const cartRepository = new InMemoryCartRepository();
-  const productRepository = new InMemoryProductRepository();
-  const tempOrderRepository = new InMemoryTempOrderRepository();
-  const couponRepository = new InMemoryCouponRepository();
-
-  const cartController = createCartController({
-    cartRepository,
-    productRepository,
-  });
-  const productController = createProductController({
-    cartRepository,
-    productRepository,
-  });
-  const tempOrderController = createTempOrderController({
-    tempOrderRepository,
-    productRepository,
-    couponRepository,
-  });
-  const discountSummaryController = createDiscountSummaryController({
-    tempOrderRepository,
-    couponRepository,
-  });
-  const couponController = createCouponController({
-    couponRepository,
-  });
+  const { app, productRepository } = createShopApp();
 
   const product1 = new Product({
     name: "피자",
@@ -67,14 +28,6 @@ describe("프로덕트 API 테스트", () => {
     name: "치킨",
     price: 20000,
     thumbnail: "chicken.png",
-  });
-
-  const app = createApp({
-    productController,
-    cartController,
-    tempOrderController,
-    discountSummaryController,
-    couponController,
   });
 
   beforeEach(() => {
@@ -198,39 +151,7 @@ describe("프로덕트 API 테스트", () => {
 });
 
 describe("카트 API 테스트", () => {
-  const productRepository = new InMemoryProductRepository();
-  const cartRepository = new InMemoryCartRepository();
-  const tempOrderRepository = new InMemoryTempOrderRepository();
-  const couponRepository = new InMemoryCouponRepository();
-
-  const productController = createProductController({
-    productRepository,
-    cartRepository,
-  });
-  const cartController = createCartController({
-    cartRepository,
-    productRepository,
-  });
-  const tempOrderController = createTempOrderController({
-    tempOrderRepository,
-    productRepository,
-    couponRepository,
-  });
-  const discountSummaryController = createDiscountSummaryController({
-    tempOrderRepository,
-    couponRepository,
-  });
-  const couponController = createCouponController({
-    couponRepository,
-  });
-
-  const app = createApp({
-    productController,
-    cartController,
-    tempOrderController,
-    discountSummaryController,
-    couponController,
-  });
+  const { app, cartRepository } = createShopApp();
   const cart = cartRepository.get();
 
   beforeEach(() => {
@@ -306,39 +227,7 @@ describe("카트 API 테스트", () => {
 });
 
 describe("임시 주문서 API 테스트", () => {
-  const cartRepository = new InMemoryCartRepository();
-  const productRepository = new InMemoryProductRepository();
-  const tempOrderRepository = new InMemoryTempOrderRepository();
-  const couponRepository = new InMemoryCouponRepository();
-
-  const cartController = createCartController({
-    cartRepository,
-    productRepository,
-  });
-  const productController = createProductController({
-    cartRepository,
-    productRepository,
-  });
-  const tempOrderController = createTempOrderController({
-    tempOrderRepository,
-    productRepository,
-    couponRepository,
-  });
-  const couponController = createCouponController({
-    couponRepository,
-  });
-  const discountSummaryController = createDiscountSummaryController({
-    tempOrderRepository,
-    couponRepository,
-  });
-
-  const app = createApp({
-    cartController,
-    productController,
-    tempOrderController,
-    discountSummaryController,
-    couponController,
-  });
+  const { app, productRepository, tempOrderRepository, couponRepository } = createShopApp();
 
   const amountDiscountCoupon = new AmountDiscountCoupon({
     conditions: [],
@@ -577,38 +466,7 @@ describe("임시 주문서 API 테스트", () => {
 });
 
 describe("쿠폰 API 테스트", () => {
-  const cartRepository = new InMemoryCartRepository();
-  const productRepository = new InMemoryProductRepository();
-  const tempOrderRepository = new InMemoryTempOrderRepository();
-  const couponRepository = new InMemoryCouponRepository();
-
-  const cartController = createCartController({
-    cartRepository,
-    productRepository,
-  });
-  const productController = createProductController({
-    cartRepository,
-    productRepository,
-  });
-  const tempOrderController = createTempOrderController({
-    tempOrderRepository,
-    productRepository,
-    couponRepository,
-  });
-  const couponController = createCouponController({
-    couponRepository,
-  });
-  const discountSummaryController = createDiscountSummaryController({
-    tempOrderRepository,
-    couponRepository,
-  });
-  const app = createApp({
-    cartController,
-    productController,
-    tempOrderController,
-    discountSummaryController,
-    couponController,
-  });
+  const { app, couponRepository } = createShopApp();
 
   const amountDiscountCoupon = new AmountDiscountCoupon({
     conditions: [new HotTimeDiscountCondition(5, 8)],
@@ -646,38 +504,7 @@ describe("쿠폰 API 테스트", () => {
 });
 
 describe("할인금액 API 테스트", () => {
-  const cartRepository = new InMemoryCartRepository();
-  const productRepository = new InMemoryProductRepository();
-  const tempOrderRepository = new InMemoryTempOrderRepository();
-  const couponRepository = new InMemoryCouponRepository();
-
-  const cartController = createCartController({
-    cartRepository,
-    productRepository,
-  });
-  const productController = createProductController({
-    cartRepository,
-    productRepository,
-  });
-  const tempOrderController = createTempOrderController({
-    tempOrderRepository,
-    productRepository,
-    couponRepository,
-  });
-  const couponController = createCouponController({
-    couponRepository,
-  });
-  const discountSummaryController = createDiscountSummaryController({
-    tempOrderRepository,
-    couponRepository,
-  });
-  const app = createApp({
-    cartController,
-    productController,
-    tempOrderController,
-    discountSummaryController,
-    couponController,
-  });
+  const { app, tempOrderRepository, couponRepository } = createShopApp();
 
   const amountDiscountCoupon = new AmountDiscountCoupon({
     conditions: [],
