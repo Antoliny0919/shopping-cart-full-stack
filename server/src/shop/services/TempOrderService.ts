@@ -23,18 +23,13 @@ export class TempOrderService {
   }
 
   create(rawItems: { product_id: string; quantity: number }[]) {
-    const items = rawItems.map((item) => {
-      const product = this.productRepository.findById(item.product_id);
-      if (!product) throw new NotFoundError();
-      return { ...item, product };
-    });
-
-    const delivery = new DeliveryFee(DELIVERY_PRICE_POLICY.default, [
-      new HardPlacePolicy(DELIVERY_PRICE_POLICY.hardPlace),
-    ]);
+    const items = this.convertToItems(rawItems);
+    const delivery = this.buildDelivery(true);
     const coupons = this.couponRepository.findAll();
-    const incompleteOrder = new TempOrder(items, delivery, []);
-    const bestCoupons = findBestCouponCombination(incompleteOrder, coupons);
+    const bestCoupons = findBestCouponCombination(
+      new TempOrder(items, delivery, []),
+      coupons,
+    );
     const tempOrder = new TempOrder(items, delivery, bestCoupons);
 
     const id = tempOrder.getId();
@@ -52,24 +47,38 @@ export class TempOrderService {
     const { hard_delivery_place, selected_coupons } = body;
 
     if (hard_delivery_place !== undefined) {
-      const policies = hard_delivery_place
-        ? [new HardPlacePolicy(DELIVERY_PRICE_POLICY.hardPlace)]
-        : [];
-      order = order.withDelivery(
-        new DeliveryFee(DELIVERY_PRICE_POLICY.default, policies),
-      );
+      order = order.withDelivery(this.buildDelivery(hard_delivery_place));
     }
 
     if (selected_coupons !== undefined) {
-      const coupons = selected_coupons.map((couponId) => {
-        const coupon = this.couponRepository.findById(couponId);
-        if (!coupon) throw new NotFoundError();
-        return coupon;
-      });
-      order = order.withCoupons(coupons);
+      order = order.withCoupons(this.convertToCoupons(selected_coupons));
     }
 
     this.tempOrderRepository.save(order.getId(), order);
     return order.toObject();
+  }
+
+  private convertToItems(rawItems: { product_id: string; quantity: number }[]) {
+    return rawItems.map((item) => {
+      const product = this.productRepository.findById(item.product_id);
+      if (!product) throw new NotFoundError();
+      const { id: _id, ...productData } = product.toObject();
+      return { ...item, product: productData };
+    });
+  }
+
+  private buildDelivery(isHardPlace: boolean) {
+    const policies = isHardPlace
+      ? [new HardPlacePolicy(DELIVERY_PRICE_POLICY.hardPlace)]
+      : [];
+    return new DeliveryFee(DELIVERY_PRICE_POLICY.default, policies);
+  }
+
+  private convertToCoupons(ids: string[]) {
+    return ids.map((couponId) => {
+      const coupon = this.couponRepository.findById(couponId);
+      if (!coupon) throw new NotFoundError();
+      return coupon;
+    });
   }
 }
