@@ -41,6 +41,14 @@ describe("DeliveryFee Tests", () => {
     const deliveryFee = new DeliveryFee(3000, [new FreeDeliveryPolicy(50000)]);
     expect(deliveryFee.getDeliveryFee(50000)).toBe(0);
   });
+
+  test("도서/산간 지역이더라도 무료 배송 조건을 충족하면 배송비는 0원이다.", () => {
+    const deliveryFee = new DeliveryFee(3000, [
+      new HardPlacePolicy(5000),
+      new FreeDeliveryPolicy(50000),
+    ]);
+    expect(deliveryFee.getDeliveryFee(50000)).toBe(0);
+  });
 });
 
 describe("FreeDeliveryPolicy Tests", () => {
