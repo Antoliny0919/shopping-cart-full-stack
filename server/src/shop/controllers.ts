@@ -5,10 +5,11 @@ import {
   ProductRepository,
   TempOrderRepository,
 } from "./repositories/InMemoryRepositories.js";
-import { Coupon } from "./models/Coupon.js";
 import { ProductService } from "./services/ProductService.js";
 import { CartService } from "./services/CartService.js";
 import { TempOrderService } from "./services/TempOrderService.js";
+import { CouponService } from "./services/CouponService.js";
+import { DiscountSummaryService } from "./services/DiscountSummaryService.js";
 
 export interface ProductController {
   get: express.RequestHandler;
@@ -150,16 +151,11 @@ export function createCouponController({
 }: {
   couponRepository: CouponRepository;
 }): CouponController {
+  const service = new CouponService(couponRepository);
   return {
     get: (_req, res, next) => {
       try {
-        res
-          .status(200)
-          .send(
-            couponRepository
-              .findAll()
-              .map((coupon: Coupon) => coupon.toObject()),
-          );
+        res.status(200).send(service.getAll());
       } catch (err) {
         next(err);
       }
@@ -174,18 +170,13 @@ export function createDiscountSummaryController({
   tempOrderRepository: TempOrderRepository;
   couponRepository: CouponRepository;
 }): DiscountSummaryController {
+  const service = new DiscountSummaryService(tempOrderRepository, couponRepository);
   return {
     post: (req, res, next) => {
       try {
-        const tempOrder = tempOrderRepository.findById(req.params.id as string);
-        const { coupon_id } = req.body;
-        const coupons = coupon_id.map((id: string) =>
-          couponRepository.findById(id),
-        );
-        const newOrder = tempOrder?.withCoupons(coupons);
         res
           .status(200)
-          .send({ discount_price: newOrder?.totalDiscountPrice() });
+          .send(service.calculate(req.params.id as string, req.body.coupon_id));
       } catch (err) {
         next(err);
       }
