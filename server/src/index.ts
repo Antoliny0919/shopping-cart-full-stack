@@ -3,6 +3,8 @@ import {
   createCartController,
   createProductController,
   createTempOrderController,
+  createDiscountSummaryController,
+  createCouponController,
 } from "./shop/controllers.js";
 import {
   InMemoryCartRepository,
@@ -18,7 +20,7 @@ const PORT = process.env.PORT ?? 3000;
 const productRepository = new InMemoryProductRepository();
 const cartRepository = new InMemoryCartRepository();
 const tempOrderRepository = new InMemoryTempOrderRepository();
-const CouponRepository = new InMemoryCouponRepository();
+const couponRepository = new InMemoryCouponRepository();
 
 const cart = cartRepository.get();
 for (const { quantity, ...productData } of SEED_DATA["products"]) {
@@ -28,7 +30,7 @@ for (const { quantity, ...productData } of SEED_DATA["products"]) {
 }
 
 for (const coupon of SEED_DATA["coupons"]) {
-  CouponRepository.save(coupon.getId(), coupon);
+  couponRepository.save(coupon.getId(), coupon);
 }
 
 const productController = createProductController({
@@ -42,11 +44,24 @@ const cartController = createCartController({
 const tempOrderController = createTempOrderController({
   productRepository,
   tempOrderRepository,
+  couponRepository,
 });
+
+const discountSummaryController = createDiscountSummaryController({
+  tempOrderRepository,
+  couponRepository,
+});
+
+const couponController = createCouponController({
+  couponRepository,
+});
+
 const app = createApp({
   productController,
   cartController,
   tempOrderController,
+  discountSummaryController,
+  couponController,
 });
 
 app.listen(PORT, () => {
