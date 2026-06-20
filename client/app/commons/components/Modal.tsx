@@ -38,7 +38,9 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
 }
 
 const CloseButton = styled.button`
-  align-self: flex-end;
+  position: absolute;
+  top: 0;
+  right: 0;
   background: none;
   border: none;
   font-size: 18px;
@@ -49,6 +51,7 @@ const CloseButton = styled.button`
 `;
 
 const ModalContent = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 32px;

@@ -1,12 +1,12 @@
-import { useState } from "react";
 import { useLocation } from "react-router";
+import { useState } from "react";
 import styled from "@emotion/styled";
 import { Button } from "../../../commons/styles/Button";
 import OrderItemList from "./OrderItemList";
 import Checkbox from "../../../commons/components/Checkbox";
 import OrderSummary from "./OrderSummary";
 import Info from "../../../commons/images/info.svg?react";
-import Modal from "../../../commons/components/Modal";
+import CouponSelectModal from "./CouponSelectModal";
 
 export default function Section() {
   const { totalItems, totalQuantity, totalPrice } = useLocation().state;
@@ -31,6 +31,11 @@ export default function Section() {
       },
     },
   ];
+
+  function onClose() {
+    setIsCouponModalOpen(false);
+  }
+
   return (
     <SectionLayout>
       <Title>주문 확인</Title>
@@ -39,10 +44,10 @@ export default function Section() {
       </SubText>
       <SubText>최종 결제 금액을 확인해 주세요.</SubText>
       <OrderItemList items={items}></OrderItemList>
-      <CouponApplyButton onClick={() => setIsCouponModalOpen(true)}>쿠폰 적용</CouponApplyButton>
-      <Modal isOpen={isCouponModalOpen} onClose={() => setIsCouponModalOpen(false)}>
-        <p>쿠폰 내용</p>
-      </Modal>
+      <CouponApplyButton onClick={() => setIsCouponModalOpen(true)}>
+        쿠폰 적용
+      </CouponApplyButton>
+      <CouponSelectModal isOpen={isCouponModalOpen} onClose={onClose} />
       <DeliveryOption>
         <p>배송 정보</p>
         <Checkbox
