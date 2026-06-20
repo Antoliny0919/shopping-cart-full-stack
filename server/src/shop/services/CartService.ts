@@ -8,7 +8,10 @@ export class CartService {
   constructor(
     private readonly cartRepository: CartRepository,
     private readonly productRepository: ProductRepository,
-  ) {}
+  ) {
+    this.cartRepository = cartRepository;
+    this.productRepository = productRepository;
+  }
 
   getAll() {
     const cart = this.cartRepository.get();

@@ -8,7 +8,10 @@ export class DiscountSummaryService {
   constructor(
     private readonly tempOrderRepository: TempOrderRepository,
     private readonly couponRepository: CouponRepository,
-  ) {}
+  ) {
+    this.tempOrderRepository = tempOrderRepository;
+    this.couponRepository = couponRepository;
+  }
 
   calculate(orderId: string, couponIds: string[]) {
     const tempOrder = this.tempOrderRepository.findById(orderId);

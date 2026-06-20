@@ -9,7 +9,10 @@ export class ProductService {
   constructor(
     private readonly productRepository: ProductRepository,
     private readonly cartRepository: CartRepository,
-  ) {}
+  ) {
+    this.productRepository = productRepository;
+    this.cartRepository = cartRepository;
+  }
 
   getAll() {
     return this.productRepository.findAll().map((p: Product) => p.toObject());

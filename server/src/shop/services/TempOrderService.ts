@@ -21,7 +21,11 @@ export class TempOrderService {
     private readonly tempOrderRepository: TempOrderRepository,
     private readonly productRepository: ProductRepository,
     private readonly couponRepository: CouponRepository,
-  ) {}
+  ) {
+    this.tempOrderRepository = tempOrderRepository;
+    this.productRepository = productRepository;
+    this.couponRepository = couponRepository;
+  }
 
   getById(id: string) {
     const tempOrder = this.tempOrderRepository.findById(id);
