@@ -122,3 +122,4 @@
 
 - [] OrderSummary
 - [] CartItem, OrderItem
+- [] 체크박스 텍스트
