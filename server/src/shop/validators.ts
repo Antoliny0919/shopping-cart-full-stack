@@ -6,6 +6,7 @@ import {
   validateMaxArrayLength,
 } from "../validators.js";
 import { ValidatorMap } from "../types.js";
+import { COUPON_SELECT_LIMIT } from "./constants.js";
 
 export const ProductFieldValidators: ValidatorMap = {
   name: [validateIsNotEmpty("상품명"), validateLengthRange("상품명", 0, 100)],
@@ -17,9 +18,9 @@ export const CartFieldValidators: ValidatorMap = {
 };
 
 export const TempOrderFieldValidators: ValidatorMap = {
-  selected_coupons: [validateMaxArrayLength("쿠폰", 2)],
+  selected_coupons: [validateMaxArrayLength("쿠폰", COUPON_SELECT_LIMIT)],
 };
 
 export const DiscountSummaryFieldValidators: ValidatorMap = {
-  coupon_id: [validateMaxArrayLength("쿠폰", 2)],
+  coupon_id: [validateMaxArrayLength("쿠폰", COUPON_SELECT_LIMIT)],
 };
