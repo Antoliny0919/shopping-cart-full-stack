@@ -26,6 +26,7 @@ export interface TempOrderRepository {
 
 export interface CouponRepository {
   save: (id: string, obj: Coupon) => void;
+  findById: (id: string) => Coupon | undefined;
   findAll: () => Coupon[];
 }
 
@@ -96,7 +97,15 @@ export class InMemoryCouponRepository implements CouponRepository {
     this.coupons.set(id, obj);
   }
 
+  findById(id: string) {
+    return this.coupons.get(id);
+  }
+
   findAll() {
     return [...this.coupons.values()];
+  }
+
+  clearAll() {
+    return (this.coupons = new Map());
   }
 }

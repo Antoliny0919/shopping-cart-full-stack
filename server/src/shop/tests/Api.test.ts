@@ -8,7 +8,12 @@ import {
   InMemoryCouponRepository,
 } from "../repositories/InMemoryRepositories.js";
 import TempOrder from "../models/TempOrder.js";
-import { AmountDiscountCoupon, RateDiscountCoupon } from "../models/Coupon.js";
+import {
+  AmountDiscountCoupon,
+  BonusCoupon,
+  FreeShippingCoupon,
+  RateDiscountCoupon,
+} from "../models/Coupon.js";
 import Product from "../models/Product.js";
 import request from "supertest";
 import {
@@ -335,12 +340,33 @@ describe("임시 주문서 API 테스트", () => {
     [amountDiscountCoupon, rateDiscountCoupon],
   );
 
+  const freeShippingCoupon = new FreeShippingCoupon({
+    conditions: [],
+  });
+  const bonusCoupon = new BonusCoupon({
+    conditions: [],
+    minQuantity: 2,
+    bonusCount: 1,
+  });
+
   beforeEach(() => {
+    productRepository.save(
+      "123",
+      new Product({ name: "상품A", price: 10000, thumbnail: "a.png" }),
+    );
+    productRepository.save(
+      "456",
+      new Product({ name: "상품B", price: 20000, thumbnail: "b.png" }),
+    );
     tempOrderRepository.save(tempOrder.getId(), tempOrder);
+    couponRepository.save(freeShippingCoupon.getId(), freeShippingCoupon);
+    couponRepository.save(bonusCoupon.getId(), bonusCoupon);
   });
 
   afterEach(() => {
     tempOrderRepository.clearAll();
+    couponRepository.clearAll();
+    productRepository.clearAll();
   });
 
   test("임시 주문서를 생성한다.", async () => {
@@ -404,11 +430,14 @@ describe("임시 주문서 API 테스트", () => {
   });
 
   test("특정 임시 주문서를 수정한다.", async () => {
+    const id = tempOrder.getId();
     const res = await request(app)
-      .patch(`/api/orders/${tempOrder.id}/`)
-      .send({ seelcted_coupons: ["FREESHIPPING, MIRACLESALE"] })
+      .patch(`/api/orders/${id}/`)
+      .send({
+        selected_coupons: [freeShippingCoupon.getId(), bonusCoupon.getId()],
+      })
       .set("Accept", "application/json");
-    expect(res.status).toBe(201);
+    expect(res.status).toBe(200);
     res.body.price_summary = {
       order_price: 30500,
       discount_price: 4000,
@@ -416,32 +445,32 @@ describe("임시 주문서 API 테스트", () => {
       total_price: 26500,
     };
     expect(res.body).toEqual({
-      id: tempOrder.id,
-      hard_delivery_place: false,
-      selected_coupons: ["FREESHIPPING, MIRACLESALE"],
+      id: id,
+      hard_delivery_place: true,
+      selected_coupons: [freeShippingCoupon.getId(), bonusCoupon.getId()],
       selected_items: [
         {
-          product_id: "123",
-          quantity: 2,
+          product_id: "777",
+          quantity: 4,
           product: {
-            name: "투썸 아이스크림",
-            price: 4000,
-            thumbnail: "ice.png",
+            name: "레몬에이드",
+            price: 2500,
+            thumbnail: "lemon-ade.png",
           },
         },
         {
-          product_id: "456",
-          quantity: 5,
+          product_id: "555",
+          quantity: 4,
           product: {
-            name: "투썸 초코 아이스크림",
-            price: 4500,
-            thumbnail: "ice-choco.png",
+            name: "블루레몬에이드",
+            price: 10000,
+            thumbnail: "blue-lemon-ade.png",
           },
         },
       ],
       price_summary: {
         order_price: 30500,
-        discout_price: 4000,
+        discount_price: 4000,
         delivery_price: 0,
         total_price: 26500,
       },

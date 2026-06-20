@@ -93,7 +93,7 @@
     - API GET /api/coupons/
   - [] 쿠폰 할인금액 계산
     - API POST /api/coupons/discount-summary/
-  - [] 쿠폰 적용, 제주 산간(배송지) 변경
+  - [x] 쿠폰 적용, 제주 산간(배송지) 변경
     - API PATCH /api/order/{orderId}/
   - [] 주문서 생성
     - API POST /api/payment/

@@ -35,7 +35,10 @@ export function createShopRouter({
     .delete(cartController.delete);
 
   router.route("/api/orders/").post(tempOrderController.post);
-  router.route("/api/orders/:id/").get(tempOrderController.get);
+  router
+    .route("/api/orders/:id/")
+    .get(tempOrderController.get)
+    .patch(tempOrderController.patch);
 
   return router;
 }

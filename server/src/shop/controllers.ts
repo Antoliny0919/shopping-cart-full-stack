@@ -27,6 +27,7 @@ export interface CartController {
 export interface tempOrderController {
   get: express.RequestHandler;
   post: express.RequestHandler;
+  patch: express.RequestHandler;
 }
 
 export function createProductController({
@@ -172,6 +173,41 @@ export function createTempOrderController({
         const id = tempOrder.getId();
         tempOrderRepository.save(id, tempOrder);
         res.status(201).send({ order_id: id });
+      } catch (err) {
+        next(err);
+      }
+    },
+    patch: (req, res, next) => {
+      try {
+        // TODO : 서비스 분리 -> 검증
+        const tempOrder = tempOrderRepository.findById(req.params.id as string);
+        if (!tempOrder) throw new NotFoundError();
+        const { hard_delivery_place, selected_coupons } = req.body;
+
+        let updatedOrder = tempOrder;
+
+        if (hard_delivery_place !== undefined) {
+          const deliveryPolicies = hard_delivery_place
+            ? [new HardPlacePolicy(DELIVERY_PRICE_POLICY.hardPlace)]
+            : [];
+          const newDelivery = new DeliveryFee(
+            DELIVERY_PRICE_POLICY.default,
+            deliveryPolicies,
+          );
+          updatedOrder = updatedOrder.withDelivery(newDelivery);
+        }
+
+        if (selected_coupons !== undefined) {
+          const coupons = (selected_coupons as string[]).map((id) => {
+            const coupon = couponRepository.findById(id);
+            if (!coupon) throw new NotFoundError();
+            return coupon;
+          });
+          updatedOrder = updatedOrder.withCoupons(coupons);
+        }
+
+        tempOrderRepository.save(updatedOrder.getId(), updatedOrder);
+        res.status(200).send(updatedOrder.toObject());
       } catch (err) {
         next(err);
       }

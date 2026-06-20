@@ -18,8 +18,9 @@ class TempOrder {
     private readonly items: OrderItem[],
     deliveryFee: DeliveryFee,
     selectedCoupons: Coupon[],
+    id: string = crypto.randomUUID(),
   ) {
-    this.id = crypto.randomUUID();
+    this.id = id;
     this.items = items;
     this.deliveryFee = deliveryFee;
     this.selectedCoupons = selectedCoupons;
@@ -74,6 +75,19 @@ class TempOrder {
 
   public getId() {
     return this.id;
+  }
+
+  public withDelivery(deliveryFee: DeliveryFee): TempOrder {
+    return new TempOrder(
+      this.items,
+      deliveryFee,
+      this.selectedCoupons,
+      this.id,
+    );
+  }
+
+  public withCoupons(coupons: Coupon[]): TempOrder {
+    return new TempOrder(this.items, this.deliveryFee, coupons, this.id);
   }
 }
 
