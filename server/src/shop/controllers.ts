@@ -1,18 +1,14 @@
 import express from "express";
-import { NotFoundError } from "../errors.js";
-import TempOrder from "./models/TempOrder.js";
 import {
   CartRepository,
   CouponRepository,
   ProductRepository,
   TempOrderRepository,
 } from "./repositories/InMemoryRepositories.js";
-import { findBestCouponCombination } from "./couponCalculator.js";
-import { DELIVERY_PRICE_POLICY } from "./constants.js";
-import { DeliveryFee, HardPlacePolicy } from "./models/DeliveryFee.js";
 import { Coupon } from "./models/Coupon.js";
 import { ProductService } from "./services/ProductService.js";
 import { CartService } from "./services/CartService.js";
+import { TempOrderService } from "./services/TempOrderService.js";
 
 export interface ProductController {
   get: express.RequestHandler;
@@ -117,78 +113,31 @@ export function createTempOrderController({
   productRepository: ProductRepository;
   couponRepository: CouponRepository;
 }): tempOrderController {
+  const service = new TempOrderService(
+    tempOrderRepository,
+    productRepository,
+    couponRepository,
+  );
   return {
     get: (req, res, next) => {
       try {
-        const tempOrder = tempOrderRepository.findById(req.params.id as string);
-        if (!tempOrder) throw new NotFoundError();
-        res.status(200).send(tempOrder.toObject());
+        res.status(200).send(service.getById(req.params.id as string));
       } catch (err) {
         next(err);
       }
     },
     post: (req, res, next) => {
       try {
-        // TODO : Service 로 분리
-        const items = req.body.map(
-          (item: { product_id: string; quantity: number }) => {
-            const product = productRepository.findById(item.product_id);
-            if (!product) throw new NotFoundError();
-            return {
-              ...item,
-              product: product,
-            };
-          },
-        );
-        // TODO: Service 로 분리 + 캡슐화 필요
-        const coupons = couponRepository.findAll();
-        const delivery = new DeliveryFee(DELIVERY_PRICE_POLICY.default, [
-          new HardPlacePolicy(DELIVERY_PRICE_POLICY.hardPlace),
-        ]);
-        const incompleteOrder = new TempOrder(items, delivery, []);
-        const bestCouponCombination = findBestCouponCombination(
-          incompleteOrder,
-          coupons,
-        );
-        const tempOrder = new TempOrder(items, delivery, bestCouponCombination);
-        const id = tempOrder.getId();
-        tempOrderRepository.save(id, tempOrder);
-        res.status(201).send({ order_id: id });
+        res.status(201).send(service.create(req.body));
       } catch (err) {
         next(err);
       }
     },
     patch: (req, res, next) => {
       try {
-        // TODO : 서비스 분리 -> 검증
-        const tempOrder = tempOrderRepository.findById(req.params.id as string);
-        if (!tempOrder) throw new NotFoundError();
-        const { hard_delivery_place, selected_coupons } = req.body;
-
-        let updatedOrder = tempOrder;
-
-        if (hard_delivery_place !== undefined) {
-          const deliveryPolicies = hard_delivery_place
-            ? [new HardPlacePolicy(DELIVERY_PRICE_POLICY.hardPlace)]
-            : [];
-          const newDelivery = new DeliveryFee(
-            DELIVERY_PRICE_POLICY.default,
-            deliveryPolicies,
-          );
-          updatedOrder = updatedOrder.withDelivery(newDelivery);
-        }
-
-        if (selected_coupons !== undefined) {
-          const coupons = (selected_coupons as string[]).map((id) => {
-            const coupon = couponRepository.findById(id);
-            if (!coupon) throw new NotFoundError();
-            return coupon;
-          });
-          updatedOrder = updatedOrder.withCoupons(coupons);
-        }
-
-        tempOrderRepository.save(updatedOrder.getId(), updatedOrder);
-        res.status(200).send(updatedOrder.toObject());
+        res
+          .status(200)
+          .send(service.patch(req.params.id as string, req.body));
       } catch (err) {
         next(err);
       }
