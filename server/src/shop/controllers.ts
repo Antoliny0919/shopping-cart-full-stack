@@ -12,6 +12,7 @@ import { DELIVERY_PRICE_POLICY } from "./constants.js";
 import { DeliveryFee, HardPlacePolicy } from "./models/DeliveryFee.js";
 import { Coupon } from "./models/Coupon.js";
 import { ProductService } from "./services/ProductService.js";
+import { CartService } from "./services/CartService.js";
 
 export interface ProductController {
   get: express.RequestHandler;
@@ -80,42 +81,25 @@ export function createCartController({
   cartRepository: CartRepository;
   productRepository: ProductRepository;
 }): CartController {
+  const service = new CartService(cartRepository, productRepository);
   return {
     get: (_req, res, next) => {
       try {
-        const cart = cartRepository.get();
-        const items = cart.getAllItems().map(({ product_id, quantity }) => {
-          const product = productRepository.findById(product_id)?.toObject();
-          return { product_id, quantity, product };
-        });
-        res.send(items);
+        res.send(service.getAll());
       } catch (err) {
         next(err);
       }
     },
     update: (req, res, next) => {
       try {
-        const id = req.params.id;
-        const { quantity } = req.body;
-        const cart = cartRepository.get();
-        if (!cart.hasItemByProductId(id)) {
-          throw new NotFoundError();
-        }
-
-        cart.updateItemByProductId(id, quantity);
-        res.status(200).send({ product_id: id, quantity: quantity });
+        res.status(200).send(service.update(req.params.id, req.body.quantity));
       } catch (err) {
         next(err);
       }
     },
     delete: (req, res, next) => {
       try {
-        const id = req.params.id;
-        const cart = cartRepository.get();
-        if (!cart.hasItemByProductId(id)) {
-          throw new NotFoundError();
-        }
-        cart.deleteItemByProductId(id);
+        service.delete(req.params.id);
         res.status(204).send();
       } catch (err) {
         next(err);
