@@ -226,23 +226,3 @@ STATUS: 200
 ```
 
 STATUS: 201
-
-## `POST` `/api/payment/` - 영수증을 생성한다.
-
-### Body
-
-```
-{
-  order_id: "123-456-789",
-}
-```
-
-### Success Response
-
-```
-{
-  receipt_id: "123-456",
-}
-```
-
-STATUS: 201

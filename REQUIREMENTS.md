@@ -80,7 +80,7 @@
     - [] 임시주문서에 제주/도서 산간 여부 반영하기.(API PATCH /api/order/{orderId}/, hard_delivery_place)
 
   - [] 사용자가 결제하기 버튼을 클릭했다.
-    - [] 주문서를 생성하기.
+    - [] 결제금액 확인 페이지로 이동.
 
 ## BE
 
@@ -91,12 +91,10 @@
     - API GET /api/orders/{orderId}/
   - [x] 쿠폰 가져오기
     - API GET /api/coupons/
-  - [] 쿠폰 할인금액 계산
+  - [x] 쿠폰 할인금액 계산
     - API POST /api/orders/{order-id}/discount-summary/
   - [x] 쿠폰 적용, 제주 산간(배송지) 변경
     - API PATCH /api/order/{orderId}/
-  - [] 주문서 생성
-    - API POST /api/payment/
 
 - [] 임시 주문서
 
