@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import Modal from "../../../commons/components/Modal";
 import InfoText from "../../../commons/components/InfoText";
 import Checkbox from "../../../commons/components/Checkbox";
+import { Button } from "../../../commons/styles/Button";
 
 interface Props {
   isOpen: boolean;
@@ -67,6 +68,7 @@ export default function CouponSelectModal({ isOpen, onClose }: Props) {
           },
         )}
       </CouponList>
+      <CouponUseButton>총 6,000원 할인 쿠폰 사용하기</CouponUseButton>
     </Modal>
   );
 }
@@ -83,6 +85,7 @@ const CouponList = styled.ul`
   gap: 12px;
   padding: 0;
   width: 100%;
+  overflow: scroll;
 `;
 
 const SubText = styled.p`
@@ -98,6 +101,12 @@ const CouponLayout = styled.div`
 
 const CouponHeader = styled.div`
   margin: 8px 0;
+`;
+
+const CouponUseButton = styled(Button)`
+  padding: 12px 0;
+  border-radius: 5px;
+  margin-top: auto;
 `;
 
 const CouponItem = styled.li`

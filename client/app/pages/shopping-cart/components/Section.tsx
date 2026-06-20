@@ -8,7 +8,7 @@ import Cart from "../domain/Cart";
 import CartPricing from "../domain/CartPricing";
 import DeliveryFee from "../domain/DeliveryFee";
 import { FREE_THRESHOLD, DELIVERY_FEE } from "../constants";
-import { Button } from "../../../commons/styles/Button";
+import { FixedButton } from "../../../commons/styles/Button";
 import { SelectedItemsLocalStorage } from "../storages/SelectedItemsStorage";
 import useCartItems from "../hooks/useCartItems";
 import useCartItemSelected from "../hooks/useCartItemSelected";
@@ -142,12 +142,12 @@ export default function Section() {
               <p>장바구니에 담은 상품이 없습니다.</p>
             </EmptyCart>
           )}
-          <Button
+          <FixedButton
             disabled={!cart.selectedItemCount()}
             onClick={goToOrderCheckPage}
           >
             주문 확인
-          </Button>
+          </FixedButton>
         </>
       )}
       {(initialLoadStatus === "error" || networkError) && <NetworkError />}

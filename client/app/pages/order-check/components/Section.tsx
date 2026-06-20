@@ -1,7 +1,7 @@
 import { useLocation } from "react-router";
 import { useState } from "react";
 import styled from "@emotion/styled";
-import { Button } from "../../../commons/styles/Button";
+import { FixedButton } from "../../../commons/styles/Button";
 import OrderItemList from "./OrderItemList";
 import Checkbox from "../../../commons/components/Checkbox";
 import OrderSummary from "./OrderSummary";
@@ -66,9 +66,9 @@ export default function Section() {
         deliveryFee={6000}
         totalPrice={70000}
       ></OrderSummary>
-      <Button type="button" disabled={true}>
+      <FixedButton type="button" disabled={true}>
         결제하기
-      </Button>
+      </FixedButton>
     </SectionLayout>
   );
 }
