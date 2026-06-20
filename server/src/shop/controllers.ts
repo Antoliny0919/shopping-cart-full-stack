@@ -11,6 +11,7 @@ import {
 import { findBestCouponCombination } from "./couponCalculator.js";
 import { DELIVERY_PRICE_POLICY } from "./constants.js";
 import { DeliveryFee, HardPlacePolicy } from "./models/DeliveryFee.js";
+import { Coupon } from "./models/Coupon.js";
 
 export interface ProductController {
   get: express.RequestHandler;
@@ -28,6 +29,10 @@ export interface tempOrderController {
   get: express.RequestHandler;
   post: express.RequestHandler;
   patch: express.RequestHandler;
+}
+
+export interface CouponController {
+  get: express.RequestHandler;
 }
 
 export function createProductController({
@@ -208,6 +213,28 @@ export function createTempOrderController({
 
         tempOrderRepository.save(updatedOrder.getId(), updatedOrder);
         res.status(200).send(updatedOrder.toObject());
+      } catch (err) {
+        next(err);
+      }
+    },
+  };
+}
+
+export function createCouponController({
+  couponRepository,
+}: {
+  couponRepository: CouponRepository;
+}): CouponController {
+  return {
+    get: (_req, res, next) => {
+      try {
+        res
+          .status(200)
+          .send(
+            couponRepository
+              .findAll()
+              .map((coupon: Coupon) => coupon.toObject()),
+          );
       } catch (err) {
         next(err);
       }

@@ -6,6 +6,7 @@ import {
   ProductController,
   CartController,
   tempOrderController,
+  CouponController,
 } from "./shop/controllers.js";
 import { createShopRouter } from "./shop/route.js";
 import { handleErrors } from "./errors.js";
@@ -14,10 +15,12 @@ export function createApp({
   productController,
   cartController,
   tempOrderController,
+  couponController,
 }: {
   productController: ProductController;
   cartController: CartController;
   tempOrderController: tempOrderController;
+  couponController: CouponController;
 }) {
   const app = express();
   const router = app.router;
@@ -36,6 +39,7 @@ export function createApp({
       productController,
       cartController,
       tempOrderController,
+      couponController,
     }),
   );
 

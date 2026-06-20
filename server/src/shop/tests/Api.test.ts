@@ -18,10 +18,15 @@ import Product from "../models/Product.js";
 import request from "supertest";
 import {
   createCartController,
+  createCouponController,
   createProductController,
   createTempOrderController,
 } from "../controllers.js";
 import { ProductType } from "../models/Product.js";
+import {
+  HotTimeDiscountCondition,
+  MinimumOrderPriceDiscountCondition,
+} from "../models/DiscountCondition.js";
 
 describe("프로덕트 API 테스트", () => {
   // TODO: 매 테스트마다 controller와 리포지토리를 생성해야한다.
@@ -44,6 +49,10 @@ describe("프로덕트 API 테스트", () => {
     productRepository,
     couponRepository,
   });
+  const couponController = createCouponController({
+    couponRepository,
+  });
+
   const product1 = new Product({
     name: "피자",
     price: 30000,
@@ -59,6 +68,7 @@ describe("프로덕트 API 테스트", () => {
     productController,
     cartController,
     tempOrderController,
+    couponController,
   });
 
   beforeEach(() => {
@@ -200,11 +210,15 @@ describe("카트 API 테스트", () => {
     productRepository,
     couponRepository,
   });
+  const couponController = createCouponController({
+    couponRepository,
+  });
 
   const app = createApp({
     productController,
     cartController,
     tempOrderController,
+    couponController,
   });
   const cart = cartRepository.get();
 
@@ -299,10 +313,15 @@ describe("임시 주문서 API 테스트", () => {
     productRepository,
     couponRepository,
   });
+  const couponController = createCouponController({
+    couponRepository,
+  });
+
   const app = createApp({
     cartController,
     productController,
     tempOrderController,
+    couponController,
   });
 
   const amountDiscountCoupon = new AmountDiscountCoupon({
@@ -475,5 +494,69 @@ describe("임시 주문서 API 테스트", () => {
         total_price: 26500,
       },
     });
+  });
+});
+
+describe("쿠폰 API 테스트", () => {
+  const cartRepository = new InMemoryCartRepository();
+  const productRepository = new InMemoryProductRepository();
+  const tempOrderRepository = new InMemoryTempOrderRepository();
+  const couponRepository = new InMemoryCouponRepository();
+
+  const cartController = createCartController({
+    cartRepository,
+    productRepository,
+  });
+  const productController = createProductController({
+    cartRepository,
+    productRepository,
+  });
+  const tempOrderController = createTempOrderController({
+    tempOrderRepository,
+    productRepository,
+    couponRepository,
+  });
+  const couponController = createCouponController({
+    couponRepository,
+  });
+  const app = createApp({
+    cartController,
+    productController,
+    tempOrderController,
+    couponController,
+  });
+
+  const amountDiscountCoupon = new AmountDiscountCoupon({
+    conditions: [new HotTimeDiscountCondition(5, 8)],
+    discountPrice: 5000,
+    expirationDate: new Date("2020-01-01"),
+  });
+
+  const rateDiscountCoupon = new RateDiscountCoupon({
+    conditions: [new MinimumOrderPriceDiscountCondition(1000)],
+    discountRate: 30,
+    expirationDate: new Date("2030-12-31"),
+  });
+
+  couponRepository.save(amountDiscountCoupon.getId(), amountDiscountCoupon);
+  couponRepository.save(rateDiscountCoupon.getId(), rateDiscountCoupon);
+
+  test("쿠폰 목록을 가져온다", async () => {
+    const res = await request(app).get("/api/coupons/");
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual([
+      {
+        id: amountDiscountCoupon.getId(),
+        name: "5,000원 할인 쿠폰",
+        expiration_date: "2020-01-01T00:00:00.000Z",
+        description: "사용 가능 시간: 오전 5시부터 오전 8시까지",
+      },
+      {
+        id: rateDiscountCoupon.getId(),
+        name: "30% 시간제 할인 쿠폰",
+        expiration_date: "2030-12-31T00:00:00.000Z",
+        description: "최소 주문 금액: 1000",
+      },
+    ]);
   });
 });
