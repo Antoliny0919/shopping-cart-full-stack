@@ -3,7 +3,7 @@ import { DeliveryFee, HardPlacePolicy } from "../models/DeliveryFee.js";
 import {
   AmountDiscountCoupon,
   BonusCoupon,
-  FreeShippingCoupon,
+  FreeDeliveryCoupon,
   RateDiscountCoupon,
 } from "../models/Coupon.js";
 
@@ -83,7 +83,7 @@ describe("TempOrder Tests", () => {
   });
 
   test("배송비 무료 쿠폰이 배송비를 0으로 만든다.", () => {
-    const coupon = new FreeShippingCoupon({ conditions: [] });
+    const coupon = new FreeDeliveryCoupon({ conditions: [] });
     const order = new TempOrder(items, new DeliveryFee(3000, []), [coupon]);
     expect(order.toObject().price_summary).toEqual({
       order_price: 26000,
@@ -114,7 +114,7 @@ describe("TempOrder Tests", () => {
       minQuantity: 2,
       bonusCount: 1,
     });
-    const freeDeliveryCoupon = new FreeShippingCoupon({
+    const freeDeliveryCoupon = new FreeDeliveryCoupon({
       conditions: [],
     });
     const order = new TempOrder(

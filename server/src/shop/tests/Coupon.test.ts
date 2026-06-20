@@ -1,7 +1,7 @@
 import {
   AmountDiscountCoupon,
   BonusCoupon,
-  FreeShippingCoupon,
+  FreeDeliveryCoupon,
   RateDiscountCoupon,
 } from "../models/Coupon.js";
 import TempOrder from "../models/TempOrder.js";
@@ -86,9 +86,9 @@ describe("Coupon Test", () => {
     });
   });
 
-  describe("FreeShippingCoupon Tests", () => {
+  describe("FreeDeliveryCoupon Tests", () => {
     test("배송비 무료 쿠폰은 적용되는 배송비만큼 할인금액으로 반환한다.", () => {
-      const coupon = new FreeShippingCoupon({
+      const coupon = new FreeDeliveryCoupon({
         conditions: [],
       });
       expect(coupon.getDiscountPrice(tempOrder)).toBe(10000);

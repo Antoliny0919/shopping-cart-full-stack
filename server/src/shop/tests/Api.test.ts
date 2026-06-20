@@ -4,7 +4,7 @@ import TempOrder from "../models/TempOrder.js";
 import {
   AmountDiscountCoupon,
   BonusCoupon,
-  FreeShippingCoupon,
+  FreeDeliveryCoupon,
   RateDiscountCoupon,
 } from "../models/Coupon.js";
 import Product from "../models/Product.js";
@@ -227,7 +227,8 @@ describe("카트 API 테스트", () => {
 });
 
 describe("임시 주문서 API 테스트", () => {
-  const { app, productRepository, tempOrderRepository, couponRepository } = createShopApp();
+  const { app, productRepository, tempOrderRepository, couponRepository } =
+    createShopApp();
 
   const amountDiscountCoupon = new AmountDiscountCoupon({
     conditions: [],
@@ -264,7 +265,7 @@ describe("임시 주문서 API 테스트", () => {
     [amountDiscountCoupon, rateDiscountCoupon],
   );
 
-  const freeShippingCoupon = new FreeShippingCoupon({
+  const freeDeliveryCoupon = new FreeDeliveryCoupon({
     conditions: [],
   });
   const bonusCoupon = new BonusCoupon({
@@ -283,7 +284,7 @@ describe("임시 주문서 API 테스트", () => {
       new Product({ name: "상품B", price: 20000, thumbnail: "b.png" }),
     );
     tempOrderRepository.save(tempOrder.getId(), tempOrder);
-    couponRepository.save(freeShippingCoupon.getId(), freeShippingCoupon);
+    couponRepository.save(freeDeliveryCoupon.getId(), freeDeliveryCoupon);
     couponRepository.save(bonusCoupon.getId(), bonusCoupon);
   });
 
@@ -382,7 +383,7 @@ describe("임시 주문서 API 테스트", () => {
     const res = await request(app)
       .patch(`/api/orders/${id}/`)
       .send({
-        selected_coupons: [freeShippingCoupon.getId(), bonusCoupon.getId()],
+        selected_coupons: [freeDeliveryCoupon.getId(), bonusCoupon.getId()],
       })
       .set("Accept", "application/json");
     expect(res.status).toBe(200);
@@ -395,7 +396,7 @@ describe("임시 주문서 API 테스트", () => {
     expect(res.body).toEqual({
       id: id,
       hard_delivery_place: true,
-      selected_coupons: [freeShippingCoupon.getId(), bonusCoupon.getId()],
+      selected_coupons: [freeDeliveryCoupon.getId(), bonusCoupon.getId()],
       selected_items: [
         {
           product_id: "777",
@@ -429,7 +430,7 @@ describe("임시 주문서 API 테스트", () => {
     const res = await request(app)
       .patch(`/api/orders/unknown/`)
       .send({
-        selected_coupons: [freeShippingCoupon.getId(), bonusCoupon.getId()],
+        selected_coupons: [freeDeliveryCoupon.getId(), bonusCoupon.getId()],
       })
       .set("Accept", "application/json");
     expect(res.status).toBe(404);
@@ -445,9 +446,9 @@ describe("임시 주문서 API 테스트", () => {
       .patch(`/api/orders/${id}/`)
       .send({
         selected_coupons: [
-          freeShippingCoupon.getId(),
+          freeDeliveryCoupon.getId(),
           bonusCoupon.getId(),
-          freeShippingCoupon.getId(),
+          freeDeliveryCoupon.getId(),
         ],
       })
       .set("Accept", "application/json");
@@ -516,7 +517,7 @@ describe("할인금액 API 테스트", () => {
     discountRate: 30,
   });
 
-  const freeDeliveryCoupon = new FreeShippingCoupon({
+  const freeDeliveryCoupon = new FreeDeliveryCoupon({
     conditions: [],
   });
 

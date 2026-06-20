@@ -1,7 +1,7 @@
 import {
   AmountDiscountCoupon,
   BonusCoupon,
-  FreeShippingCoupon,
+  FreeDeliveryCoupon,
   RateDiscountCoupon,
 } from "./models/Coupon.js";
 import {
@@ -38,7 +38,7 @@ export const SEED_DATA = {
       bonusCount: 1,
       expirationDate: new Date("2026-06-30T23:59:59"),
     }),
-    new FreeShippingCoupon({
+    new FreeDeliveryCoupon({
       conditions: [new MinimumOrderPriceDiscountCondition(50_000)],
       expirationDate: new Date("2026-08-31T23:59:59"),
     }),

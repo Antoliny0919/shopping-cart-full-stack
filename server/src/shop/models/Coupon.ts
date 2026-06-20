@@ -118,7 +118,7 @@ export class BonusCoupon extends Coupon {
   }
 }
 
-export class FreeShippingCoupon extends Coupon {
+export class FreeDeliveryCoupon extends Coupon {
   public readonly phase = CouponPhase.FIXED;
 
   constructor({
