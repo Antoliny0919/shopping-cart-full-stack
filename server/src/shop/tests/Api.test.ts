@@ -261,7 +261,7 @@ describe("임시 주문서 API 테스트", () => {
         },
       },
     ],
-    new DeliveryFee(3000, [new HardPlacePolicy(3000)]),
+    new DeliveryFee(3000, [new HardPlacePolicy(3000)], true),
     [amountDiscountCoupon, rateDiscountCoupon],
   );
 
@@ -542,7 +542,7 @@ describe("할인금액 API 테스트", () => {
         },
       },
     ],
-    new DeliveryFee(3000, [new HardPlacePolicy(3000)]),
+    new DeliveryFee(3000, [new HardPlacePolicy(3000)], true),
     [amountDiscountCoupon, rateDiscountCoupon],
   );
 

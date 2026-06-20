@@ -5,10 +5,12 @@ export interface DeliveryFeePolicy {
 export class DeliveryFee {
   private readonly baseFee: number;
   private readonly policies: DeliveryFeePolicy[];
+  private readonly hardPlace: boolean;
 
-  constructor(baseFee: number, policies: DeliveryFeePolicy[]) {
+  constructor(baseFee: number, policies: DeliveryFeePolicy[], hardPlace: boolean = false) {
     this.baseFee = baseFee;
     this.policies = policies;
+    this.hardPlace = hardPlace;
   }
 
   getDeliveryFee(orderPrice: number) {
@@ -19,12 +21,12 @@ export class DeliveryFee {
   }
 
   isHardPlace() {
-    return this.policies.some((policy) => policy instanceof HardPlacePolicy);
+    return this.hardPlace;
   }
 }
 
 export class HardPlacePolicy implements DeliveryFeePolicy {
-  hardPlaceExtraFee: number;
+  private readonly hardPlaceExtraFee: number;
 
   constructor(hardPlaceExtraFee: number) {
     this.hardPlaceExtraFee = hardPlaceExtraFee;

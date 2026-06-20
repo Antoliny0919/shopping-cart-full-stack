@@ -86,7 +86,7 @@ export class TempOrderService {
           ...defaultPolicies,
         ]
       : [...defaultPolicies];
-    return new DeliveryFee(DELIVERY_PRICE_POLICY.default, policies);
+    return new DeliveryFee(DELIVERY_PRICE_POLICY.default, policies, isHardPlace);
   }
 
   private convertToCoupons(ids: string[]) {

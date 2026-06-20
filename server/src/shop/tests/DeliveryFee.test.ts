@@ -30,7 +30,7 @@ describe("DeliveryFee Tests", () => {
   });
 
   test("도서/산간 지역에 대한 여부를 반환한다.", () => {
-    const withHardPlace = new DeliveryFee(5000, [new HardPlacePolicy(3000)]);
+    const withHardPlace = new DeliveryFee(5000, [new HardPlacePolicy(3000)], true);
     const withoutHardPlace = new DeliveryFee(5000, []);
 
     expect(withHardPlace.isHardPlace()).toBe(true);
