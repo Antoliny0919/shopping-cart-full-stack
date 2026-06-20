@@ -23,7 +23,7 @@ export interface CartController {
   delete: express.RequestHandler<{ id: string }>;
 }
 
-export interface tempOrderController {
+export interface TempOrderController {
   get: express.RequestHandler;
   post: express.RequestHandler;
   patch: express.RequestHandler;
@@ -113,7 +113,7 @@ export function createTempOrderController({
   tempOrderRepository: TempOrderRepository;
   productRepository: ProductRepository;
   couponRepository: CouponRepository;
-}): tempOrderController {
+}): TempOrderController {
   const service = new TempOrderService(
     tempOrderRepository,
     productRepository,
@@ -136,9 +136,7 @@ export function createTempOrderController({
     },
     patch: (req, res, next) => {
       try {
-        res
-          .status(200)
-          .send(service.patch(req.params.id as string, req.body));
+        res.status(200).send(service.patch(req.params.id as string, req.body));
       } catch (err) {
         next(err);
       }
@@ -170,7 +168,10 @@ export function createDiscountSummaryController({
   tempOrderRepository: TempOrderRepository;
   couponRepository: CouponRepository;
 }): DiscountSummaryController {
-  const service = new DiscountSummaryService(tempOrderRepository, couponRepository);
+  const service = new DiscountSummaryService(
+    tempOrderRepository,
+    couponRepository,
+  );
   return {
     post: (req, res, next) => {
       try {

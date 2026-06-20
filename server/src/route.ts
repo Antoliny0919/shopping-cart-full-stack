@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import {
   ProductController,
   CartController,
-  tempOrderController,
+  TempOrderController,
   CouponController,
   DiscountSummaryController,
 } from "./shop/controllers.js";
@@ -21,7 +21,7 @@ export function createApp({
 }: {
   productController: ProductController;
   cartController: CartController;
-  tempOrderController: tempOrderController;
+  tempOrderController: TempOrderController;
   discountSummaryController: DiscountSummaryController;
   couponController: CouponController;
 }) {
