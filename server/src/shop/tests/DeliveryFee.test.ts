@@ -12,6 +12,10 @@ describe("DeliveryFee Tests", () => {
     getExtraFee() {
       return this.extraFee;
     }
+
+    isHardPlace() {
+      return false;
+    }
   }
 
   test("배송비는 정책에 따른 비용을 합하여 반환한다.", () => {
