@@ -8,17 +8,20 @@ import {
   CartController,
   tempOrderController,
   CouponController,
+  DiscountSummaryController,
 } from "./controllers.js";
 
 export function createShopRouter({
   productController,
   cartController,
   tempOrderController,
+  discountSummaryController,
   couponController,
 }: {
   productController: ProductController;
   cartController: CartController;
   tempOrderController: tempOrderController;
+  discountSummaryController: DiscountSummaryController;
   couponController: CouponController;
 }) {
   const router = Router();
@@ -42,6 +45,10 @@ export function createShopRouter({
     .route("/api/orders/:id/")
     .get(tempOrderController.get)
     .patch(tempOrderController.patch);
+
+  router
+    .route("/api/orders/:id/discount-summary/")
+    .post(discountSummaryController.post);
 
   router.route("/api/coupons/").get(couponController.get);
 

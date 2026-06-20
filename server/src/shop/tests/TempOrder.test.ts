@@ -1,5 +1,5 @@
 import TempOrder from "../models/TempOrder.js";
-import { DeliveryFee } from "../models/DeliveryFee.js";
+import { DeliveryFee, HardPlacePolicy } from "../models/DeliveryFee.js";
 import {
   AmountDiscountCoupon,
   BonusCoupon,
@@ -58,7 +58,10 @@ describe("TempOrder Tests", () => {
   });
 
   test("고정 금액 할인 쿠폰이 주문 금액에서 차감된다.", () => {
-    const coupon = new AmountDiscountCoupon({ conditions: [], discountPrice: 5000 });
+    const coupon = new AmountDiscountCoupon({
+      conditions: [],
+      discountPrice: 5000,
+    });
     const order = new TempOrder(items, new DeliveryFee(3000, []), [coupon]);
     expect(order.toObject().price_summary).toEqual({
       order_price: 26000,
@@ -91,7 +94,11 @@ describe("TempOrder Tests", () => {
   });
 
   test("보너스 쿠폰이 가장 비싼 아이템 가격만큼 할인된다.", () => {
-    const coupon = new BonusCoupon({ conditions: [], minQuantity: 2, bonusCount: 1 });
+    const coupon = new BonusCoupon({
+      conditions: [],
+      minQuantity: 2,
+      bonusCount: 1,
+    });
     const order = new TempOrder(items, new DeliveryFee(3000, []), [coupon]);
     expect(order.toObject().price_summary).toEqual({
       order_price: 26000,
@@ -99,5 +106,23 @@ describe("TempOrder Tests", () => {
       delivery_price: 3000,
       total_price: 25000,
     });
+  });
+
+  test("총 할인금액을 반환한다.", () => {
+    const bonusCoupon = new BonusCoupon({
+      conditions: [],
+      minQuantity: 2,
+      bonusCount: 1,
+    });
+    const freeDeliveryCoupon = new FreeShippingCoupon({
+      conditions: [],
+    });
+    const order = new TempOrder(
+      items,
+      new DeliveryFee(3000, [new HardPlacePolicy(5000)]),
+      [bonusCoupon, freeDeliveryCoupon],
+    );
+
+    expect(order.totalDiscountPrice()).toBe(12000);
   });
 });

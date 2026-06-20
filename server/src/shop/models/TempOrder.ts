@@ -43,23 +43,35 @@ class TempOrder {
       .price;
   }
 
-  private priceSummary() {
-    const order_price = this.calculateOrderPrice();
-    const delivery_fee = this.calculateDeliveryFee();
-    const discount_price = calculateDiscount(
+  private discountPriceSummary() {
+    const discountPrice = calculateDiscount(
       this,
       this.selectedCoupons.filter((c) => !c.isDeliveryDiscount()),
     );
-    const delivery_discount = calculateDiscount(
+    const deliveryDiscountPrice = calculateDiscount(
       this,
       this.selectedCoupons.filter((c) => c.isDeliveryDiscount()),
     );
-    const delivery_price = delivery_fee - delivery_discount;
+    return { discountPrice, deliveryDiscountPrice };
+  }
+
+  public totalDiscountPrice() {
+    const { discountPrice, deliveryDiscountPrice } =
+      this.discountPriceSummary();
+    return discountPrice + deliveryDiscountPrice;
+  }
+
+  private priceSummary() {
+    const order_price = this.calculateOrderPrice();
+    const delivery_fee = this.calculateDeliveryFee();
+    const { discountPrice, deliveryDiscountPrice } =
+      this.discountPriceSummary();
+    const delivery_price = delivery_fee - deliveryDiscountPrice;
     return {
       order_price,
-      discount_price,
+      discount_price: discountPrice,
       delivery_price,
-      total_price: order_price - discount_price + delivery_price,
+      total_price: order_price - discountPrice + delivery_price,
     };
   }
 

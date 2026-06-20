@@ -35,6 +35,10 @@ export interface CouponController {
   get: express.RequestHandler;
 }
 
+export interface DiscountSummaryController {
+  post: express.RequestHandler;
+}
+
 export function createProductController({
   productRepository,
   cartRepository,
@@ -235,6 +239,32 @@ export function createCouponController({
               .findAll()
               .map((coupon: Coupon) => coupon.toObject()),
           );
+      } catch (err) {
+        next(err);
+      }
+    },
+  };
+}
+
+export function createDiscountSummaryController({
+  tempOrderRepository,
+  couponRepository,
+}: {
+  tempOrderRepository: TempOrderRepository;
+  couponRepository: CouponRepository;
+}): DiscountSummaryController {
+  return {
+    post: (req, res, next) => {
+      try {
+        const tempOrder = tempOrderRepository.findById(req.params.id as string);
+        const { coupon_id } = req.body;
+        const coupons = coupon_id.map((id: string) =>
+          couponRepository.findById(id),
+        );
+        const newOrder = tempOrder?.withCoupons(coupons);
+        res
+          .status(200)
+          .send({ discount_price: newOrder?.totalDiscountPrice() });
       } catch (err) {
         next(err);
       }

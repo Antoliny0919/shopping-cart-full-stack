@@ -19,6 +19,7 @@ import request from "supertest";
 import {
   createCartController,
   createCouponController,
+  createDiscountSummaryController,
   createProductController,
   createTempOrderController,
 } from "../controllers.js";
@@ -49,6 +50,10 @@ describe("프로덕트 API 테스트", () => {
     productRepository,
     couponRepository,
   });
+  const discountSummaryController = createDiscountSummaryController({
+    tempOrderRepository,
+    couponRepository,
+  });
   const couponController = createCouponController({
     couponRepository,
   });
@@ -68,6 +73,7 @@ describe("프로덕트 API 테스트", () => {
     productController,
     cartController,
     tempOrderController,
+    discountSummaryController,
     couponController,
   });
 
@@ -210,6 +216,10 @@ describe("카트 API 테스트", () => {
     productRepository,
     couponRepository,
   });
+  const discountSummaryController = createDiscountSummaryController({
+    tempOrderRepository,
+    couponRepository,
+  });
   const couponController = createCouponController({
     couponRepository,
   });
@@ -218,6 +228,7 @@ describe("카트 API 테스트", () => {
     productController,
     cartController,
     tempOrderController,
+    discountSummaryController,
     couponController,
   });
   const cart = cartRepository.get();
@@ -316,11 +327,16 @@ describe("임시 주문서 API 테스트", () => {
   const couponController = createCouponController({
     couponRepository,
   });
+  const discountSummaryController = createDiscountSummaryController({
+    tempOrderRepository,
+    couponRepository,
+  });
 
   const app = createApp({
     cartController,
     productController,
     tempOrderController,
+    discountSummaryController,
     couponController,
   });
 
@@ -519,10 +535,15 @@ describe("쿠폰 API 테스트", () => {
   const couponController = createCouponController({
     couponRepository,
   });
+  const discountSummaryController = createDiscountSummaryController({
+    tempOrderRepository,
+    couponRepository,
+  });
   const app = createApp({
     cartController,
     productController,
     tempOrderController,
+    discountSummaryController,
     couponController,
   });
 
@@ -558,5 +579,90 @@ describe("쿠폰 API 테스트", () => {
         description: "최소 주문 금액: 1000",
       },
     ]);
+  });
+});
+
+describe("할인금액 API 테스트", () => {
+  const cartRepository = new InMemoryCartRepository();
+  const productRepository = new InMemoryProductRepository();
+  const tempOrderRepository = new InMemoryTempOrderRepository();
+  const couponRepository = new InMemoryCouponRepository();
+
+  const cartController = createCartController({
+    cartRepository,
+    productRepository,
+  });
+  const productController = createProductController({
+    cartRepository,
+    productRepository,
+  });
+  const tempOrderController = createTempOrderController({
+    tempOrderRepository,
+    productRepository,
+    couponRepository,
+  });
+  const couponController = createCouponController({
+    couponRepository,
+  });
+  const discountSummaryController = createDiscountSummaryController({
+    tempOrderRepository,
+    couponRepository,
+  });
+  const app = createApp({
+    cartController,
+    productController,
+    tempOrderController,
+    discountSummaryController,
+    couponController,
+  });
+
+  const amountDiscountCoupon = new AmountDiscountCoupon({
+    conditions: [],
+    discountPrice: 5000,
+  });
+
+  const rateDiscountCoupon = new RateDiscountCoupon({
+    conditions: [],
+    discountRate: 30,
+  });
+
+  const tempOrder = new TempOrder(
+    [
+      {
+        product_id: "777",
+        quantity: 4,
+        product: {
+          name: "레몬에이드",
+          price: 2500,
+          thumbnail: "lemon-ade.png",
+        },
+      },
+      {
+        product_id: "555",
+        quantity: 4,
+        product: {
+          name: "블루레몬에이드",
+          price: 10000,
+          thumbnail: "blue-lemon-ade.png",
+        },
+      },
+    ],
+    new DeliveryFee(3000, [new HardPlacePolicy(3000)]),
+    [amountDiscountCoupon, rateDiscountCoupon],
+  );
+
+  tempOrderRepository.save(tempOrder.getId(), tempOrder);
+  couponRepository.save(amountDiscountCoupon.getId(), amountDiscountCoupon);
+  couponRepository.save(rateDiscountCoupon.getId(), rateDiscountCoupon);
+
+  test("할인 금액을 응답한다", async () => {
+    const res = await request(app)
+      .post(`/api/orders/${tempOrder.getId()}/discount-summary/`)
+      .send({ coupon_id: [amountDiscountCoupon.getId()] })
+      .set("Accept", "application/json");
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({
+      discount_price: 5000,
+    });
   });
 });

@@ -7,6 +7,7 @@ import {
   CartController,
   tempOrderController,
   CouponController,
+  DiscountSummaryController,
 } from "./shop/controllers.js";
 import { createShopRouter } from "./shop/route.js";
 import { handleErrors } from "./errors.js";
@@ -15,11 +16,13 @@ export function createApp({
   productController,
   cartController,
   tempOrderController,
+  discountSummaryController,
   couponController,
 }: {
   productController: ProductController;
   cartController: CartController;
   tempOrderController: tempOrderController;
+  discountSummaryController: DiscountSummaryController;
   couponController: CouponController;
 }) {
   const app = express();
@@ -39,6 +42,7 @@ export function createApp({
       productController,
       cartController,
       tempOrderController,
+      discountSummaryController,
       couponController,
     }),
   );
