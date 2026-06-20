@@ -49,7 +49,7 @@ describe("Coupon Test", () => {
     expect(coupon.toObject()).toEqual({
       id: coupon.getId(),
       name: "50,000원 할인 쿠폰",
-      expiration_date: new Date("3000-09-19").toISOString(),
+      expiration_date: "3000년 9월 19일",
       description:
         "최소 주문 금액: 10000, 사용 가능 시간: 오후 3시부터 오후 6시까지",
     });

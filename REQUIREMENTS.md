@@ -89,7 +89,7 @@
     - API POST /api/orders/
   - [x] 특정 임시 주문서 가져오기
     - API GET /api/orders/{orderId}/
-  - [] 쿠폰 가져오기
+  - [x] 쿠폰 가져오기
     - API GET /api/coupons/
   - [] 쿠폰 할인금액 계산
     - API POST /api/coupons/discount-summary/

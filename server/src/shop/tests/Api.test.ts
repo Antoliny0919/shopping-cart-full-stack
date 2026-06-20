@@ -548,13 +548,13 @@ describe("쿠폰 API 테스트", () => {
       {
         id: amountDiscountCoupon.getId(),
         name: "5,000원 할인 쿠폰",
-        expiration_date: "2020-01-01T00:00:00.000Z",
+        expiration_date: "2020년 1월 1일",
         description: "사용 가능 시간: 오전 5시부터 오전 8시까지",
       },
       {
         id: rateDiscountCoupon.getId(),
         name: "30% 시간제 할인 쿠폰",
-        expiration_date: "2030-12-31T00:00:00.000Z",
+        expiration_date: "2030년 12월 31일",
         description: "최소 주문 금액: 1000",
       },
     ]);

@@ -50,7 +50,12 @@ export abstract class Coupon {
     return {
       id: this.id,
       name: this.name,
-      expiration_date: this.expirationDate?.toISOString() ?? null,
+      expiration_date:
+        this.expirationDate?.toLocaleDateString("ko-KR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }) ?? null,
       description: this.conditions
         .map((conditions) => conditions.description())
         .filter(Boolean)
