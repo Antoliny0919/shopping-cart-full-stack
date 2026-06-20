@@ -51,7 +51,10 @@ export abstract class Coupon {
       id: this.id,
       name: this.name,
       expiration_date: this.expirationDate?.toISOString() ?? null,
-      description: "",
+      description: this.conditions
+        .map((conditions) => conditions.description())
+        .filter(Boolean)
+        .join(", "),
     };
   }
 }

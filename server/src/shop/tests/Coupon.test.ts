@@ -6,6 +6,10 @@ import {
 } from "../models/Coupon.js";
 import TempOrder from "../models/TempOrder.js";
 import { DeliveryFee } from "../models/DeliveryFee.js";
+import {
+  MinimumOrderPriceDiscountCondition,
+  HotTimeDiscountCondition,
+} from "../models/DiscountCondition.js";
 
 describe("Coupon Test", () => {
   const tempOrder = new TempOrder(
@@ -32,6 +36,24 @@ describe("Coupon Test", () => {
     new DeliveryFee(10000),
     [],
   );
+
+  test("쿠폰을 객체형태로 반환한다.", () => {
+    const coupon = new AmountDiscountCoupon({
+      conditions: [
+        new MinimumOrderPriceDiscountCondition(10000),
+        new HotTimeDiscountCondition(15, 18),
+      ],
+      expirationDate: new Date("3000-09-19"),
+      discountPrice: 50000,
+    });
+    expect(coupon.toObject()).toEqual({
+      id: coupon.getId(),
+      name: "50,000원 할인 쿠폰",
+      expiration_date: new Date("3000-09-19").toISOString(),
+      description:
+        "최소 주문 금액: 10000, 사용 가능 시간: 오후 3시부터 오후 6시까지",
+    });
+  });
 
   test("만료일을 전달하면 만료일 정책이 적용된다.", () => {
     const coupon = new AmountDiscountCoupon({

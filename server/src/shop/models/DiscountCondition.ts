@@ -2,7 +2,7 @@ import TempOrder from "./TempOrder.js";
 
 export interface DiscountCondition {
   isAvailable: (tempOrder: TempOrder) => boolean;
-  description: () => string;
+  description: () => string | null;
 }
 
 export class ExpireDateDiscountCondition implements DiscountCondition {
@@ -17,7 +17,7 @@ export class ExpireDateDiscountCondition implements DiscountCondition {
   }
 
   description() {
-    return "";
+    return null;
   }
 }
 
