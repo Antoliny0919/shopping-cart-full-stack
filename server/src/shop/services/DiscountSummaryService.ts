@@ -1,3 +1,4 @@
+import { NotFoundError } from "../../errors.js";
 import {
   CouponRepository,
   TempOrderRepository,
@@ -11,8 +12,14 @@ export class DiscountSummaryService {
 
   calculate(orderId: string, couponIds: string[]) {
     const tempOrder = this.tempOrderRepository.findById(orderId);
-    const coupons = couponIds.map((id) => this.couponRepository.findById(id));
-    const newOrder = tempOrder?.withCoupons(coupons as any);
-    return { discount_price: newOrder?.totalDiscountPrice() };
+    if (!tempOrder) throw new NotFoundError();
+
+    const coupons = couponIds.map((couponId) => {
+      const coupon = this.couponRepository.findById(couponId);
+      if (!coupon) throw new NotFoundError();
+      return coupon;
+    });
+    const newOrder = tempOrder.withCoupons(coupons);
+    return { discount_price: newOrder.totalDiscountPrice() };
   }
 }
