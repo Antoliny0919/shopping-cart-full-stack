@@ -85,9 +85,9 @@
 ## BE
 
 - [] API
-  - [] 임시 주문서 생성
+  - [x] 임시 주문서 생성
     - API POST /api/orders/
-  - [] 특정 임시 주문서 가져오기
+  - [x] 특정 임시 주문서 가져오기
     - API GET /api/orders/{orderId}/
   - [] 쿠폰 가져오기
     - API GET /api/coupons/
