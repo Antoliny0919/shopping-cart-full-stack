@@ -8,7 +8,7 @@ import {
 import {
   ProductController,
   CartController,
-  tempOrderController,
+  TempOrderController,
   CouponController,
   DiscountSummaryController,
 } from "./controllers.js";
@@ -22,7 +22,7 @@ export function createShopRouter({
 }: {
   productController: ProductController;
   cartController: CartController;
-  tempOrderController: tempOrderController;
+  tempOrderController: TempOrderController;
   discountSummaryController: DiscountSummaryController;
   couponController: CouponController;
 }) {
