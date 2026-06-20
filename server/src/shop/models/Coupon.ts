@@ -24,6 +24,10 @@ export abstract class Coupon {
     return this.conditions.every((policy) => policy.isAvailable(tempOrder));
   }
 
+  public isDeliveryDiscount(): boolean {
+    return false;
+  }
+
   public abstract getDiscountPrice(tempOrder: TempOrder, basePrice?: number): number;
 }
 
@@ -78,6 +82,10 @@ export class FreeShippingCoupon extends Coupon {
 
   constructor({ conditions }: { conditions: DiscountCondition[] }) {
     super(conditions);
+  }
+
+  public isDeliveryDiscount(): boolean {
+    return true;
   }
 
   public getDiscountPrice(tempOrder: TempOrder) {

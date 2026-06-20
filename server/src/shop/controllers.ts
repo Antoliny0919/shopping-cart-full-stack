@@ -25,6 +25,7 @@ export interface CartController {
 }
 
 export interface tempOrderController {
+  get: express.RequestHandler;
   post: express.RequestHandler;
 }
 
@@ -137,6 +138,15 @@ export function createTempOrderController({
   couponRepository: CouponRepository;
 }): tempOrderController {
   return {
+    get: (req, res, next) => {
+      try {
+        const tempOrder = tempOrderRepository.findById(req.params.id as string);
+        if (!tempOrder) throw new NotFoundError();
+        res.status(200).send(tempOrder.toObject());
+      } catch (err) {
+        next(err);
+      }
+    },
     post: (req, res, next) => {
       try {
         // TODO : Service 로 분리

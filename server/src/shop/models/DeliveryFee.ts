@@ -1,5 +1,6 @@
 export interface DeliveryFeePolicy {
   getExtraFee(): number;
+  isHardPlace(): boolean;
 }
 
 export class DeliveryFee {
@@ -17,6 +18,10 @@ export class DeliveryFee {
       this.policies.reduce((sum, policy) => sum + policy.getExtraFee(), 0)
     );
   }
+
+  isHardPlace() {
+    return this.policies.some((policy) => policy.isHardPlace());
+  }
 }
 
 export class HardPlacePolicy implements DeliveryFeePolicy {
@@ -28,5 +33,9 @@ export class HardPlacePolicy implements DeliveryFeePolicy {
 
   getExtraFee() {
     return this.extraFee;
+  }
+
+  isHardPlace() {
+    return true;
   }
 }

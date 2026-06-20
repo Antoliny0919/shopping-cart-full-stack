@@ -1,30 +1,11 @@
 import { combinations } from "../../utils.js";
 import TempOrder from "../models/TempOrder.js";
 import { Coupon } from "../models/Coupon.js";
-import { CouponPhase } from "../models/Coupon.js";
 import { COUPON_SELECT_LIMIT } from "../constants.js";
 
 const CouponService = {
   calculateDiscount(tempOrder: TempOrder, coupons: Coupon[]): number {
-    const sorted = [...coupons].sort((a, b) => a.phase - b.phase);
-    const orderPrice = tempOrder.calculateOrderPrice();
-    let fixedDiscount = 0;
-
-    for (const coupon of sorted) {
-      if (coupon.phase === CouponPhase.FIXED)
-        fixedDiscount += coupon.getDiscountPrice(tempOrder);
-    }
-
-    let rateDiscount = 0;
-    for (const coupon of sorted) {
-      if (coupon.phase === CouponPhase.RATE)
-        rateDiscount += coupon.getDiscountPrice(
-          tempOrder,
-          orderPrice - fixedDiscount,
-        );
-    }
-
-    return fixedDiscount + rateDiscount;
+    return tempOrder.calculateDiscount(coupons);
   },
 
   calculateBestCouponCombination(tempOrder: TempOrder, coupons: Coupon[]) {

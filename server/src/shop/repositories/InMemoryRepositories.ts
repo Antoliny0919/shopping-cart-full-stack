@@ -18,8 +18,10 @@ export interface ProductRepository {
 }
 
 export interface TempOrderRepository {
+  findById: (id: string) => TempOrder | undefined;
   save: (id: string, obj: TempOrder) => void;
   findAll: () => TempOrder[];
+  clearAll: () => void;
 }
 
 export interface CouponRepository {
@@ -70,12 +72,20 @@ export class InMemoryProductRepository implements ProductRepository {
 export class InMemoryTempOrderRepository implements TempOrderRepository {
   private tempOrders = new Map<string, TempOrder>();
 
+  findById(id: string) {
+    return this.tempOrders.get(id);
+  }
+
   save(id: string, obj: TempOrder) {
     this.tempOrders.set(id, obj);
   }
 
   findAll() {
     return [...this.tempOrders.values()];
+  }
+
+  clearAll() {
+    return (this.tempOrders = new Map());
   }
 }
 

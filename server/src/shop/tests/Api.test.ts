@@ -1,10 +1,14 @@
 import { jest } from "@jest/globals";
 import { createApp } from "../../route.js";
+import { DeliveryFee, HardPlacePolicy } from "../models/DeliveryFee.js";
 import {
   InMemoryCartRepository,
   InMemoryProductRepository,
   InMemoryTempOrderRepository,
+  InMemoryCouponRepository,
 } from "../repositories/InMemoryRepositories.js";
+import TempOrder from "../models/TempOrder.js";
+import { AmountDiscountCoupon, RateDiscountCoupon } from "../models/Coupon.js";
 import Product from "../models/Product.js";
 import request from "supertest";
 import {
@@ -20,6 +24,7 @@ describe("프로덕트 API 테스트", () => {
   const cartRepository = new InMemoryCartRepository();
   const productRepository = new InMemoryProductRepository();
   const tempOrderRepository = new InMemoryTempOrderRepository();
+  const couponRepository = new InMemoryCouponRepository();
 
   const cartController = createCartController({
     cartRepository,
@@ -32,6 +37,7 @@ describe("프로덕트 API 테스트", () => {
   const tempOrderController = createTempOrderController({
     tempOrderRepository,
     productRepository,
+    couponRepository,
   });
   const product1 = new Product({
     name: "피자",
@@ -174,6 +180,7 @@ describe("카트 API 테스트", () => {
   const productRepository = new InMemoryProductRepository();
   const cartRepository = new InMemoryCartRepository();
   const tempOrderRepository = new InMemoryTempOrderRepository();
+  const couponRepository = new InMemoryCouponRepository();
 
   const productController = createProductController({
     productRepository,
@@ -186,6 +193,7 @@ describe("카트 API 테스트", () => {
   const tempOrderController = createTempOrderController({
     tempOrderRepository,
     productRepository,
+    couponRepository,
   });
 
   const app = createApp({
@@ -271,6 +279,7 @@ describe("임시 주문서 API 테스트", () => {
   const cartRepository = new InMemoryCartRepository();
   const productRepository = new InMemoryProductRepository();
   const tempOrderRepository = new InMemoryTempOrderRepository();
+  const couponRepository = new InMemoryCouponRepository();
 
   const cartController = createCartController({
     cartRepository,
@@ -283,6 +292,7 @@ describe("임시 주문서 API 테스트", () => {
   const tempOrderController = createTempOrderController({
     tempOrderRepository,
     productRepository,
+    couponRepository,
   });
   const app = createApp({
     cartController,
@@ -290,23 +300,51 @@ describe("임시 주문서 API 테스트", () => {
     tempOrderController,
   });
 
-  // TODO: PATCH, GET 에서 활성화
-  // const tempOrder = new TempOrder({
-  //   products: [
-  //     { product_id: "777", quantity: 3 },
-  //     { product_id: "555", quantity: 10 },
-  //   ],
-  // });
+  const amountDiscountCoupon = new AmountDiscountCoupon({
+    conditions: [],
+    discountPrice: 5000,
+  });
 
-  // beforeEach(() => {
-  //   tempOrderRepository.save(tempOrder.getId(), tempOrder);
-  // });
+  const rateDiscountCoupon = new RateDiscountCoupon({
+    conditions: [],
+    discountRate: 30,
+  });
 
-  // afterEach(() => {
-  //   tempOrderRepository.clearAll();
-  // });
+  const tempOrder = new TempOrder(
+    [
+      {
+        product_id: "777",
+        quantity: 4,
+        product: {
+          name: "레몬에이드",
+          price: 2500,
+          thumbnail: "lemon-ade.png",
+        },
+      },
+      {
+        product_id: "555",
+        quantity: 4,
+        product: {
+          name: "블루레몬에이드",
+          price: 10000,
+          thumbnail: "blue-lemon-ade.png",
+        },
+      },
+    ],
+    new DeliveryFee(3000, [new HardPlacePolicy(3000)]),
+    [amountDiscountCoupon, rateDiscountCoupon],
+  );
+
+  beforeEach(() => {
+    tempOrderRepository.save(tempOrder.getId(), tempOrder);
+  });
+
+  afterEach(() => {
+    tempOrderRepository.clearAll();
+  });
 
   test("임시 주문서를 생성한다.", async () => {
+    tempOrderRepository.clearAll();
     const res = await request(app)
       .post("/api/orders/")
       .send([
@@ -322,42 +360,43 @@ describe("임시 주문서 API 테스트", () => {
   });
 
   test("특정 임시 주문서를 가져온다.", async () => {
-    const res = await request(app).get(`/api/orders/${tempOrder.id}/`);
+    const id = tempOrder.getId();
+    const res = await request(app).get(`/api/orders/${id}/`);
     expect(res.status).toBe(200);
     res.body.selected_coupons = ["SOME_COUPON1", "SOME_COUPON2"];
     res.body.price_summary = {
       order_price: 30500,
-      discout_price: 6000,
+      discount_price: 6000,
       delivery_price: 3000,
       total_price: 21500,
     };
     expect(res.body).toEqual({
-      id: tempOrder.id,
-      hard_delivery_place: false,
+      id: id,
+      hard_delivery_place: true,
       selected_coupons: ["SOME_COUPON1", "SOME_COUPON2"],
       selected_items: [
         {
-          product_id: "123",
-          quantity: 2,
+          product_id: "777",
+          quantity: 4,
           product: {
-            name: "투썸 아이스크림",
-            price: 4000,
-            thumbnail: "ice.png",
+            name: "레몬에이드",
+            price: 2500,
+            thumbnail: "lemon-ade.png",
           },
         },
         {
-          product_id: "456",
-          quantity: 5,
+          product_id: "555",
+          quantity: 4,
           product: {
-            name: "투썸 초코 아이스크림",
-            price: 4500,
-            thumbnail: "ice-choco.png",
+            name: "블루레몬에이드",
+            price: 10000,
+            thumbnail: "blue-lemon-ade.png",
           },
         },
       ],
       price_summary: {
         order_price: 30500,
-        discout_price: 6000,
+        discount_price: 6000,
         delivery_price: 3000,
         total_price: 21500,
       },
