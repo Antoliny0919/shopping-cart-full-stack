@@ -6,7 +6,7 @@ import {
   validateMaxArrayLength,
 } from "../validators.js";
 import { ValidatorMap } from "../types.js";
-import { COUPON_SELECT_LIMIT } from "./constants.js";
+import { CART_ITEM_QUANTITY, COUPON_SELECT_LIMIT } from "./constants.js";
 
 export const ProductFieldValidators: ValidatorMap = {
   name: [validateIsNotEmpty("상품명"), validateLengthRange("상품명", 0, 100)],
@@ -14,7 +14,9 @@ export const ProductFieldValidators: ValidatorMap = {
 };
 
 export const CartFieldValidators: ValidatorMap = {
-  quantity: [validateNumberRange("수량", 1, 99)],
+  quantity: [
+    validateNumberRange("수량", CART_ITEM_QUANTITY.min, CART_ITEM_QUANTITY.max),
+  ],
 };
 
 export const TempOrderFieldValidators: ValidatorMap = {

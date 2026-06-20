@@ -1,3 +1,8 @@
+export const CART_ITEM_QUANTITY = {
+  min: 1,
+  max: 99,
+};
+
 export const DELIVERY_PRICE_POLICY = {
   default: 3000,
   hardPlace: 3000,
