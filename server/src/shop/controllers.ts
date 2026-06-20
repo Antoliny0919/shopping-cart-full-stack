@@ -1,6 +1,5 @@
 import express from "express";
 import { NotFoundError } from "../errors.js";
-import Product from "./models/Product.js";
 import TempOrder from "./models/TempOrder.js";
 import {
   CartRepository,

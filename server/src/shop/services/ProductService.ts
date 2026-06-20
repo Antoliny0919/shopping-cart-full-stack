@@ -18,7 +18,7 @@ export class ProductService {
   add(body: { name: string; price: number; thumbnail: string }) {
     const product = new Product(body);
     this.productRepository.save(product.getId(), product);
-    return { id: product.toObject().id };
+    return { id: product.getId() };
   }
 
   delete(id: string) {
