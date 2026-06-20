@@ -549,6 +549,31 @@ describe("임시 주문서 API 테스트", () => {
       message: "요청한 리소스를 찾을 수 없습니다.",
     });
   });
+
+  test("쿠폰을 2개 초과 전달하면 400 에러가 발생한다.", async () => {
+    const id = tempOrder.getId();
+    const res = await request(app)
+      .patch(`/api/orders/${id}/`)
+      .send({
+        selected_coupons: [
+          freeShippingCoupon.getId(),
+          bonusCoupon.getId(),
+          freeShippingCoupon.getId(),
+        ],
+      })
+      .set("Accept", "application/json");
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({
+      code: "BAD_REQUEST",
+      message: "요청 데이터가 유효하지 않습니다.",
+      errors: {
+        selected_coupons: {
+          code: "EXCEED_MAX_COUNT",
+          message: "쿠폰은 최대 2개까지 선택할 수 있습니다.",
+        },
+      },
+    });
+  });
 });
 
 describe("쿠폰 API 테스트", () => {
@@ -664,6 +689,10 @@ describe("할인금액 API 테스트", () => {
     discountRate: 30,
   });
 
+  const freeDeliveryCoupon = new FreeShippingCoupon({
+    conditions: [],
+  });
+
   const tempOrder = new TempOrder(
     [
       {
@@ -701,6 +730,30 @@ describe("할인금액 API 테스트", () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
       discount_price: 5000,
+    });
+  });
+
+  test("쿠폰을 2개 초과 전달하면 400 에러가 발생한다.", async () => {
+    const res = await request(app)
+      .post(`/api/orders/${tempOrder.getId()}/discount-summary/`)
+      .send({
+        coupon_id: [
+          amountDiscountCoupon.getId(),
+          rateDiscountCoupon.getId(),
+          freeDeliveryCoupon.getId(),
+        ],
+      })
+      .set("Accept", "application/json");
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({
+      code: "BAD_REQUEST",
+      message: "요청 데이터가 유효하지 않습니다.",
+      errors: {
+        coupon_id: {
+          code: "EXCEED_MAX_COUNT",
+          message: "쿠폰은 최대 2개까지 선택할 수 있습니다.",
+        },
+      },
     });
   });
 });

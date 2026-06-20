@@ -3,6 +3,7 @@ import {
   validateLengthRange,
   validateMinNumber,
   validateNumberRange,
+  validateMaxArrayLength,
 } from "../validators.js";
 import { ValidatorMap } from "../types.js";
 
@@ -13,4 +14,12 @@ export const ProductFieldValidators: ValidatorMap = {
 
 export const CartFieldValidators: ValidatorMap = {
   quantity: [validateNumberRange("수량", 1, 99)],
+};
+
+export const TempOrderFieldValidators: ValidatorMap = {
+  selected_coupons: [validateMaxArrayLength("쿠폰", 2)],
+};
+
+export const DiscountSummaryFieldValidators: ValidatorMap = {
+  coupon_id: [validateMaxArrayLength("쿠폰", 2)],
 };

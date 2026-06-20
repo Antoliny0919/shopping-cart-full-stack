@@ -2,6 +2,8 @@ import { Router } from "express";
 import {
   productBodyValidateMiddelware,
   cartBodyValidateMiddelware,
+  tempOrderBodyValidateMiddleware,
+  discountSummaryBodyValidateMiddleware,
 } from "./middlewares/BodyValiadateMiddleware.js";
 import {
   ProductController,
@@ -44,11 +46,14 @@ export function createShopRouter({
   router
     .route("/api/orders/:id/")
     .get(tempOrderController.get)
-    .patch(tempOrderController.patch);
+    .patch(tempOrderBodyValidateMiddleware, tempOrderController.patch);
 
   router
     .route("/api/orders/:id/discount-summary/")
-    .post(discountSummaryController.post);
+    .post(
+      discountSummaryBodyValidateMiddleware,
+      discountSummaryController.post,
+    );
 
   router.route("/api/coupons/").get(couponController.get);
 
