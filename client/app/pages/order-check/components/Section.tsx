@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import { Button } from "../../../commons/styles/Button";
 import OrderItemList from "./OrderItemList";
 import Checkbox from "../../../commons/components/Checkbox";
+import OrderSummary from "./OrderSummary";
 import Info from "../../../commons/images/info.svg?react";
 
 export default function Section() {
@@ -48,6 +49,12 @@ export default function Section() {
         <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
         배송됩니다.
       </SubText>
+      <OrderSummary
+        price={70000}
+        couponDiscount={-6000}
+        deliveryFee={6000}
+        totalPrice={70000}
+      ></OrderSummary>
       <Button type="button" disabled={true}>
         결제하기
       </Button>
@@ -67,6 +74,7 @@ const SectionLayout = styled.section`
     display: flex;
     align-items: center;
     gap: 4px;
+    margin-bottom: 8px;
   }
 `;
 
