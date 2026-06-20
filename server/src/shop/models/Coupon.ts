@@ -12,15 +12,21 @@ export enum CouponPhase {
 export abstract class Coupon {
   private readonly id: string;
   private readonly conditions: DiscountCondition[];
+  private readonly name: string;
   private readonly expirationDate: Date | null;
   abstract readonly phase: CouponPhase;
 
-  constructor(conditions: DiscountCondition[], expirationDate?: Date) {
+  constructor(
+    conditions: DiscountCondition[],
+    name: string,
+    expirationDate?: Date,
+  ) {
     this.id = crypto.randomUUID();
     this.expirationDate = expirationDate ?? null;
     this.conditions = this.expirationDate
       ? [new ExpireDateDiscountCondition(this.expirationDate), ...conditions]
       : conditions;
+    this.name = name;
   }
 
   public getId() {
@@ -43,7 +49,7 @@ export abstract class Coupon {
   public toObject() {
     return {
       id: this.id,
-      name: "",
+      name: this.name,
       expiration_date: this.expirationDate?.toISOString() ?? null,
       description: "",
     };
@@ -63,7 +69,11 @@ export class AmountDiscountCoupon extends Coupon {
     discountPrice: number;
     expirationDate?: Date;
   }) {
-    super(conditions, expirationDate);
+    super(
+      conditions,
+      `${discountPrice.toLocaleString("ko-KR")}원 할인 쿠폰`,
+      expirationDate,
+    );
     this.discountPrice = discountPrice;
   }
 
@@ -88,7 +98,7 @@ export class BonusCoupon extends Coupon {
     bonusCount: number;
     expirationDate?: Date;
   }) {
-    super(conditions, expirationDate);
+    super(conditions, `${minQuantity}+${bonusCount} 쿠폰`, expirationDate);
     this.minQuantity = minQuantity;
     this.bonusCount = bonusCount;
   }
@@ -110,7 +120,7 @@ export class FreeShippingCoupon extends Coupon {
     conditions: DiscountCondition[];
     expirationDate?: Date;
   }) {
-    super(conditions, expirationDate);
+    super(conditions, "무료 배송 쿠폰", expirationDate);
   }
 
   public isDeliveryDiscount(): boolean {
@@ -135,7 +145,7 @@ export class RateDiscountCoupon extends Coupon {
     discountRate: number;
     expirationDate?: Date;
   }) {
-    super(conditions, expirationDate);
+    super(conditions, `${discountRate}% 시간제 할인 쿠폰`, expirationDate);
     this.discountRate = discountRate;
   }
 
