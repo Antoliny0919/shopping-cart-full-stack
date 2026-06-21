@@ -1,14 +1,22 @@
 import styled from "@emotion/styled";
+import { useLocation } from "react-router";
+import { formatToKoreanPrice } from "../../commons/utils";
 
 export default function Section() {
+  const location = useLocation();
+
+  const { orderItemsTypeLength, orderItemsLength, totalPrice } = location.state;
   return (
     <SectionLayout>
       <Title>결제 확인</Title>
-      <SubText>총 1종류의 상품 2개를 주문했습니다.</SubText>
+      <SubText>
+        총 {orderItemsTypeLength}종류의 상품 {orderItemsLength}개를
+        주문했습니다.
+      </SubText>
       <SubText>최종 결제 금액을 확인해 주세요.</SubText>
 
       <MiddleTitle>총 결제 금액</MiddleTitle>
-      <TotalPrice>70,000원</TotalPrice>
+      <TotalPrice>{formatToKoreanPrice(totalPrice)}원</TotalPrice>
     </SectionLayout>
   );
 }

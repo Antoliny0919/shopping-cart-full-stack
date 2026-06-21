@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import styled from "@emotion/styled";
 import { FixedButton } from "../../../commons/styles/Button";
 import OrderItemList from "./OrderItemList";
@@ -26,6 +27,8 @@ export default function Section({ orderId }: Props) {
   const [loadStatus, setLoadStatus] = useState<"loading" | "success" | "error">(
     "loading",
   );
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getOrder(orderId)
@@ -77,17 +80,28 @@ export default function Section({ orderId }: Props) {
     setOrder(order);
   }
 
+  const orderItemsTypeLength = order?.selected_items.length ?? 0;
+  const orderItemsLength =
+    order?.selected_items.reduce((count, item) => count + item.quantity, 0) ??
+    0;
+  function goToPurchaseCheckPage() {
+    if (order)
+      navigate(`/cart/check/purchase/`, {
+        state: {
+          orderItemsTypeLength,
+          orderItemsLength,
+          totalPrice: order.price_summary.total_price,
+        },
+      });
+  }
+
   return (
     <SectionLayout>
       <Title>주문 확인</Title>
       {order && (
         <>
           <SubText>
-            총 {order.selected_items.length}종류의 상품{" "}
-            {order.selected_items.reduce(
-              (count, item) => count + item.quantity,
-              0,
-            )}
+            총 {orderItemsTypeLength}종류의 상품 {orderItemsLength}
             개를 주문합니다.
           </SubText>
           <SubText>최종 결제 금액을 확인해 주세요.</SubText>
@@ -124,7 +138,11 @@ export default function Section({ orderId }: Props) {
           />
         </>
       )}
-      <FixedButton type="button" disabled={loadStatus !== "success"}>
+      <FixedButton
+        type="button"
+        onClick={goToPurchaseCheckPage}
+        disabled={loadStatus !== "success"}
+      >
         결제하기
       </FixedButton>
     </SectionLayout>
