@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { useLocation } from "react-router";
 import { formatToKoreanPrice } from "../../commons/utils";
+import { FixedButton } from "../../commons/styles/Button";
 
 export default function Section() {
   const location = useLocation();
@@ -17,6 +18,7 @@ export default function Section() {
 
       <MiddleTitle>총 결제 금액</MiddleTitle>
       <TotalPrice>{formatToKoreanPrice(totalPrice)}원</TotalPrice>
+      <FixedButton>장바구니로 돌아가기</FixedButton>
     </SectionLayout>
   );
 }
