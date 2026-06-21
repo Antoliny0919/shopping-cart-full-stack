@@ -47,41 +47,44 @@ export default function Section({ orderId }: Props) {
   return (
     <SectionLayout>
       <Title>주문 확인</Title>
-      <SubText>
-        총 {order?.selected_items.length}종류의 상품{" "}
-        {order?.selected_items.reduce(
-          (count, item) => count + item.quantity,
-          0,
-        )}
-        개를 주문합니다.
-      </SubText>
-      <SubText>최종 결제 금액을 확인해 주세요.</SubText>
-      {order && <OrderItemList items={order.selected_items} />}
-      <CouponApplyButton onClick={couponModalOpen}>쿠폰 적용</CouponApplyButton>
-      <CouponSelectModal
-        coupons={coupons}
-        isOpen={isCouponModalOpen}
-        onClose={onClose}
-      />
-      <DeliveryOption>
-        <p>배송 정보</p>
-        <Checkbox
-          labelText={"제주도 및 도서 산간 지역"}
-          checked={order?.hard_delivery_place ?? false}
-          onChange={() => {}}
-        ></Checkbox>
-      </DeliveryOption>
-      <SubText className="icon-text">
-        <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
-        배송됩니다.
-      </SubText>
       {order && (
-        <OrderSummary
-          price={order.price_summary.order_price}
-          couponDiscount={order.price_summary.discount_price}
-          deliveryFee={order.price_summary.delivery_price}
-          totalPrice={order.price_summary.total_price}
-        />
+        <>
+          <SubText>
+            총 {order.selected_items.length}종류의 상품{" "}
+            {order.selected_items.reduce(
+              (count, item) => count + item.quantity,
+              0,
+            )}
+            개를 주문합니다.
+          </SubText>
+          <SubText>최종 결제 금액을 확인해 주세요.</SubText>
+          <OrderItemList items={order.selected_items} />
+          <CouponApplyButton onClick={couponModalOpen}>쿠폰 적용</CouponApplyButton>
+          <CouponSelectModal
+            selectedCoupons={order.selected_coupons}
+            coupons={coupons}
+            isOpen={isCouponModalOpen}
+            onClose={onClose}
+          />
+          <DeliveryOption>
+            <p>배송 정보</p>
+            <Checkbox
+              labelText={"제주도 및 도서 산간 지역"}
+              checked={order.hard_delivery_place}
+              onChange={() => {}}
+            ></Checkbox>
+          </DeliveryOption>
+          <SubText className="icon-text">
+            <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
+            배송됩니다.
+          </SubText>
+          <OrderSummary
+            price={order.price_summary.order_price}
+            couponDiscount={order.price_summary.discount_price}
+            deliveryFee={order.price_summary.delivery_price}
+            totalPrice={order.price_summary.total_price}
+          />
+        </>
       )}
       <FixedButton type="button" disabled={loadStatus !== "success"}>
         결제하기
