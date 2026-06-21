@@ -8,6 +8,6 @@ import {
 export default [
   ...prefix("cart/", [
     index("./pages/shopping-cart/ShoppingCartPage.tsx"),
-    route("check/", "./pages/shopping-cart/OrderCheckPage.tsx"),
+    route("check/:id/", "./pages/shopping-cart/OrderCheckPage.tsx"),
   ]),
 ] satisfies RouteConfig;

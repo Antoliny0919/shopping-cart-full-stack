@@ -10,11 +10,17 @@ import CouponSelectModal from "./CouponSelectModal";
 import { getOrder, Order } from "../api";
 import NetworkError from "../../../commons/components/NetworkError";
 
-export default function Section() {
-  const { totalItems, totalQuantity, orderId } = useLocation().state;
+interface Props {
+  orderId: string;
+}
+
+export default function Section({ orderId }: Props) {
+  const { totalItems, totalQuantity } = useLocation().state;
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
   const [order, setOrder] = useState<Order | null>(null);
-  const [loadStatus, setLoadStatus] = useState<"loading" | "success" | "error">("loading");
+  const [loadStatus, setLoadStatus] = useState<"loading" | "success" | "error">(
+    "loading",
+  );
 
   useEffect(() => {
     getOrder(orderId)

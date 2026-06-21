@@ -82,9 +82,8 @@ export default function Section() {
       .map(({ product_id, quantity }) => ({ product_id, quantity }));
 
     const { order_id } = await createOrder(selectedItems);
-    navigate("/cart/check/", {
+    navigate(`/cart/check/${order_id}/`, {
       state: {
-        orderId: order_id,
         totalItems: cart.selectedItemCount(),
         totalQuantity: cart.selectedItemTotalQuantity(),
         totalPrice: priceSummary.totalPrice,
