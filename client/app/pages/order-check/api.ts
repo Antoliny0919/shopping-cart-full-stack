@@ -34,3 +34,14 @@ export async function getOrder(orderId: string): Promise<Order> {
   if (!response.ok) throw new Error("주문 조회 실패");
   return response.json();
 }
+
+export async function getCoupons() {
+  let response: Response;
+  try {
+    response = await fetch(`${BASE_URL}/api/coupons/`);
+  } catch {
+    throw new NetworkError();
+  }
+  if (!response.ok) throw new Error("쿠폰을 불러오지 못했습니다.");
+  return response.json();
+}
