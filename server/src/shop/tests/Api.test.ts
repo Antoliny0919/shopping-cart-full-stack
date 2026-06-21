@@ -482,7 +482,13 @@ describe("쿠폰 API 테스트", () => {
   });
 
   const tempOrder = new TempOrder(
-    [{ product_id: "1", quantity: 1, product: { name: "피자", price: 5000, thumbnail: "" } }],
+    [
+      {
+        product_id: "1",
+        quantity: 1,
+        product: { name: "피자", price: 5000, thumbnail: "" },
+      },
+    ],
     new DeliveryFee(0, []),
     [],
   );
@@ -492,7 +498,9 @@ describe("쿠폰 API 테스트", () => {
   tempOrderRepository.save(tempOrder.getId(), tempOrder);
 
   test("쿠폰 목록을 가져온다", async () => {
-    const res = await request(app).get(`/api/orders/${tempOrder.getId()}/coupons/`);
+    const res = await request(app).get(
+      `/api/orders/${tempOrder.getId()}/coupons/`,
+    );
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
       {
@@ -562,7 +570,7 @@ describe("할인금액 API 테스트", () => {
   test("할인 금액을 응답한다", async () => {
     const res = await request(app)
       .post(`/api/orders/${tempOrder.getId()}/discount-summary/`)
-      .send({ coupon_id: [amountDiscountCoupon.getId()] })
+      .send({ selected_coupons: [amountDiscountCoupon.getId()] })
       .set("Accept", "application/json");
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
@@ -574,7 +582,7 @@ describe("할인금액 API 테스트", () => {
     const res = await request(app)
       .post(`/api/orders/${tempOrder.getId()}/discount-summary/`)
       .send({
-        coupon_id: [
+        selected_coupons: [
           amountDiscountCoupon.getId(),
           rateDiscountCoupon.getId(),
           freeDeliveryCoupon.getId(),
@@ -586,7 +594,7 @@ describe("할인금액 API 테스트", () => {
       code: "BAD_REQUEST",
       message: "요청 데이터가 유효하지 않습니다.",
       errors: {
-        coupon_id: {
+        selected_coupons: {
           code: "EXCEED_MAX_COUNT",
           message: "쿠폰은 최대 2개까지 선택할 수 있습니다.",
         },
