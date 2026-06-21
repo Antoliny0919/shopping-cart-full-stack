@@ -1,0 +1,36 @@
+import { BASE_URL } from "../../constants";
+import { NetworkError } from "../../commons/errors";
+
+export interface OrderItem {
+  product_id: string;
+  quantity: number;
+  product: {
+    name: string;
+    thumbnail: string;
+    price: number;
+  };
+}
+
+export interface Order {
+  id: string;
+  hard_delivery_place: boolean;
+  selected_coupons: string[];
+  selected_items: OrderItem[];
+  price_summary: {
+    order_price: number;
+    discount_price: number;
+    delivery_price: number;
+    total_price: number;
+  };
+}
+
+export async function getOrder(orderId: string): Promise<Order> {
+  let response: Response;
+  try {
+    response = await fetch(`${BASE_URL}/api/orders/${orderId}/`);
+  } catch {
+    throw new NetworkError();
+  }
+  if (!response.ok) throw new Error("주문 조회 실패");
+  return response.json();
+}

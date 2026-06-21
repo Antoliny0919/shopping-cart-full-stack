@@ -1,5 +1,5 @@
 import { useLocation } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { FixedButton } from "../../../commons/styles/Button";
 import OrderItemList from "./OrderItemList";
@@ -7,34 +7,31 @@ import Checkbox from "../../../commons/components/Checkbox";
 import OrderSummary from "./OrderSummary";
 import Info from "../../../commons/images/info.svg?react";
 import CouponSelectModal from "./CouponSelectModal";
+import { getOrder, Order } from "../api";
+import NetworkError from "../../../commons/components/NetworkError";
 
 export default function Section() {
-  const { totalItems, totalQuantity, totalPrice } = useLocation().state;
+  const { totalItems, totalQuantity, orderId } = useLocation().state;
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
-  const items = [
-    {
-      product_id: "123",
-      quantity: 2,
-      product: {
-        name: "상품이름A",
-        price: 35000,
-        thumbnail: "/chicken.png",
-      },
-    },
-    {
-      product_id: "456",
-      quantity: 5,
-      product: {
-        name: "상품이름B",
-        price: 50000,
-        thumbnail: "/pizza.jpg",
-      },
-    },
-  ];
+  const [order, setOrder] = useState<Order | null>(null);
+  const [loadStatus, setLoadStatus] = useState<"loading" | "success" | "error">("loading");
+
+  useEffect(() => {
+    getOrder(orderId)
+      .then((data) => {
+        setOrder(data);
+        setLoadStatus("success");
+      })
+      .catch(() => {
+        setLoadStatus("error");
+      });
+  }, [orderId]);
 
   function onClose() {
     setIsCouponModalOpen(false);
   }
+
+  if (loadStatus === "error") return <NetworkError />;
 
   return (
     <SectionLayout>
@@ -43,7 +40,7 @@ export default function Section() {
         총 {totalItems}종류의 상품 {totalQuantity}개를 주문합니다.
       </SubText>
       <SubText>최종 결제 금액을 확인해 주세요.</SubText>
-      <OrderItemList items={items}></OrderItemList>
+      {order && <OrderItemList items={order.selected_items} />}
       <CouponApplyButton onClick={() => setIsCouponModalOpen(true)}>
         쿠폰 적용
       </CouponApplyButton>
@@ -52,7 +49,7 @@ export default function Section() {
         <p>배송 정보</p>
         <Checkbox
           labelText={"제주도 및 도서 산간 지역"}
-          checked={false}
+          checked={order?.hard_delivery_place ?? false}
           onChange={() => {}}
         ></Checkbox>
       </DeliveryOption>
@@ -60,13 +57,15 @@ export default function Section() {
         <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
         배송됩니다.
       </SubText>
-      <OrderSummary
-        price={70000}
-        couponDiscount={-6000}
-        deliveryFee={6000}
-        totalPrice={70000}
-      ></OrderSummary>
-      <FixedButton type="button" disabled={true}>
+      {order && (
+        <OrderSummary
+          price={order.price_summary.order_price}
+          couponDiscount={order.price_summary.discount_price}
+          deliveryFee={order.price_summary.delivery_price}
+          totalPrice={order.price_summary.total_price}
+        />
+      )}
+      <FixedButton type="button" disabled={loadStatus !== "success"}>
         결제하기
       </FixedButton>
     </SectionLayout>
@@ -121,15 +120,3 @@ const DeliveryOption = styled.div`
     font-size: 16px;
   }
 `;
-
-// const TotalPriceLabel = styled.p`
-//   margin: 1.5rem 0;
-//   font-weight: 700;
-//   font-size: 16px;
-// `;
-
-// const TotalPrice = styled.p`
-//   margin: 0;
-//   font-weight: 700;
-//   font-size: 24px;
-// `;

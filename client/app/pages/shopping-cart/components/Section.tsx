@@ -17,6 +17,7 @@ import NetworkError from "../../../commons/components/NetworkError";
 import Loading from "./Loading";
 import Toast from "../../../commons/components/Toast";
 import { useEffect, useEffectEvent, useMemo } from "react";
+import { createOrder } from "../api";
 
 export default function Section() {
   const navigate = useNavigate();
@@ -75,9 +76,15 @@ export default function Section() {
     }
   };
 
-  const goToOrderCheckPage = () => {
+  const goToOrderCheckPage = async () => {
+    const selectedItems = cartItems
+      .filter((item) => selectedItemId?.includes(item.product_id))
+      .map(({ product_id, quantity }) => ({ product_id, quantity }));
+
+    const { order_id } = await createOrder(selectedItems);
     navigate("/cart/check/", {
       state: {
+        orderId: order_id,
         totalItems: cart.selectedItemCount(),
         totalQuantity: cart.selectedItemTotalQuantity(),
         totalPrice: priceSummary.totalPrice,
