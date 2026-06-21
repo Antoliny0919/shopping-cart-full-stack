@@ -9,5 +9,6 @@ export default [
   ...prefix("cart/", [
     index("./pages/shopping-cart/ShoppingCartPage.tsx"),
     route("check/:id/", "./pages/shopping-cart/OrderCheckPage.tsx"),
+    route("check/purchase/", "./pages/purchase-check/PurchaseCheckPage.tsx"),
   ]),
 ] satisfies RouteConfig;
