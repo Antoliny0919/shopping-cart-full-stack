@@ -23,6 +23,13 @@ const mockCoupons: Coupon[] = [
     description: "5만원 이상 구매 시 사용 가능",
     is_active: false,
   },
+  {
+    id: "coupon-3",
+    name: "2+1 쿠폰",
+    expiration_date: "2026-11-30",
+    description: "2개 구매 시 1개 무료",
+    is_active: true,
+  },
 ];
 
 describe("CouponSelectModal", () => {
@@ -109,7 +116,9 @@ describe("CouponSelectModal", () => {
       />,
     );
 
-    expect(screen.getByText("총 5000원 할인 쿠폰 사용하기")).toBeInTheDocument();
+    expect(
+      screen.getByText("총 5000원 할인 쿠폰 사용하기"),
+    ).toBeInTheDocument();
   });
 
   test("쿠폰을 클릭하면 버튼의 가격이 변경된다", async () => {
@@ -130,7 +139,33 @@ describe("CouponSelectModal", () => {
     fireEvent.click(checkbox);
 
     await waitFor(() => {
-      expect(screen.getByText("총 10000원 할인 쿠폰 사용하기")).toBeInTheDocument();
+      expect(
+        screen.getByText("총 10000원 할인 쿠폰 사용하기"),
+      ).toBeInTheDocument();
+    });
+  });
+
+  test("쿠폰은 3개 이상 선택하면 선택되지 않는다", async () => {
+    const calculateDiscountPrice = vi
+      .fn()
+      .mockRejectedValue(new Error("쿠폰은 최대 2개까지 선택할 수 있습니다."));
+
+    render(
+      <CouponSelectModal
+        coupons={mockCoupons}
+        selectedCoupons={["coupon-1", "coupon-2"]}
+        initialDiscountPrice={5000}
+        calculateDiscountPrice={calculateDiscountPrice}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const checkboxes = screen.getAllByRole("checkbox", { hidden: true });
+    fireEvent.click(checkboxes[2]);
+
+    await waitFor(() => {
+      expect(checkboxes[2]).not.toBeChecked();
     });
   });
 

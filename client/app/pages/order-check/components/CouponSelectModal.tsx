@@ -5,6 +5,7 @@ import InfoText from "../../../commons/components/InfoText";
 import { Button } from "../../../commons/styles/Button";
 import { Coupon as CouponType } from "../types";
 import Coupon from "./Coupon";
+import Toast from "../../../commons/components/Toast";
 
 interface Props {
   selectedCoupons: string[];
@@ -26,18 +27,28 @@ export default function CouponSelectModal({
   const [localSelected, setLocalSelected] = useState<string[]>(selectedCoupons);
   const [discountPrice, setDiscountPrice] =
     useState<number>(initialDiscountPrice);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   async function onToggle(item: CouponType) {
     const next = localSelected.includes(item.id)
       ? localSelected.filter((id) => id !== item.id)
       : [...localSelected, item.id];
-    setLocalSelected(next);
-    const price = await calculateDiscountPrice(next);
-    setDiscountPrice(price);
+    try {
+      const price = await calculateDiscountPrice(next);
+      setLocalSelected(next);
+      setDiscountPrice(price);
+    } catch (err) {
+      setErrorMessage(
+        err instanceof Error ? err.message : "오류가 발생했습니다.",
+      );
+    }
   }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
+      {errorMessage && (
+        <Toast message={errorMessage} onClose={() => setErrorMessage(null)} />
+      )}
       <Title>쿠폰을 선택해 주세요</Title>
       <InfoText>쿠폰은 최대 2개까지 사용할 수 있습니다.</InfoText>
       <CouponList>
