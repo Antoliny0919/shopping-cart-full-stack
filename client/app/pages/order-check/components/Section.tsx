@@ -1,4 +1,3 @@
-import { useLocation } from "react-router";
 import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { FixedButton } from "../../../commons/styles/Button";
@@ -15,7 +14,6 @@ interface Props {
 }
 
 export default function Section({ orderId }: Props) {
-  const { totalItems, totalQuantity } = useLocation().state;
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
   const [order, setOrder] = useState<Order | null>(null);
   const [loadStatus, setLoadStatus] = useState<"loading" | "success" | "error">(
@@ -43,7 +41,12 @@ export default function Section({ orderId }: Props) {
     <SectionLayout>
       <Title>주문 확인</Title>
       <SubText>
-        총 {totalItems}종류의 상품 {totalQuantity}개를 주문합니다.
+        총 {order?.selected_items.length}종류의 상품{" "}
+        {order?.selected_items.reduce(
+          (count, item) => count + item.quantity,
+          0,
+        )}
+        개를 주문합니다.
       </SubText>
       <SubText>최종 결제 금액을 확인해 주세요.</SubText>
       {order && <OrderItemList items={order.selected_items} />}

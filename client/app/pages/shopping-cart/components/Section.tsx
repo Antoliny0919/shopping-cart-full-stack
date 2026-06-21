@@ -47,7 +47,6 @@ export default function Section() {
     () => new CartPricing(cart, new DeliveryFee(DELIVERY_FEE, FREE_THRESHOLD)),
     [cart],
   );
-  const priceSummary = cartPricing.calculatePriceSummary();
 
   const onUpdateQuantity = async (
     itemId: string,
@@ -82,13 +81,7 @@ export default function Section() {
       .map(({ product_id, quantity }) => ({ product_id, quantity }));
 
     const { order_id } = await createOrder(selectedItems);
-    navigate(`/cart/check/${order_id}/`, {
-      state: {
-        totalItems: cart.selectedItemCount(),
-        totalQuantity: cart.selectedItemTotalQuantity(),
-        totalPrice: priceSummary.totalPrice,
-      },
-    });
+    navigate(`/cart/check/${order_id}/`);
   };
 
   const allSelect = useEffectEvent(() => {
