@@ -5,16 +5,17 @@ import { Coupon as CouponType } from "../types";
 interface Props {
   item: CouponType;
   isSelect: boolean;
+  onToggle: () => void;
 }
 
-export default function Coupon({ item, isSelect }: Props) {
+export default function Coupon({ item, isSelect, onToggle }: Props) {
   return (
     <CouponItem key={item.id} isActive={item.is_active}>
       <CouponLayout>
         <CouponHeader>
           <Checkbox
             labelText={item.name}
-            onChange={() => {}}
+            onChange={onToggle}
             checked={isSelect}
           ></Checkbox>
         </CouponHeader>

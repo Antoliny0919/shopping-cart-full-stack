@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { useState } from "react";
 import Modal from "../../../commons/components/Modal";
 import InfoText from "../../../commons/components/InfoText";
 import { Button } from "../../../commons/styles/Button";
@@ -8,6 +9,8 @@ import Coupon from "./Coupon";
 interface Props {
   selectedCoupons: string[];
   coupons: CouponType[];
+  initialDiscountPrice: number;
+  calculateDiscountPrice: (selectedCoupons: string[]) => Promise<number>;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -15,12 +18,23 @@ interface Props {
 export default function CouponSelectModal({
   selectedCoupons,
   coupons,
+  initialDiscountPrice,
+  calculateDiscountPrice,
   isOpen,
   onClose,
 }: Props) {
-  // function onCouponActive(id: string) {
+  const [localSelected, setLocalSelected] = useState<string[]>(selectedCoupons);
+  const [discountPrice, setDiscountPrice] =
+    useState<number>(initialDiscountPrice);
 
-  // }
+  async function onToggle(item: CouponType) {
+    const next = localSelected.includes(item.id)
+      ? localSelected.filter((id) => id !== item.id)
+      : [...localSelected, item.id];
+    setLocalSelected(next);
+    const price = await calculateDiscountPrice(next);
+    setDiscountPrice(price);
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -29,11 +43,15 @@ export default function CouponSelectModal({
       <CouponList>
         {coupons.map((item: CouponType) => {
           return (
-            <Coupon item={item} isSelect={selectedCoupons.includes(item.id)} />
+            <Coupon
+              item={item}
+              onToggle={() => onToggle(item)}
+              isSelect={localSelected.includes(item.id)}
+            />
           );
         })}
       </CouponList>
-      <CouponUseButton>총 6,000원 할인 쿠폰 사용하기</CouponUseButton>
+      <CouponUseButton>총 {discountPrice}원 할인 쿠폰 사용하기</CouponUseButton>
     </Modal>
   );
 }

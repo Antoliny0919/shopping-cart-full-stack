@@ -39,5 +39,5 @@ export const TempOrderFieldValidators: ValidatorMap = {
 };
 
 export const DiscountSummaryFieldValidators: ValidatorMap = {
-  coupon_id: [validateMaxArrayLength("쿠폰", COUPON_SELECT_LIMIT)],
+  selected_coupons: [validateMaxArrayLength("쿠폰", COUPON_SELECT_LIMIT)],
 };

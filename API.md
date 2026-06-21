@@ -163,7 +163,7 @@ STATUS: 200
 
 ```
 {
-  coupon_id: ["BOGO", "FREESHIPPING"]
+  selected_coupons: ["BOGO", "FREESHIPPING"]
 }
 ```
 

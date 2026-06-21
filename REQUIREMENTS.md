@@ -69,9 +69,9 @@
   - [x] 사용자가 쿠폰 적용 버튼(주문 확인 페이지에서)을 클릭했다.
     - [x] 쿠폰을 가져와서 데이터 보여주기.(API GET /api/coupons/)
 
-  - [] 사용자가 각 쿠폰을 적용하는 체크 버튼을 클릭했다.
-    - [] 쿠폰 할인금액을 계산하여 데이터를 보여주기.(API POST /api/orders/{order-id}/discount-summary/ )
-      - [] 검증로직 수행.(BE)
+  - [x] 사용자가 각 쿠폰을 적용하는 체크 버튼을 클릭했다.
+    - [x] 쿠폰 할인금액을 계산하여 데이터를 보여주기.(API POST /api/orders/{order-id}/discount-summary/ )
+      - [x] 검증로직 수행.(BE)
 
   - [] 사용자가 총 xx원 할인 쿠폰 사용하기 버튼을 클릭했다.
     - [] 임시주문서에 선택된 쿠폰 반영하기.(API PATCH /api/order/{orderId}/, selected_coupons)

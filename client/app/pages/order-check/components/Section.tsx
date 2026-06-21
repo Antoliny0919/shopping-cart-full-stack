@@ -6,7 +6,12 @@ import Checkbox from "../../../commons/components/Checkbox";
 import OrderSummary from "./OrderSummary";
 import Info from "../../../commons/images/info.svg?react";
 import CouponSelectModal from "./CouponSelectModal";
-import { getOrder, Order, getCoupons } from "../api";
+import {
+  getOrder,
+  Order,
+  getCoupons,
+  calculateCouponDiscountPrice,
+} from "../api";
 import NetworkError from "../../../commons/components/NetworkError";
 
 interface Props {
@@ -43,6 +48,19 @@ export default function Section({ orderId }: Props) {
     const data = await getCoupons(orderId);
     setCoupons(data);
   }
+
+  async function calculateDiscountPrice(
+    selectedCoupons: string[],
+  ): Promise<number> {
+    if (order) {
+      const data = await calculateCouponDiscountPrice(order.id, {
+        selected_coupons: selectedCoupons,
+      });
+      return data.discount_price;
+    }
+    return 0;
+  }
+
   return (
     <SectionLayout>
       <Title>주문 확인</Title>
@@ -64,6 +82,8 @@ export default function Section({ orderId }: Props) {
           <CouponSelectModal
             selectedCoupons={order.selected_coupons}
             coupons={coupons}
+            initialDiscountPrice={order.price_summary.discount_price}
+            calculateDiscountPrice={calculateDiscountPrice}
             isOpen={isCouponModalOpen}
             onClose={onClose}
           />

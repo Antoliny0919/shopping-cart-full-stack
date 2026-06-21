@@ -179,7 +179,7 @@ export function createDiscountSummaryController({
       try {
         res
           .status(200)
-          .send(service.calculate(req.params.id as string, req.body.coupon_id));
+          .send(service.calculate(req.params.id as string, req.body.selected_coupons));
       } catch (err) {
         next(err);
       }

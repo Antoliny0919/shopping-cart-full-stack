@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, test, expect, vi, beforeAll } from "vitest";
 import CouponSelectModal from "../components/CouponSelectModal";
 import { Coupon } from "../types";
@@ -30,6 +30,9 @@ describe("CouponSelectModal", () => {
     render(
       <CouponSelectModal
         coupons={mockCoupons}
+        selectedCoupons={[]}
+        initialDiscountPrice={0}
+        calculateDiscountPrice={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
       />,
@@ -49,6 +52,9 @@ describe("CouponSelectModal", () => {
     render(
       <CouponSelectModal
         coupons={mockCoupons}
+        selectedCoupons={[]}
+        initialDiscountPrice={0}
+        calculateDiscountPrice={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
       />,
@@ -59,7 +65,16 @@ describe("CouponSelectModal", () => {
   });
 
   test("쿠폰이 없으면 쿠폰 아이템이 렌더링되지 않는다", () => {
-    render(<CouponSelectModal coupons={[]} isOpen={true} onClose={vi.fn()} />);
+    render(
+      <CouponSelectModal
+        coupons={[]}
+        selectedCoupons={[]}
+        initialDiscountPrice={0}
+        calculateDiscountPrice={vi.fn()}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
 
     const checkboxes = screen.queryAllByRole("checkbox", { hidden: true });
     expect(checkboxes).toHaveLength(0);
@@ -69,6 +84,9 @@ describe("CouponSelectModal", () => {
     render(
       <CouponSelectModal
         coupons={mockCoupons}
+        selectedCoupons={[]}
+        initialDiscountPrice={0}
+        calculateDiscountPrice={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
       />,
@@ -77,5 +95,64 @@ describe("CouponSelectModal", () => {
     const couponItems = screen.getAllByRole("listitem", { hidden: true });
     expect(couponItems[0]).toHaveStyle("opacity: 1");
     expect(couponItems[1]).toHaveStyle("opacity: 0.3");
+  });
+
+  test("버튼에 초기 할인 금액이 표시된다", () => {
+    render(
+      <CouponSelectModal
+        coupons={mockCoupons}
+        selectedCoupons={[]}
+        initialDiscountPrice={5000}
+        calculateDiscountPrice={vi.fn()}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("총 5000원 할인 쿠폰 사용하기")).toBeInTheDocument();
+  });
+
+  test("쿠폰을 클릭하면 버튼의 가격이 변경된다", async () => {
+    const calculateDiscountPrice = vi.fn().mockResolvedValue(10000);
+
+    render(
+      <CouponSelectModal
+        coupons={mockCoupons}
+        selectedCoupons={[]}
+        initialDiscountPrice={5000}
+        calculateDiscountPrice={calculateDiscountPrice}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const checkbox = screen.getAllByRole("checkbox", { hidden: true })[0];
+    fireEvent.click(checkbox);
+
+    await waitFor(() => {
+      expect(screen.getByText("총 10000원 할인 쿠폰 사용하기")).toBeInTheDocument();
+    });
+  });
+
+  test("선택된 쿠폰을 다시 클릭하면 버튼의 가격이 변경된다", async () => {
+    const calculateDiscountPrice = vi.fn().mockResolvedValue(0);
+
+    render(
+      <CouponSelectModal
+        coupons={mockCoupons}
+        selectedCoupons={["coupon-1"]}
+        initialDiscountPrice={5000}
+        calculateDiscountPrice={calculateDiscountPrice}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const checkbox = screen.getAllByRole("checkbox", { hidden: true })[0];
+    fireEvent.click(checkbox);
+
+    await waitFor(() => {
+      expect(screen.getByText("총 0원 할인 쿠폰 사용하기")).toBeInTheDocument();
+    });
   });
 });
