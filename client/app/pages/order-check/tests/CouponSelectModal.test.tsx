@@ -3,6 +3,11 @@ import userEvent from "@testing-library/user-event";
 import { describe, test, expect, vi, beforeAll } from "vitest";
 import CouponSelectModal from "../components/CouponSelectModal";
 import { Coupon } from "../types";
+import * as api from "../api";
+
+vi.mock("../api", () => ({
+  calculateCouponDiscountPrice: vi.fn(),
+}));
 
 beforeAll(() => {
   HTMLDialogElement.prototype.showModal = vi.fn();
@@ -37,10 +42,10 @@ describe("CouponSelectModal", () => {
   test("모달이 열렸을 때 쿠폰 목록이 렌더링된다", () => {
     render(
       <CouponSelectModal
+        orderId="order-1"
         coupons={mockCoupons}
         selectedCoupons={[]}
         initialDiscountPrice={0}
-        calculateDiscountPrice={vi.fn()}
         updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
@@ -60,10 +65,10 @@ describe("CouponSelectModal", () => {
   test("쿠폰 개수만큼 체크박스가 렌더링된다", () => {
     render(
       <CouponSelectModal
+        orderId="order-1"
         coupons={mockCoupons}
         selectedCoupons={[]}
         initialDiscountPrice={0}
-        calculateDiscountPrice={vi.fn()}
         updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
@@ -77,10 +82,10 @@ describe("CouponSelectModal", () => {
   test("쿠폰이 없으면 쿠폰 아이템이 렌더링되지 않는다", () => {
     render(
       <CouponSelectModal
+        orderId="order-1"
         coupons={[]}
         selectedCoupons={[]}
         initialDiscountPrice={0}
-        calculateDiscountPrice={vi.fn()}
         updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
@@ -94,10 +99,10 @@ describe("CouponSelectModal", () => {
   test("is_active에 따라 쿠폰에 투명도가 적용된다.", () => {
     render(
       <CouponSelectModal
+        orderId="order-1"
         coupons={mockCoupons}
         selectedCoupons={[]}
         initialDiscountPrice={0}
-        calculateDiscountPrice={vi.fn()}
         updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
@@ -112,10 +117,10 @@ describe("CouponSelectModal", () => {
   test("버튼에 초기 할인 금액이 표시된다", () => {
     render(
       <CouponSelectModal
+        orderId="order-1"
         coupons={mockCoupons}
         selectedCoupons={[]}
         initialDiscountPrice={5000}
-        calculateDiscountPrice={vi.fn()}
         updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
@@ -129,14 +134,16 @@ describe("CouponSelectModal", () => {
 
   test("쿠폰을 클릭하면 버튼의 가격이 변경된다", async () => {
     const user = userEvent.setup();
-    const calculateDiscountPrice = vi.fn().mockResolvedValue(10000);
+    vi.mocked(api.calculateCouponDiscountPrice).mockResolvedValue({
+      discount_price: 10000,
+    });
 
     render(
       <CouponSelectModal
+        orderId="order-1"
         coupons={mockCoupons}
         selectedCoupons={[]}
         initialDiscountPrice={5000}
-        calculateDiscountPrice={calculateDiscountPrice}
         updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
@@ -155,16 +162,16 @@ describe("CouponSelectModal", () => {
 
   test("쿠폰은 3개 이상 선택하면 선택되지 않는다", async () => {
     const user = userEvent.setup();
-    const calculateDiscountPrice = vi
-      .fn()
-      .mockRejectedValue(new Error("쿠폰은 최대 2개까지 선택할 수 있습니다."));
+    vi.mocked(api.calculateCouponDiscountPrice).mockRejectedValue(
+      new Error("쿠폰은 최대 2개까지 선택할 수 있습니다."),
+    );
 
     render(
       <CouponSelectModal
+        orderId="order-1"
         coupons={mockCoupons}
         selectedCoupons={["coupon-1", "coupon-2"]}
         initialDiscountPrice={5000}
-        calculateDiscountPrice={calculateDiscountPrice}
         updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
@@ -181,14 +188,16 @@ describe("CouponSelectModal", () => {
 
   test("선택된 쿠폰을 다시 클릭하면 버튼의 가격이 변경된다", async () => {
     const user = userEvent.setup();
-    const calculateDiscountPrice = vi.fn().mockResolvedValue(0);
+    vi.mocked(api.calculateCouponDiscountPrice).mockResolvedValue({
+      discount_price: 0,
+    });
 
     render(
       <CouponSelectModal
+        orderId="order-1"
         coupons={mockCoupons}
         selectedCoupons={["coupon-1"]}
         initialDiscountPrice={5000}
-        calculateDiscountPrice={calculateDiscountPrice}
         updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}

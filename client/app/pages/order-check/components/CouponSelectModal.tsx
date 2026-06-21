@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
 import Modal from "../../../commons/components/Modal";
 import InfoText from "../../../commons/components/InfoText";
 import { Button } from "../../../commons/styles/Button";
@@ -7,43 +6,29 @@ import { Coupon as CouponType } from "../types";
 import Coupon from "./Coupon";
 import Toast from "../../../commons/components/Toast";
 import { formatToKoreanPrice } from "../../../commons/utils";
+import useCouponSelection from "../hooks/useCouponSelection";
 
 interface Props {
+  orderId: string;
   selectedCoupons: string[];
   coupons: CouponType[];
   initialDiscountPrice: number;
-  calculateDiscountPrice: (selectedCoupons: string[]) => Promise<number>;
   updateOrder: (body: { selected_coupons?: string[] }) => Promise<void>;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export default function CouponSelectModal({
+  orderId,
   selectedCoupons,
   coupons,
   initialDiscountPrice,
-  calculateDiscountPrice,
   updateOrder,
   isOpen,
   onClose,
 }: Props) {
-  const [localSelected, setLocalSelected] = useState<string[]>(selectedCoupons);
-  const [discountPrice, setDiscountPrice] =
-    useState<number>(initialDiscountPrice);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  async function onToggle(item: CouponType) {
-    const next = localSelected.includes(item.id)
-      ? localSelected.filter((id) => id !== item.id)
-      : [...localSelected, item.id];
-    try {
-      const price = await calculateDiscountPrice(next);
-      setLocalSelected(next);
-      setDiscountPrice(price);
-    } catch (err) {
-      if (err instanceof Error) setErrorMessage(err.message);
-    }
-  }
+  const { localSelected, discountPrice, errorMessage, setErrorMessage, onToggle } =
+    useCouponSelection(orderId, selectedCoupons, initialDiscountPrice);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

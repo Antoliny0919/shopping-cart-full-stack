@@ -7,7 +7,6 @@ import Checkbox from "../../../commons/components/Checkbox";
 import OrderSummary from "./OrderSummary";
 import Info from "../../../commons/images/info.svg?react";
 import CouponSelectModal from "./CouponSelectModal";
-import { calculateCouponDiscountPrice } from "../api";
 import useOrder from "../hooks/useOrder";
 import useCoupons from "../hooks/useCoupons";
 import NetworkError from "../../../commons/components/NetworkError";
@@ -24,18 +23,6 @@ export default function Section({ orderId }: Props) {
   const { coupons, getCoupons } = useCoupons(orderId);
 
   const navigate = useNavigate();
-
-  async function calculateDiscountPrice(
-    selectedCoupons: string[],
-  ): Promise<number> {
-    if (order) {
-      const data = await calculateCouponDiscountPrice(order.id, {
-        selected_coupons: selectedCoupons,
-      });
-      return data.discount_price;
-    }
-    return 0;
-  }
 
   const orderItemsTypeLength = order?.selected_items.length ?? 0;
   const orderItemsLength =
@@ -74,10 +61,10 @@ export default function Section({ orderId }: Props) {
             쿠폰 적용
           </CouponApplyButton>
           <CouponSelectModal
+            orderId={orderId}
             selectedCoupons={order.selected_coupons}
             coupons={coupons}
             initialDiscountPrice={order.price_summary.discount_price}
-            calculateDiscountPrice={calculateDiscountPrice}
             updateOrder={updateOrder}
             isOpen={isCouponModalOpen}
             onClose={() => setIsCouponModalOpen(false)}
