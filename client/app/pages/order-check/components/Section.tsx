@@ -7,8 +7,9 @@ import Checkbox from "../../../commons/components/Checkbox";
 import OrderSummary from "./OrderSummary";
 import Info from "../../../commons/images/info.svg?react";
 import CouponSelectModal from "./CouponSelectModal";
-import { getCoupons, calculateCouponDiscountPrice } from "../api";
+import { calculateCouponDiscountPrice } from "../api";
 import useOrder from "../hooks/useOrder";
+import useCoupons from "../hooks/useCoupons";
 import NetworkError from "../../../commons/components/NetworkError";
 import Spinner from "../../../commons/components/Spinner";
 
@@ -18,17 +19,11 @@ interface Props {
 
 export default function Section({ orderId }: Props) {
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
-  const [coupons, setCoupons] = useState([]);
 
   const { loadStatus, order, updateOrder } = useOrder(orderId);
+  const { coupons, getCoupons } = useCoupons(orderId);
 
   const navigate = useNavigate();
-
-  async function couponModalOpen() {
-    setIsCouponModalOpen(true);
-    const data = await getCoupons(orderId);
-    setCoupons(data);
-  }
 
   async function calculateDiscountPrice(
     selectedCoupons: string[],
@@ -70,7 +65,12 @@ export default function Section({ orderId }: Props) {
           </SubText>
           <SubText>최종 결제 금액을 확인해 주세요.</SubText>
           <OrderItemList items={order.selected_items} />
-          <CouponApplyButton onClick={couponModalOpen}>
+          <CouponApplyButton
+            onClick={async () => {
+              setIsCouponModalOpen(true);
+              await getCoupons();
+            }}
+          >
             쿠폰 적용
           </CouponApplyButton>
           <CouponSelectModal

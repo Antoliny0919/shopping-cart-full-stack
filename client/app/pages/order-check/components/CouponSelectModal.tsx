@@ -41,9 +41,7 @@ export default function CouponSelectModal({
       setLocalSelected(next);
       setDiscountPrice(price);
     } catch (err) {
-      setErrorMessage(
-        err instanceof Error ? err.message : "오류가 발생했습니다.",
-      );
+      if (err instanceof Error) setErrorMessage(err.message);
     }
   }
 
@@ -66,7 +64,12 @@ export default function CouponSelectModal({
           );
         })}
       </CouponList>
-      <CouponUseButton onClick={() => { updateOrder({ selected_coupons: localSelected }); onClose(); }}>
+      <CouponUseButton
+        onClick={() => {
+          updateOrder({ selected_coupons: localSelected });
+          onClose();
+        }}
+      >
         총 {formatToKoreanPrice(discountPrice)} 할인 쿠폰 사용하기
       </CouponUseButton>
     </Modal>
