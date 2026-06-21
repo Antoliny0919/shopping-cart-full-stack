@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import { FixedButton } from "../../../commons/styles/Button";
 import OrderItemList from "./OrderItemList";
 import Checkbox from "../../../commons/components/Checkbox";
+import { FetchStatus } from "../../../commons/types";
 import OrderSummary from "./OrderSummary";
 import Info from "../../../commons/images/info.svg?react";
 import CouponSelectModal from "./CouponSelectModal";
@@ -24,22 +25,26 @@ export default function Section({ orderId }: Props) {
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
   const [coupons, setCoupons] = useState([]);
   const [order, setOrder] = useState<Order | null>(null);
-  const [loadStatus, setLoadStatus] = useState<"loading" | "success" | "error">(
-    "loading",
-  );
+  const [loadStatus, setLoadStatus] = useState<FetchStatus>("idle");
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    getOrder(orderId)
-      .then((data) => {
-        setOrder(data);
-        setLoadStatus("success");
-      })
-      .catch(() => {
-        setLoadStatus("error");
-      });
-  }, [orderId]);
+  useEffect(
+    function loadOrder() {
+      async function fetchOrder() {
+        setLoadStatus("loading");
+        try {
+          const data = await getOrder(orderId);
+          setOrder(data);
+          setLoadStatus("success");
+        } catch {
+          setLoadStatus("error");
+        }
+      }
+      fetchOrder();
+    },
+    [orderId],
+  );
 
   function onClose() {
     setIsCouponModalOpen(false);
