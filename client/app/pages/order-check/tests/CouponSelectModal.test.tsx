@@ -64,4 +64,18 @@ describe("CouponSelectModal", () => {
     const checkboxes = screen.queryAllByRole("checkbox", { hidden: true });
     expect(checkboxes).toHaveLength(0);
   });
+
+  test("is_active에 따라 쿠폰에 투명도가 적용된다.", () => {
+    render(
+      <CouponSelectModal
+        coupons={mockCoupons}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const couponItems = screen.getAllByRole("listitem", { hidden: true });
+    expect(couponItems[0]).toHaveStyle("opacity: 1");
+    expect(couponItems[1]).toHaveStyle("opacity: 0.3");
+  });
 });

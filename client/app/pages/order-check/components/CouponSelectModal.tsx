@@ -23,9 +23,10 @@ export default function CouponSelectModal({ coupons, isOpen, onClose }: Props) {
             name: string;
             expiration_date: string;
             description: string;
+            is_active: boolean;
           }) => {
             return (
-              <CouponItem key={item.id}>
+              <CouponItem key={item.id} isActive={item.is_active}>
                 <CouponLayout>
                   <CouponHeader>
                     <Checkbox
@@ -85,7 +86,7 @@ const CouponUseButton = styled(Button)`
   margin-top: auto;
 `;
 
-const CouponItem = styled.li`
+const CouponItem = styled.li<{ isActive: boolean }>`
   list-style: none;
   display: flex;
   gap: 12px;
@@ -93,4 +94,5 @@ const CouponItem = styled.li`
   width: 318px;
   height: 82px;
   border-top: 1px solid #0000001a;
+  opacity: ${(props) => (props.isActive ? 1 : 0.3)};
 `;
