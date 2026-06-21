@@ -24,10 +24,6 @@ export default function Section({ orderId }: Props) {
 
   const navigate = useNavigate();
 
-  function onClose() {
-    setIsCouponModalOpen(false);
-  }
-
   async function couponModalOpen() {
     setIsCouponModalOpen(true);
     const data = await getCoupons(orderId);
@@ -84,7 +80,7 @@ export default function Section({ orderId }: Props) {
             calculateDiscountPrice={calculateDiscountPrice}
             updateOrder={updateOrder}
             isOpen={isCouponModalOpen}
-            onClose={onClose}
+            onClose={() => setIsCouponModalOpen(false)}
           />
           <DeliveryOption>
             <p>배송 정보</p>
