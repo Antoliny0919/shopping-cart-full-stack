@@ -8,12 +8,14 @@ import Coupon from "./Coupon";
 import Toast from "../../../commons/components/Toast";
 
 interface Props {
+  orderId: string;
   selectedCoupons: string[];
   coupons: CouponType[];
   initialDiscountPrice: number;
   calculateDiscountPrice: (selectedCoupons: string[]) => Promise<number>;
   isOpen: boolean;
   onClose: () => void;
+  onSubmit: (selected: string[]) => void;
 }
 
 export default function CouponSelectModal({
@@ -23,6 +25,7 @@ export default function CouponSelectModal({
   calculateDiscountPrice,
   isOpen,
   onClose,
+  onSubmit,
 }: Props) {
   const [localSelected, setLocalSelected] = useState<string[]>(selectedCoupons);
   const [discountPrice, setDiscountPrice] =
@@ -62,7 +65,9 @@ export default function CouponSelectModal({
           );
         })}
       </CouponList>
-      <CouponUseButton>총 {discountPrice}원 할인 쿠폰 사용하기</CouponUseButton>
+      <CouponUseButton onClick={() => onSubmit(localSelected)}>
+        총 {discountPrice}원 할인 쿠폰 사용하기
+      </CouponUseButton>
     </Modal>
   );
 }

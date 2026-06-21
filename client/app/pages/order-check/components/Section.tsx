@@ -11,6 +11,7 @@ import {
   Order,
   getCoupons,
   calculateCouponDiscountPrice,
+  updateOrder,
 } from "../api";
 import NetworkError from "../../../commons/components/NetworkError";
 
@@ -61,6 +62,14 @@ export default function Section({ orderId }: Props) {
     return 0;
   }
 
+  async function onSubmitCoupon(selected: string[]) {
+    const order = await updateOrder(orderId, {
+      selected_coupons: selected,
+    });
+    setOrder(order);
+    onClose();
+  }
+
   return (
     <SectionLayout>
       <Title>주문 확인</Title>
@@ -80,12 +89,14 @@ export default function Section({ orderId }: Props) {
             쿠폰 적용
           </CouponApplyButton>
           <CouponSelectModal
+            orderId={orderId}
             selectedCoupons={order.selected_coupons}
             coupons={coupons}
             initialDiscountPrice={order.price_summary.discount_price}
             calculateDiscountPrice={calculateDiscountPrice}
             isOpen={isCouponModalOpen}
             onClose={onClose}
+            onSubmit={onSubmitCoupon}
           />
           <DeliveryOption>
             <p>배송 정보</p>

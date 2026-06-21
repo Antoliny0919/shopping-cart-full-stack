@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, test, expect, vi, beforeAll } from "vitest";
 import CouponSelectModal from "../components/CouponSelectModal";
 import { Coupon } from "../types";
@@ -122,6 +123,7 @@ describe("CouponSelectModal", () => {
   });
 
   test("쿠폰을 클릭하면 버튼의 가격이 변경된다", async () => {
+    const user = userEvent.setup();
     const calculateDiscountPrice = vi.fn().mockResolvedValue(10000);
 
     render(
@@ -136,7 +138,7 @@ describe("CouponSelectModal", () => {
     );
 
     const checkbox = screen.getAllByRole("checkbox", { hidden: true })[0];
-    fireEvent.click(checkbox);
+    await user.click(checkbox);
 
     await waitFor(() => {
       expect(
@@ -146,6 +148,7 @@ describe("CouponSelectModal", () => {
   });
 
   test("쿠폰은 3개 이상 선택하면 선택되지 않는다", async () => {
+    const user = userEvent.setup();
     const calculateDiscountPrice = vi
       .fn()
       .mockRejectedValue(new Error("쿠폰은 최대 2개까지 선택할 수 있습니다."));
@@ -162,7 +165,7 @@ describe("CouponSelectModal", () => {
     );
 
     const checkboxes = screen.getAllByRole("checkbox", { hidden: true });
-    fireEvent.click(checkboxes[2]);
+    await user.click(checkboxes[2]);
 
     await waitFor(() => {
       expect(checkboxes[2]).not.toBeChecked();
@@ -170,6 +173,7 @@ describe("CouponSelectModal", () => {
   });
 
   test("선택된 쿠폰을 다시 클릭하면 버튼의 가격이 변경된다", async () => {
+    const user = userEvent.setup();
     const calculateDiscountPrice = vi.fn().mockResolvedValue(0);
 
     render(
@@ -184,7 +188,7 @@ describe("CouponSelectModal", () => {
     );
 
     const checkbox = screen.getAllByRole("checkbox", { hidden: true })[0];
-    fireEvent.click(checkbox);
+    await user.click(checkbox);
 
     await waitFor(() => {
       expect(screen.getByText("총 0원 할인 쿠폰 사용하기")).toBeInTheDocument();

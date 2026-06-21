@@ -35,6 +35,27 @@ export async function getOrder(orderId: string): Promise<Order> {
   return response.json();
 }
 
+export async function updateOrder(
+  orderId: string,
+  body: { selected_coupons: string[] },
+) {
+  let response: Response;
+  try {
+    response = await fetch(`${BASE_URL}/api/orders/${orderId}/`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    throw new NetworkError();
+  }
+  if (!response.ok) throw new Error("주문 업데이트 실패");
+  const data = await response.json();
+  return data;
+}
+
 export async function getCoupons(orderId: string) {
   let response: Response;
   try {
@@ -65,10 +86,7 @@ export async function calculateCouponDiscountPrice(
   } catch {
     throw new NetworkError();
   }
-  if (!response.ok) {
-    const { errors } = await response.json();
-    throw new Error(errors.message);
-  }
+  if (!response.ok) throw new Error("쿠폰 할인금액을 계산에 실패했습니다.");
   const data = await response.json();
   return data;
 }
