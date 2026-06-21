@@ -23,7 +23,7 @@ export function createShopApp() {
   const cartController = createCartController({ cartRepository, productRepository });
   const tempOrderController = createTempOrderController({ tempOrderRepository, productRepository, couponRepository });
   const discountSummaryController = createDiscountSummaryController({ tempOrderRepository, couponRepository });
-  const couponController = createCouponController({ couponRepository });
+  const couponController = createCouponController({ couponRepository, tempOrderRepository });
 
   const app = createApp({ productController, cartController, tempOrderController, discountSummaryController, couponController });
 

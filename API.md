@@ -118,7 +118,7 @@ STATUS: 201
 
 STATUS: 200
 
-## `GET` `/api/coupons/`- 쿠폰 데이터를 가져온다.
+## `GET` `/api/orders/${order-id}/coupons/`- 주문서의 쿠폰 데이터를 가져온다.
 
 ### Success Response
 
@@ -128,25 +128,29 @@ STATUS: 200
     id: "FIXED5000",
     name: "5,000원 할인 쿠폰",
     expiriation_date: 2026-11-30,
-    description: "최소 주문 금액: 100,000원"
+    description: "최소 주문 금액: 100,000원",
+    is_active: false
   },
   {
     id: "BOGO",
     name: "2+1 쿠폰",
     expiriation_date: 2026-06-30,
-    description: ""
+    description: "",
+    is_active: false
   },
   {
     id: "FREESHIPPING",
     name: "무료 배송 쿠폰",
     expiriation_date: 2026-08-31,
-    description: "최소 주문 금액: 50,000원"
+    description: "최소 주문 금액: 50,000원",
+    is_active: true
   },
   {
     id: "MIRACLESALE",
     name: "30% 시간제 할인 쿠폰",
     expiriation_date: 2026-07-31,
-    description: "사용 가능 시간: 오전 4시부터 7시까지"
+    description: "사용 가능 시간: 오전 4시부터 7시까지",
+    is_active: true
   },
 ]
 ```

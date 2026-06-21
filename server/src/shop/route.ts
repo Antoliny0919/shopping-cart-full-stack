@@ -55,7 +55,7 @@ export function createShopRouter({
       discountSummaryController.post,
     );
 
-  router.route("/api/coupons/").get(couponController.get);
+  router.route("/api/orders/:id/coupons/").get(couponController.get);
 
   return router;
 }

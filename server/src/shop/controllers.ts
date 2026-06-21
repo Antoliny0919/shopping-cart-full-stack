@@ -146,14 +146,16 @@ export function createTempOrderController({
 
 export function createCouponController({
   couponRepository,
+  tempOrderRepository,
 }: {
   couponRepository: CouponRepository;
+  tempOrderRepository: TempOrderRepository;
 }): CouponController {
-  const service = new CouponService(couponRepository);
+  const service = new CouponService(couponRepository, tempOrderRepository);
   return {
-    get: (_req, res, next) => {
+    get: (req, res, next) => {
       try {
-        res.status(200).send(service.getAll());
+        res.status(200).send(service.getByOrderId(req.params.id as string));
       } catch (err) {
         next(err);
       }

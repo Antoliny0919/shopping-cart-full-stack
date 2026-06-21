@@ -35,10 +35,10 @@ export async function getOrder(orderId: string): Promise<Order> {
   return response.json();
 }
 
-export async function getCoupons() {
+export async function getCoupons(orderId: string) {
   let response: Response;
   try {
-    response = await fetch(`${BASE_URL}/api/coupons/`);
+    response = await fetch(`${BASE_URL}/api/orders/${orderId}/coupons/`);
   } catch {
     throw new NetworkError();
   }

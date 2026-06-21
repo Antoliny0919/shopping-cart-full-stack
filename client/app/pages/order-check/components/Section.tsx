@@ -40,7 +40,7 @@ export default function Section({ orderId }: Props) {
 
   async function couponModalOpen() {
     setIsCouponModalOpen(true);
-    const data = await getCoupons();
+    const data = await getCoupons(orderId);
     setCoupons(data);
   }
 

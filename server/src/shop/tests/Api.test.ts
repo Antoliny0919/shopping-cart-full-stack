@@ -467,7 +467,7 @@ describe("임시 주문서 API 테스트", () => {
 });
 
 describe("쿠폰 API 테스트", () => {
-  const { app, couponRepository } = createShopApp();
+  const { app, couponRepository, tempOrderRepository } = createShopApp();
 
   const amountDiscountCoupon = new AmountDiscountCoupon({
     conditions: [new HotTimeDiscountCondition(5, 8)],
@@ -481,11 +481,18 @@ describe("쿠폰 API 테스트", () => {
     expirationDate: new Date("2030-12-31"),
   });
 
+  const tempOrder = new TempOrder(
+    [{ product_id: "1", quantity: 1, product: { name: "피자", price: 5000, thumbnail: "" } }],
+    new DeliveryFee(0, []),
+    [],
+  );
+
   couponRepository.save(amountDiscountCoupon.getId(), amountDiscountCoupon);
   couponRepository.save(rateDiscountCoupon.getId(), rateDiscountCoupon);
+  tempOrderRepository.save(tempOrder.getId(), tempOrder);
 
   test("쿠폰 목록을 가져온다", async () => {
-    const res = await request(app).get("/api/coupons/");
+    const res = await request(app).get(`/api/orders/${tempOrder.getId()}/coupons/`);
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
       {
@@ -493,12 +500,14 @@ describe("쿠폰 API 테스트", () => {
         name: "5,000원 할인 쿠폰",
         expiration_date: "2020년 1월 1일",
         description: "사용 가능 시간: 오전 5시부터 오전 8시까지",
+        is_active: false,
       },
       {
         id: rateDiscountCoupon.getId(),
         name: "30% 시간제 할인 쿠폰",
         expiration_date: "2030년 12월 31일",
         description: "최소 주문 금액: 1000",
+        is_active: true,
       },
     ]);
   });
