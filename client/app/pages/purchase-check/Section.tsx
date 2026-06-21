@@ -17,7 +17,7 @@ export default function Section() {
       <SubText>최종 결제 금액을 확인해 주세요.</SubText>
 
       <MiddleTitle>총 결제 금액</MiddleTitle>
-      <TotalPrice>{formatToKoreanPrice(totalPrice)}원</TotalPrice>
+      <TotalPrice>{formatToKoreanPrice(totalPrice)}</TotalPrice>
       <FixedButton>장바구니로 돌아가기</FixedButton>
     </SectionLayout>
   );
