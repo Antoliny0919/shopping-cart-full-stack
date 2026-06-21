@@ -43,7 +43,6 @@ export default function Section({ orderId }: Props) {
     const data = await getCoupons(orderId);
     setCoupons(data);
   }
-
   return (
     <SectionLayout>
       <Title>주문 확인</Title>
@@ -59,7 +58,9 @@ export default function Section({ orderId }: Props) {
           </SubText>
           <SubText>최종 결제 금액을 확인해 주세요.</SubText>
           <OrderItemList items={order.selected_items} />
-          <CouponApplyButton onClick={couponModalOpen}>쿠폰 적용</CouponApplyButton>
+          <CouponApplyButton onClick={couponModalOpen}>
+            쿠폰 적용
+          </CouponApplyButton>
           <CouponSelectModal
             selectedCoupons={order.selected_coupons}
             coupons={coupons}
