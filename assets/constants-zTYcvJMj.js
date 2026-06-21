@@ -1,0 +1,1 @@
+var e=`https://shopping-cart-full-stack-production-62c3.up.railway.app`;export{e as t};

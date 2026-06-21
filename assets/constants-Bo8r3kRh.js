@@ -1,0 +1,1 @@
+var e={MAX:99,MIN:1,STEP:1},t=1e5,n=3e3;export{n,t as r,e as t};
