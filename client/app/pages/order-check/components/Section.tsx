@@ -70,6 +70,13 @@ export default function Section({ orderId }: Props) {
     onClose();
   }
 
+  async function onToggleDeliveryPlace(state: boolean) {
+    const order = await updateOrder(orderId, {
+      hard_delivery_place: state,
+    });
+    setOrder(order);
+  }
+
   return (
     <SectionLayout>
       <Title>주문 확인</Title>
@@ -102,7 +109,7 @@ export default function Section({ orderId }: Props) {
             <Checkbox
               labelText={"제주도 및 도서 산간 지역"}
               checked={order.hard_delivery_place}
-              onChange={() => {}}
+              onChange={() => onToggleDeliveryPlace(!order.hard_delivery_place)}
             ></Checkbox>
           </DeliveryOption>
           <SubText className="icon-text">

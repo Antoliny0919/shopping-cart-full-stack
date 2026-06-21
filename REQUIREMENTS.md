@@ -76,8 +76,8 @@
   - [x] 사용자가 총 xx원 할인 쿠폰 사용하기 버튼을 클릭했다.
     - [x] 임시주문서에 선택된 쿠폰 반영하기.(API PATCH /api/order/{orderId}/, selected_coupons)
 
-  - [] 사용자가 제주/도서 산간 체크버튼을 활성화/비활성화 했다.
-    - [] 임시주문서에 제주/도서 산간 여부 반영하기.(API PATCH /api/order/{orderId}/, hard_delivery_place)
+  - [x] 사용자가 제주/도서 산간 체크버튼을 활성화/비활성화 했다.
+    - [x] 임시주문서에 제주/도서 산간 여부 반영하기.(API PATCH /api/order/{orderId}/, hard_delivery_place)
 
   - [] 사용자가 결제하기 버튼을 클릭했다.
     - [] 결제금액 확인 페이지로 이동.

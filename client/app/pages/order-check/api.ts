@@ -37,7 +37,7 @@ export async function getOrder(orderId: string): Promise<Order> {
 
 export async function updateOrder(
   orderId: string,
-  body: { selected_coupons: string[] },
+  body: { selected_coupons?: string[]; hard_delivery_place?: boolean },
 ) {
   let response: Response;
   try {

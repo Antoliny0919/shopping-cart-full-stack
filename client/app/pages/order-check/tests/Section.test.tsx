@@ -71,6 +71,64 @@ const updatedOrder = {
   },
 };
 
+describe("제주도 및 도서 산간 지역 체크박스", () => {
+  test("체크박스 클릭할 때마다 배송비가 변경된다", async () => {
+    const user = userEvent.setup();
+
+    const orderWithNormalDelivery = {
+      ...initialOrder,
+      hard_delivery_place: false,
+      price_summary: {
+        order_price: 50000,
+        discount_price: 0,
+        delivery_price: 3000,
+        total_price: 53000,
+      },
+    };
+
+    const orderWithHardDelivery = {
+      ...initialOrder,
+      hard_delivery_place: true,
+      price_summary: {
+        order_price: 50000,
+        discount_price: 0,
+        delivery_price: 6000,
+        total_price: 56000,
+      },
+    };
+
+    vi.mocked(api.getOrder).mockResolvedValue(orderWithNormalDelivery);
+    vi.mocked(api.updateOrder)
+      .mockResolvedValueOnce(orderWithHardDelivery)
+      .mockResolvedValueOnce(orderWithNormalDelivery);
+
+    render(<Section orderId="order-1" />);
+
+    await waitFor(() => screen.getByText("제주도 및 도서 산간 지역"));
+
+    expect(screen.getByText("3,000원")).toBeInTheDocument();
+
+    const checkbox = screen.getByLabelText("제주도 및 도서 산간 지역");
+    await user.click(checkbox);
+
+    await waitFor(() => {
+      expect(api.updateOrder).toHaveBeenCalledWith("order-1", {
+        hard_delivery_place: true,
+      });
+      expect(screen.getByText("6,000원")).toBeInTheDocument();
+    });
+
+    await user.click(checkbox);
+
+    await waitFor(() => {
+      expect(api.updateOrder).toHaveBeenCalledWith("order-1", {
+        hard_delivery_place: false,
+      });
+      expect(screen.getByText("3,000원")).toBeInTheDocument();
+    });
+  });
+});
+
 describe("Section + CouponSelectModal 통합", () => {
   test("쿠폰 사용하기 버튼 클릭 시 Section의 가격이 변경된다", async () => {
     const user = userEvent.setup();
