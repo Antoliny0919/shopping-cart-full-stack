@@ -1,4 +1,5 @@
-import styled, { keyframes } from "@emotion/styled";
+import styled from "@emotion/styled";
+import { keyframes } from "@emotion/react";
 
 export default function Spinner() {
   return (
