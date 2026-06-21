@@ -1,20 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import styled from "@emotion/styled";
 import { FixedButton } from "../../../commons/styles/Button";
 import OrderItemList from "./OrderItemList";
 import Checkbox from "../../../commons/components/Checkbox";
-import { FetchStatus } from "../../../commons/types";
 import OrderSummary from "./OrderSummary";
 import Info from "../../../commons/images/info.svg?react";
 import CouponSelectModal from "./CouponSelectModal";
-import {
-  getOrder,
-  Order,
-  getCoupons,
-  calculateCouponDiscountPrice,
-  updateOrder,
-} from "../api";
+import { getCoupons, calculateCouponDiscountPrice } from "../api";
+import useOrder from "../hooks/useOrder";
 import NetworkError from "../../../commons/components/NetworkError";
 import Spinner from "../../../commons/components/Spinner";
 
@@ -25,27 +19,10 @@ interface Props {
 export default function Section({ orderId }: Props) {
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
   const [coupons, setCoupons] = useState([]);
-  const [order, setOrder] = useState<Order | null>(null);
-  const [loadStatus, setLoadStatus] = useState<FetchStatus>("idle");
+
+  const { loadStatus, order, updateOrder } = useOrder(orderId);
 
   const navigate = useNavigate();
-
-  useEffect(
-    function loadOrder() {
-      async function fetchOrder() {
-        setLoadStatus("loading");
-        try {
-          const data = await getOrder(orderId);
-          setOrder(data);
-          setLoadStatus("success");
-        } catch {
-          setLoadStatus("error");
-        }
-      }
-      fetchOrder();
-    },
-    [orderId],
-  );
 
   function onClose() {
     setIsCouponModalOpen(false);
@@ -69,25 +46,11 @@ export default function Section({ orderId }: Props) {
     return 0;
   }
 
-  async function onSubmitCoupon(selected: string[]) {
-    const order = await updateOrder(orderId, {
-      selected_coupons: selected,
-    });
-    setOrder(order);
-    onClose();
-  }
-
-  async function onToggleDeliveryPlace(state: boolean) {
-    const order = await updateOrder(orderId, {
-      hard_delivery_place: state,
-    });
-    setOrder(order);
-  }
-
   const orderItemsTypeLength = order?.selected_items.length ?? 0;
   const orderItemsLength =
     order?.selected_items.reduce((count, item) => count + item.quantity, 0) ??
     0;
+
   function goToPurchaseCheckPage() {
     if (order)
       navigate(`/cart/check/purchase/`, {
@@ -119,16 +82,18 @@ export default function Section({ orderId }: Props) {
             coupons={coupons}
             initialDiscountPrice={order.price_summary.discount_price}
             calculateDiscountPrice={calculateDiscountPrice}
+            updateOrder={updateOrder}
             isOpen={isCouponModalOpen}
             onClose={onClose}
-            onSubmit={onSubmitCoupon}
           />
           <DeliveryOption>
             <p>배송 정보</p>
             <Checkbox
               labelText={"제주도 및 도서 산간 지역"}
               checked={order.hard_delivery_place}
-              onChange={() => onToggleDeliveryPlace(!order.hard_delivery_place)}
+              onChange={() =>
+                updateOrder({ hard_delivery_place: order.hard_delivery_place })
+              }
             ></Checkbox>
           </DeliveryOption>
           <SubText className="icon-text">

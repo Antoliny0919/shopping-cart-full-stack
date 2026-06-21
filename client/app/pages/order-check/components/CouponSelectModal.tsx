@@ -13,9 +13,9 @@ interface Props {
   coupons: CouponType[];
   initialDiscountPrice: number;
   calculateDiscountPrice: (selectedCoupons: string[]) => Promise<number>;
+  updateOrder: (body: { selected_coupons?: string[] }) => Promise<void>;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (selected: string[]) => void;
 }
 
 export default function CouponSelectModal({
@@ -23,9 +23,9 @@ export default function CouponSelectModal({
   coupons,
   initialDiscountPrice,
   calculateDiscountPrice,
+  updateOrder,
   isOpen,
   onClose,
-  onSubmit,
 }: Props) {
   const [localSelected, setLocalSelected] = useState<string[]>(selectedCoupons);
   const [discountPrice, setDiscountPrice] =
@@ -66,7 +66,7 @@ export default function CouponSelectModal({
           );
         })}
       </CouponList>
-      <CouponUseButton onClick={() => onSubmit(localSelected)}>
+      <CouponUseButton onClick={() => { updateOrder({ selected_coupons: localSelected }); onClose(); }}>
         총 {formatToKoreanPrice(discountPrice)} 할인 쿠폰 사용하기
       </CouponUseButton>
     </Modal>
