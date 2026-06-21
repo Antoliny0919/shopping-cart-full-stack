@@ -1,6 +1,7 @@
 import {
   DiscountCondition,
   ExpireDateDiscountCondition,
+  MinimumItemQuantityDiscountCondition,
 } from "./DiscountCondition.js";
 import TempOrder from "./TempOrder.js";
 
@@ -106,7 +107,11 @@ export class BonusCoupon extends Coupon {
     bonusCount: number;
     expirationDate?: Date;
   }) {
-    super(conditions, `${minQuantity}+${bonusCount} 쿠폰`, expirationDate);
+    super(
+      [...conditions, new MinimumItemQuantityDiscountCondition(minQuantity)],
+      `${minQuantity}+${bonusCount} 쿠폰`,
+      expirationDate,
+    );
     this.minQuantity = minQuantity;
     this.bonusCount = bonusCount;
   }

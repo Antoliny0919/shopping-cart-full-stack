@@ -29,6 +29,18 @@ export class MinimumOrderPriceDiscountCondition implements DiscountCondition {
   }
 }
 
+export class MinimumItemQuantityDiscountCondition implements DiscountCondition {
+  constructor(private readonly minQuantity: number) {}
+
+  isAvailable(tempOrder: TempOrder) {
+    return tempOrder.findMostExpensiveItemPrice(this.minQuantity) !== undefined;
+  }
+
+  description() {
+    return null;
+  }
+}
+
 export class HotTimeDiscountCondition implements DiscountCondition {
   constructor(
     private readonly startHour: number,
