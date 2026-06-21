@@ -57,6 +57,7 @@ export default function CouponSelectModal({
         {coupons.map((item: CouponType) => {
           return (
             <Coupon
+              key={item.id}
               item={item}
               onToggle={() => onToggle(item)}
               isSelect={localSelected.includes(item.id)}
