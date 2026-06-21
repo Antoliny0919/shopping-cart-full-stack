@@ -6,7 +6,7 @@ import Checkbox from "../../../commons/components/Checkbox";
 import OrderSummary from "./OrderSummary";
 import Info from "../../../commons/images/info.svg?react";
 import CouponSelectModal from "./CouponSelectModal";
-import { getOrder, Order } from "../api";
+import { getOrder, Order, getCoupons } from "../api";
 import NetworkError from "../../../commons/components/NetworkError";
 
 interface Props {
@@ -15,6 +15,7 @@ interface Props {
 
 export default function Section({ orderId }: Props) {
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
+  const [coupons, setCoupons] = useState([]);
   const [order, setOrder] = useState<Order | null>(null);
   const [loadStatus, setLoadStatus] = useState<"loading" | "success" | "error">(
     "loading",
@@ -37,6 +38,12 @@ export default function Section({ orderId }: Props) {
 
   if (loadStatus === "error") return <NetworkError />;
 
+  async function couponModalOpen() {
+    setIsCouponModalOpen(true);
+    const data = await getCoupons();
+    setCoupons(data);
+  }
+
   return (
     <SectionLayout>
       <Title>주문 확인</Title>
@@ -50,10 +57,12 @@ export default function Section({ orderId }: Props) {
       </SubText>
       <SubText>최종 결제 금액을 확인해 주세요.</SubText>
       {order && <OrderItemList items={order.selected_items} />}
-      <CouponApplyButton onClick={() => setIsCouponModalOpen(true)}>
-        쿠폰 적용
-      </CouponApplyButton>
-      <CouponSelectModal isOpen={isCouponModalOpen} onClose={onClose} />
+      <CouponApplyButton onClick={couponModalOpen}>쿠폰 적용</CouponApplyButton>
+      <CouponSelectModal
+        coupons={coupons}
+        isOpen={isCouponModalOpen}
+        onClose={onClose}
+      />
       <DeliveryOption>
         <p>배송 정보</p>
         <Checkbox

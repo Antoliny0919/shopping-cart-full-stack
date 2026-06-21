@@ -3,49 +3,25 @@ import Modal from "../../../commons/components/Modal";
 import InfoText from "../../../commons/components/InfoText";
 import Checkbox from "../../../commons/components/Checkbox";
 import { Button } from "../../../commons/styles/Button";
+import { Coupon } from "../types";
 
 interface Props {
+  coupons: Coupon[];
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function CouponSelectModal({ isOpen, onClose }: Props) {
-  const couponItems = [
-    {
-      id: "FIXED5000",
-      name: "5,000원 할인 쿠폰",
-      expiriation_date: "2026년 11월 30일",
-      description: "최소 주문 금액: 100,000원",
-    },
-    {
-      id: "BOGO",
-      name: "2+1 쿠폰",
-      expiriation_date: "2026년 6월 30일",
-      description: "",
-    },
-    {
-      id: "FREESHIPPING",
-      name: "무료 배송 쿠폰",
-      expiriation_date: "2026년 8월 31일",
-      description: "최소 주문 금액: 50,000원",
-    },
-    {
-      id: "MIRACLESALE",
-      name: "30% 시간제 할인 쿠폰",
-      expiriation_date: "2026년 7월 31일",
-      description: "사용 가능 시간: 오전 4시부터 7시까지",
-    },
-  ];
+export default function CouponSelectModal({ coupons, isOpen, onClose }: Props) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <Title>쿠폰을 선택해 주세요</Title>
       <InfoText>쿠폰은 최대 2개까지 사용할 수 있습니다.</InfoText>
       <CouponList>
-        {couponItems.map(
+        {coupons.map(
           (item: {
             id: string;
             name: string;
-            expiriation_date: string;
+            expiration_date: string;
             description: string;
           }) => {
             return (
@@ -59,7 +35,7 @@ export default function CouponSelectModal({ isOpen, onClose }: Props) {
                     ></Checkbox>
                   </CouponHeader>
                   <div>
-                    <SubText>만료일: {item.expiriation_date}</SubText>
+                    <SubText>만료일: {item.expiration_date}</SubText>
                     <SubText>{item.description}</SubText>
                   </div>
                 </CouponLayout>
