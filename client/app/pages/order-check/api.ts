@@ -31,7 +31,10 @@ export async function getOrder(orderId: string): Promise<Order> {
   } catch {
     throw new NetworkError();
   }
-  if (!response.ok) throw new Error("주문 조회 실패");
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message);
+  }
   return response.json();
 }
 
@@ -51,7 +54,10 @@ export async function updateOrder(
   } catch {
     throw new NetworkError();
   }
-  if (!response.ok) throw new Error("주문 업데이트 실패");
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message);
+  }
   const data = await response.json();
   return data;
 }
@@ -63,7 +69,10 @@ export async function getCoupons(orderId: string) {
   } catch {
     throw new NetworkError();
   }
-  if (!response.ok) throw new Error("쿠폰을 불러오지 못했습니다.");
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message);
+  }
   return response.json();
 }
 
@@ -86,7 +95,10 @@ export async function calculateCouponDiscountPrice(
   } catch {
     throw new NetworkError();
   }
-  if (!response.ok) throw new Error("쿠폰 할인금액을 계산에 실패했습니다.");
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message);
+  }
   const data = await response.json();
   return data;
 }
