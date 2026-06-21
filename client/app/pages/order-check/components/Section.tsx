@@ -16,6 +16,7 @@ import {
   updateOrder,
 } from "../api";
 import NetworkError from "../../../commons/components/NetworkError";
+import Spinner from "../../../commons/components/Spinner";
 
 interface Props {
   orderId: string;
@@ -49,8 +50,6 @@ export default function Section({ orderId }: Props) {
   function onClose() {
     setIsCouponModalOpen(false);
   }
-
-  if (loadStatus === "error") return <NetworkError />;
 
   async function couponModalOpen() {
     setIsCouponModalOpen(true);
@@ -102,9 +101,10 @@ export default function Section({ orderId }: Props) {
 
   return (
     <SectionLayout>
-      <Title>주문 확인</Title>
-      {order && (
+      {loadStatus === "loading" && <Spinner />}
+      {loadStatus === "success" && order && (
         <>
+          <Title>주문 확인</Title>
           <SubText>
             총 {orderItemsTypeLength}종류의 상품 {orderItemsLength}
             개를 주문합니다.
@@ -141,15 +141,12 @@ export default function Section({ orderId }: Props) {
             deliveryFee={order.price_summary.delivery_price}
             totalPrice={order.price_summary.total_price}
           />
+          <FixedButton type="button" onClick={goToPurchaseCheckPage}>
+            결제하기
+          </FixedButton>
         </>
       )}
-      <FixedButton
-        type="button"
-        onClick={goToPurchaseCheckPage}
-        disabled={loadStatus !== "success"}
-      >
-        결제하기
-      </FixedButton>
+      {loadStatus === "error" && <NetworkError />}
     </SectionLayout>
   );
 }
