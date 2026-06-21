@@ -41,9 +41,9 @@ describe("CouponSelectModal", () => {
         selectedCoupons={[]}
         initialDiscountPrice={0}
         calculateDiscountPrice={vi.fn()}
+        updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
-        onSubmit={vi.fn()}
       />,
     );
 
@@ -64,9 +64,9 @@ describe("CouponSelectModal", () => {
         selectedCoupons={[]}
         initialDiscountPrice={0}
         calculateDiscountPrice={vi.fn()}
+        updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
-        onSubmit={vi.fn()}
       />,
     );
 
@@ -81,9 +81,9 @@ describe("CouponSelectModal", () => {
         selectedCoupons={[]}
         initialDiscountPrice={0}
         calculateDiscountPrice={vi.fn()}
+        updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
-        onSubmit={vi.fn()}
       />,
     );
 
@@ -98,9 +98,9 @@ describe("CouponSelectModal", () => {
         selectedCoupons={[]}
         initialDiscountPrice={0}
         calculateDiscountPrice={vi.fn()}
+        updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
-        onSubmit={vi.fn()}
       />,
     );
 
@@ -116,9 +116,9 @@ describe("CouponSelectModal", () => {
         selectedCoupons={[]}
         initialDiscountPrice={5000}
         calculateDiscountPrice={vi.fn()}
+        updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
-        onSubmit={vi.fn()}
       />,
     );
 
@@ -137,9 +137,9 @@ describe("CouponSelectModal", () => {
         selectedCoupons={[]}
         initialDiscountPrice={5000}
         calculateDiscountPrice={calculateDiscountPrice}
+        updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
-        onSubmit={vi.fn()}
       />,
     );
 
@@ -165,9 +165,9 @@ describe("CouponSelectModal", () => {
         selectedCoupons={["coupon-1", "coupon-2"]}
         initialDiscountPrice={5000}
         calculateDiscountPrice={calculateDiscountPrice}
+        updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
-        onSubmit={vi.fn()}
       />,
     );
 
@@ -189,9 +189,9 @@ describe("CouponSelectModal", () => {
         selectedCoupons={["coupon-1"]}
         initialDiscountPrice={5000}
         calculateDiscountPrice={calculateDiscountPrice}
+        updateOrder={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
-        onSubmit={vi.fn()}
       />,
     );
 
