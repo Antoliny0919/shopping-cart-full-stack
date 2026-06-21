@@ -2,36 +2,35 @@ import styled from "@emotion/styled";
 import { formatToKoreanPrice } from "../../../commons/utils";
 
 export default function OrderSummary({
-  price,
-  couponDiscount,
-  deliveryFee,
-  totalPrice,
+  priceSummary,
 }: {
-  price: number;
-  couponDiscount: number;
-  deliveryFee: number;
-  totalPrice: number;
+  priceSummary: {
+    order_price: number;
+    discount_price: number;
+    delivery_price: number;
+    total_price: number;
+  };
 }) {
   return (
     <OrderSummaryContainer>
       <ShoppingCartOrderSummaryList>
         <div className="receipt-item">
           <dt>주문 금액</dt>
-          <dd>{formatToKoreanPrice(price)}</dd>
+          <dd>{formatToKoreanPrice(priceSummary.order_price)}</dd>
         </div>
         <div className="receipt-item">
           <dt>쿠폰 할인 금액</dt>
-          <dd>{formatToKoreanPrice(couponDiscount)}</dd>
+          <dd>{formatToKoreanPrice(priceSummary.discount_price)}</dd>
         </div>
         <div className="receipt-item">
           <dt>배송비</dt>
-          <dd>{formatToKoreanPrice(deliveryFee)}</dd>
+          <dd>{formatToKoreanPrice(priceSummary.delivery_price)}</dd>
         </div>
       </ShoppingCartOrderSummaryList>
       <ShoppingCartOrderSummaryResult>
         <div className="receipt-item">
           <dt>총 결제 금액</dt>
-          <dd>{formatToKoreanPrice(totalPrice)}</dd>
+          <dd>{formatToKoreanPrice(priceSummary.total_price)}</dd>
         </div>
       </ShoppingCartOrderSummaryResult>
     </OrderSummaryContainer>

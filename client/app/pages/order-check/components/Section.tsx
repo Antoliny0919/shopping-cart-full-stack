@@ -83,12 +83,7 @@ export default function Section({ orderId }: Props) {
             <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
             배송됩니다.
           </SubText>
-          <OrderSummary
-            price={order.price_summary.order_price}
-            couponDiscount={order.price_summary.discount_price}
-            deliveryFee={order.price_summary.delivery_price}
-            totalPrice={order.price_summary.total_price}
-          />
+          <OrderSummary priceSummary={order.price_summary} />
           <FixedButton type="button" onClick={goToPurchaseCheckPage}>
             결제하기
           </FixedButton>
