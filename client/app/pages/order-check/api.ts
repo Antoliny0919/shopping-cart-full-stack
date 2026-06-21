@@ -45,3 +45,30 @@ export async function getCoupons(orderId: string) {
   if (!response.ok) throw new Error("쿠폰을 불러오지 못했습니다.");
   return response.json();
 }
+
+export async function calculateCouponDiscountPrice(
+  orderId: string,
+  body: { selected_coupons: string[] },
+) {
+  let response: Response;
+  try {
+    response = await fetch(
+      `${BASE_URL}/api/orders/${orderId}/discount-summary/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      },
+    );
+  } catch {
+    throw new NetworkError();
+  }
+  if (!response.ok) {
+    const { errors } = await response.json();
+    throw new Error(errors.message);
+  }
+  const data = await response.json();
+  return data;
+}
