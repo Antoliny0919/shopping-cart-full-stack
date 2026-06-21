@@ -43,6 +43,7 @@ describe("CouponSelectModal", () => {
         calculateDiscountPrice={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
+        onSubmit={vi.fn()}
       />,
     );
 
@@ -65,6 +66,7 @@ describe("CouponSelectModal", () => {
         calculateDiscountPrice={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
+        onSubmit={vi.fn()}
       />,
     );
 
@@ -81,6 +83,7 @@ describe("CouponSelectModal", () => {
         calculateDiscountPrice={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
+        onSubmit={vi.fn()}
       />,
     );
 
@@ -97,6 +100,7 @@ describe("CouponSelectModal", () => {
         calculateDiscountPrice={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
+        onSubmit={vi.fn()}
       />,
     );
 
@@ -114,6 +118,7 @@ describe("CouponSelectModal", () => {
         calculateDiscountPrice={vi.fn()}
         isOpen={true}
         onClose={vi.fn()}
+        onSubmit={vi.fn()}
       />,
     );
 
@@ -134,6 +139,7 @@ describe("CouponSelectModal", () => {
         calculateDiscountPrice={calculateDiscountPrice}
         isOpen={true}
         onClose={vi.fn()}
+        onSubmit={vi.fn()}
       />,
     );
 
@@ -161,6 +167,7 @@ describe("CouponSelectModal", () => {
         calculateDiscountPrice={calculateDiscountPrice}
         isOpen={true}
         onClose={vi.fn()}
+        onSubmit={vi.fn()}
       />,
     );
 
@@ -184,6 +191,7 @@ describe("CouponSelectModal", () => {
         calculateDiscountPrice={calculateDiscountPrice}
         isOpen={true}
         onClose={vi.fn()}
+        onSubmit={vi.fn()}
       />,
     );
 

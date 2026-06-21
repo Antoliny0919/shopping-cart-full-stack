@@ -8,7 +8,6 @@ import Coupon from "./Coupon";
 import Toast from "../../../commons/components/Toast";
 
 interface Props {
-  orderId: string;
   selectedCoupons: string[];
   coupons: CouponType[];
   initialDiscountPrice: number;

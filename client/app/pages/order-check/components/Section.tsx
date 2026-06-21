@@ -89,7 +89,6 @@ export default function Section({ orderId }: Props) {
             쿠폰 적용
           </CouponApplyButton>
           <CouponSelectModal
-            orderId={orderId}
             selectedCoupons={order.selected_coupons}
             coupons={coupons}
             initialDiscountPrice={order.price_summary.discount_price}
