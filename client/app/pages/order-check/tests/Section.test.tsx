@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, vi, beforeAll } from "vitest";
+import { MemoryRouter } from "react-router";
 import Section from "../components/Section";
 import { Coupon } from "../types";
 import * as api from "../api";
@@ -102,7 +103,11 @@ describe("제주도 및 도서 산간 지역 체크박스", () => {
       .mockResolvedValueOnce(orderWithHardDelivery)
       .mockResolvedValueOnce(orderWithNormalDelivery);
 
-    render(<Section orderId="order-1" />);
+    render(
+      <MemoryRouter>
+        <Section orderId="order-1" />
+      </MemoryRouter>,
+    );
 
     await waitFor(() => screen.getByText("제주도 및 도서 산간 지역"));
 
@@ -140,7 +145,11 @@ describe("Section + CouponSelectModal 통합", () => {
     });
     vi.mocked(api.updateOrder).mockResolvedValue(updatedOrder);
 
-    render(<Section orderId="order-1" />);
+    render(
+      <MemoryRouter>
+        <Section orderId="order-1" />
+      </MemoryRouter>,
+    );
 
     await waitFor(() => screen.getByText("쿠폰 적용"));
 

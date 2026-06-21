@@ -88,7 +88,7 @@ export default function Section({ orderId }: Props) {
               labelText={"제주도 및 도서 산간 지역"}
               checked={order.hard_delivery_place}
               onChange={() =>
-                updateOrder({ hard_delivery_place: order.hard_delivery_place })
+                updateOrder({ hard_delivery_place: !order.hard_delivery_place })
               }
             ></Checkbox>
           </DeliveryOption>
