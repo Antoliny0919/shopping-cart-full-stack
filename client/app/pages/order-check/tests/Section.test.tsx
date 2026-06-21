@@ -151,9 +151,9 @@ describe("Section + CouponSelectModal 통합", () => {
     const checkbox = screen.getAllByRole("checkbox", { hidden: true })[0];
     await user.click(checkbox);
 
-    await waitFor(() => screen.getByText("총 10000원 할인 쿠폰 사용하기"));
+    await waitFor(() => screen.getByText("총 10,000원 할인 쿠폰 사용하기"));
 
-    await user.click(screen.getByText("총 10000원 할인 쿠폰 사용하기"));
+    await user.click(screen.getByText("총 10,000원 할인 쿠폰 사용하기"));
 
     await waitFor(() => {
       expect(screen.getByText("10,000원")).toBeInTheDocument();

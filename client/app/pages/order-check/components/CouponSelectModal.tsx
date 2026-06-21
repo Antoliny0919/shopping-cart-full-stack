@@ -6,6 +6,7 @@ import { Button } from "../../../commons/styles/Button";
 import { Coupon as CouponType } from "../types";
 import Coupon from "./Coupon";
 import Toast from "../../../commons/components/Toast";
+import { formatToKoreanPrice } from "../../../commons/utils";
 
 interface Props {
   selectedCoupons: string[];
@@ -66,7 +67,7 @@ export default function CouponSelectModal({
         })}
       </CouponList>
       <CouponUseButton onClick={() => onSubmit(localSelected)}>
-        총 {discountPrice}원 할인 쿠폰 사용하기
+        총 {formatToKoreanPrice(discountPrice)} 할인 쿠폰 사용하기
       </CouponUseButton>
     </Modal>
   );

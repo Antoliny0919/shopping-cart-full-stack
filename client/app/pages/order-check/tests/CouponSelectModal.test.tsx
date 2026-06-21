@@ -123,7 +123,7 @@ describe("CouponSelectModal", () => {
     );
 
     expect(
-      screen.getByText("총 5000원 할인 쿠폰 사용하기"),
+      screen.getByText("총 5,000원 할인 쿠폰 사용하기"),
     ).toBeInTheDocument();
   });
 
@@ -148,7 +148,7 @@ describe("CouponSelectModal", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("총 10000원 할인 쿠폰 사용하기"),
+        screen.getByText("총 10,000원 할인 쿠폰 사용하기"),
       ).toBeInTheDocument();
     });
   });
