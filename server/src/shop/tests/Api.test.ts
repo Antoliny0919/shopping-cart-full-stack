@@ -502,22 +502,25 @@ describe("쿠폰 API 테스트", () => {
       `/api/orders/${tempOrder.getId()}/coupons/`,
     );
     expect(res.status).toBe(200);
-    expect(res.body).toEqual([
-      {
-        id: amountDiscountCoupon.getId(),
-        name: "5,000원 할인 쿠폰",
-        expiration_date: "2020년 1월 1일",
-        description: "사용 가능 시간: 오전 5시부터 오전 8시까지",
-        is_active: false,
-      },
-      {
-        id: rateDiscountCoupon.getId(),
-        name: "30% 시간제 할인 쿠폰",
-        expiration_date: "2030년 12월 31일",
-        description: "최소 주문 금액: 1000",
-        is_active: true,
-      },
-    ]);
+    expect(res.body).toEqual({
+      max_coupon_count: 2,
+      items: [
+        {
+          id: amountDiscountCoupon.getId(),
+          name: "5,000원 할인 쿠폰",
+          expiration_date: "2020년 1월 1일",
+          description: "사용 가능 시간: 오전 5시부터 오전 8시까지",
+          is_active: false,
+        },
+        {
+          id: rateDiscountCoupon.getId(),
+          name: "30% 시간제 할인 쿠폰",
+          expiration_date: "2030년 12월 31일",
+          description: "최소 주문 금액: 1000",
+          is_active: true,
+        },
+      ],
+    });
   });
 });
 
