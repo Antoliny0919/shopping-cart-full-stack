@@ -31,12 +31,15 @@ export class TempOrderService {
 
   create(rawItems: { product_id: string; quantity: number }[]) {
     const items = this.convertToItems(rawItems);
-    const delivery = this.buildDelivery(true);
+    const delivery = this.buildDelivery(false);
     const tempOrderForCheck = new TempOrder(items, delivery, []);
     const activeCoupons = this.couponRepository
       .findAll()
       .filter((c) => c.isAvailable(tempOrderForCheck));
-    const bestCoupons = findBestCouponCombination(tempOrderForCheck, activeCoupons);
+    const bestCoupons = findBestCouponCombination(
+      tempOrderForCheck,
+      activeCoupons,
+    );
     const tempOrder = new TempOrder(items, delivery, bestCoupons);
 
     const id = tempOrder.getId();
