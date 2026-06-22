@@ -18,29 +18,32 @@ beforeAll(() => {
   HTMLDialogElement.prototype.close = vi.fn();
 });
 
-const mockCoupons: Coupon[] = [
-  {
-    id: "coupon-1",
-    name: "10% 할인 쿠폰",
-    expiration_date: "2026-12-31",
-    description: "전 상품 10% 할인",
-    is_active: true,
-  },
-  {
-    id: "coupon-2",
-    name: "3,000원 할인 쿠폰",
-    expiration_date: "2026-06-30",
-    description: "5만원 이상 구매 시 사용 가능",
-    is_active: false,
-  },
-  {
-    id: "coupon-3",
-    name: "2+1 쿠폰",
-    expiration_date: "2026-11-30",
-    description: "2개 구매 시 1개 무료",
-    is_active: true,
-  },
-];
+const mockCoupons: { max_coupon_count: number; items: Coupon[] } = {
+  max_coupon_count: 2,
+  items: [
+    {
+      id: "coupon-1",
+      name: "10% 할인 쿠폰",
+      expiration_date: "2026-12-31",
+      description: "전 상품 10% 할인",
+      is_active: true,
+    },
+    {
+      id: "coupon-2",
+      name: "3,000원 할인 쿠폰",
+      expiration_date: "2026-06-30",
+      description: "5만원 이상 구매 시 사용 가능",
+      is_active: false,
+    },
+    {
+      id: "coupon-3",
+      name: "2+1 쿠폰",
+      expiration_date: "2026-11-30",
+      description: "2개 구매 시 1개 무료",
+      is_active: true,
+    },
+  ],
+};
 
 const initialOrder = {
   id: "order-1",

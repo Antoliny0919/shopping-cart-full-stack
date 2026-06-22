@@ -4,6 +4,7 @@ import {
   TempOrderRepository,
 } from "../repositories/InMemoryRepositories.js";
 import { NotFoundError } from "../../errors.js";
+import { COUPON_SELECT_LIMIT } from "../constants.js";
 
 export class CouponService {
   constructor(
@@ -14,9 +15,12 @@ export class CouponService {
   getByOrderId(orderId: string) {
     const tempOrder = this.tempOrderRepository.findById(orderId);
     if (!tempOrder) throw new NotFoundError();
-    return this.couponRepository.findAll().map((c: Coupon) => ({
-      ...c.toObject(),
-      is_active: c.isAvailable(tempOrder),
-    }));
+    return {
+      items: this.couponRepository.findAll().map((c: Coupon) => ({
+        ...c.toObject(),
+        is_active: c.isAvailable(tempOrder),
+      })),
+      max_coupon_count: COUPON_SELECT_LIMIT,
+    };
   }
 }

@@ -12,6 +12,7 @@ interface Props {
   orderId: string;
   selectedCoupons: string[];
   coupons: CouponType[];
+  maxCouponCount: number;
   initialDiscountPrice: number;
   updateOrder: (body: { selected_coupons?: string[] }) => Promise<void>;
   isOpen: boolean;
@@ -22,6 +23,7 @@ export default function CouponSelectModal({
   orderId,
   selectedCoupons,
   coupons,
+  maxCouponCount,
   initialDiscountPrice,
   updateOrder,
   isOpen,
@@ -36,7 +38,7 @@ export default function CouponSelectModal({
         <Toast message={errorMessage} onClose={() => setErrorMessage(null)} />
       )}
       <Title>쿠폰을 선택해 주세요</Title>
-      <InfoText>쿠폰은 최대 2개까지 사용할 수 있습니다.</InfoText>
+      <InfoText>쿠폰은 최대 {maxCouponCount}개까지 사용할 수 있습니다.</InfoText>
       <CouponList>
         {coupons.map((item: CouponType) => {
           return (

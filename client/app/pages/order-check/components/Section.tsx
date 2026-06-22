@@ -20,7 +20,7 @@ export default function Section({ orderId }: Props) {
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
 
   const { loadStatus, order, updateOrder } = useOrder(orderId);
-  const { coupons, getCoupons } = useCoupons(orderId);
+  const { coupons, maxCouponCount, getCoupons } = useCoupons(orderId);
 
   const navigate = useNavigate();
 
@@ -64,6 +64,7 @@ export default function Section({ orderId }: Props) {
             orderId={orderId}
             selectedCoupons={order.selected_coupons}
             coupons={coupons}
+            maxCouponCount={maxCouponCount}
             initialDiscountPrice={order.price_summary.discount_price}
             updateOrder={updateOrder}
             isOpen={isCouponModalOpen}

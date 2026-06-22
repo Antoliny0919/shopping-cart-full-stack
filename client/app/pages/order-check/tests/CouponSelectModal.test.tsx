@@ -44,6 +44,7 @@ describe("CouponSelectModal", () => {
       <CouponSelectModal
         orderId="order-1"
         coupons={mockCoupons}
+        maxCouponCount={2}
         selectedCoupons={[]}
         initialDiscountPrice={0}
         updateOrder={vi.fn()}
@@ -67,6 +68,7 @@ describe("CouponSelectModal", () => {
       <CouponSelectModal
         orderId="order-1"
         coupons={mockCoupons}
+        maxCouponCount={2}
         selectedCoupons={[]}
         initialDiscountPrice={0}
         updateOrder={vi.fn()}
@@ -84,6 +86,7 @@ describe("CouponSelectModal", () => {
       <CouponSelectModal
         orderId="order-1"
         coupons={[]}
+        maxCouponCount={2}
         selectedCoupons={[]}
         initialDiscountPrice={0}
         updateOrder={vi.fn()}
@@ -101,6 +104,7 @@ describe("CouponSelectModal", () => {
       <CouponSelectModal
         orderId="order-1"
         coupons={mockCoupons}
+        maxCouponCount={2}
         selectedCoupons={[]}
         initialDiscountPrice={0}
         updateOrder={vi.fn()}
@@ -119,6 +123,7 @@ describe("CouponSelectModal", () => {
       <CouponSelectModal
         orderId="order-1"
         coupons={mockCoupons}
+        maxCouponCount={2}
         selectedCoupons={[]}
         initialDiscountPrice={5000}
         updateOrder={vi.fn()}
@@ -142,6 +147,7 @@ describe("CouponSelectModal", () => {
       <CouponSelectModal
         orderId="order-1"
         coupons={mockCoupons}
+        maxCouponCount={2}
         selectedCoupons={[]}
         initialDiscountPrice={5000}
         updateOrder={vi.fn()}
@@ -170,6 +176,7 @@ describe("CouponSelectModal", () => {
       <CouponSelectModal
         orderId="order-1"
         coupons={mockCoupons}
+        maxCouponCount={2}
         selectedCoupons={["coupon-1", "coupon-2"]}
         initialDiscountPrice={5000}
         updateOrder={vi.fn()}
@@ -196,6 +203,7 @@ describe("CouponSelectModal", () => {
       <CouponSelectModal
         orderId="order-1"
         coupons={mockCoupons}
+        maxCouponCount={2}
         selectedCoupons={["coupon-1"]}
         initialDiscountPrice={5000}
         updateOrder={vi.fn()}

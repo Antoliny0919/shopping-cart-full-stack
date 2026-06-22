@@ -123,7 +123,9 @@ STATUS: 200
 ### Success Response
 
 ```
-[
+{
+  max_coupon_count: 2,
+  items: [
   {
     id: "FIXED5000",
     name: "5,000원 할인 쿠폰",
@@ -153,6 +155,7 @@ STATUS: 200
     is_active: true
   },
 ]
+}
 ```
 
 STATUS: 200
