@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import Info from "../../../commons/images/info.svg?react";
 import Checkbox from "../../../commons/components/Checkbox";
 import CartItemList from "./CartItemList";
-import OrderSummary from "./OrderSummary";
+import PriceSummary from "../../../commons/components/PriceSummary";
 import Cart from "../domain/Cart";
 import CartPricing from "../domain/CartPricing";
 import DeliveryFee from "../domain/DeliveryFee";
@@ -47,6 +47,8 @@ export default function Section() {
     () => new CartPricing(cart, new DeliveryFee(DELIVERY_FEE, FREE_THRESHOLD)),
     [cart],
   );
+
+  const priceSummary = cartPricing.calculatePriceSummary();
 
   const onUpdateQuantity = async (
     itemId: string,
@@ -132,8 +134,15 @@ export default function Section() {
                 <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우
                 무료 배송됩니다.
               </SubText>
-              <OrderSummary
-                orderSummary={cartPricing.calculatePriceSummary()}
+              <PriceSummary
+                rows={[
+                  { label: "주문 금액", value: priceSummary.price },
+                  { label: "배송비", value: priceSummary.delivery },
+                ]}
+                total={{
+                  label: "총 결제 금액",
+                  value: priceSummary.totalPrice,
+                }}
               />
             </>
           ) : (

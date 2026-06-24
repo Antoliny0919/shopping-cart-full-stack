@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import { FixedButton } from "../../../commons/styles/Button";
 import OrderItemList from "./OrderItemList";
 import Checkbox from "../../../commons/components/Checkbox";
-import OrderSummary from "./OrderSummary";
+import PriceSummary from "../../../commons/components/PriceSummary";
 import Info from "../../../commons/images/info.svg?react";
 import CouponSelectModal from "./CouponSelectModal";
 import useOrder from "../hooks/useOrder";
@@ -84,7 +84,20 @@ export default function Section({ orderId }: Props) {
             <Info aria-label="정보" />총 주문 금액이 100,000원 이상일 경우 무료
             배송됩니다.
           </SubText>
-          <OrderSummary priceSummary={order.price_summary} />
+          <PriceSummary
+            rows={[
+              { label: "주문 금액", value: order.price_summary.order_price },
+              {
+                label: "쿠폰 할인 금액",
+                value: order.price_summary.discount_price,
+              },
+              { label: "배송비", value: order.price_summary.delivery_price },
+            ]}
+            total={{
+              label: "총 결제 금액",
+              value: order.price_summary.total_price,
+            }}
+          />
           <FixedButton type="button" onClick={goToPurchaseCheckPage}>
             결제하기
           </FixedButton>
