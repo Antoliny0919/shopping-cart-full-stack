@@ -82,16 +82,26 @@ class TempOrder implements OrderContext {
   }
 
   public withDelivery(deliveryFee: DeliveryFee): TempOrder {
-    return new TempOrder(
-      this.items,
-      deliveryFee,
-      this.selectedCoupons,
-      this.id,
-    );
+    return this.copyWith({ deliveryFee });
   }
 
   public withCoupons(coupons: Coupon[]): TempOrder {
-    return new TempOrder(this.items, this.deliveryFee, coupons, this.id);
+    return this.copyWith({ coupons });
+  }
+
+  private copyWith({
+    deliveryFee,
+    coupons,
+  }: {
+    deliveryFee?: DeliveryFee;
+    coupons?: Coupon[];
+  }) {
+    return new TempOrder(
+      this.items,
+      deliveryFee ? deliveryFee : this.deliveryFee,
+      coupons ? coupons : this.selectedCoupons,
+      this.id,
+    );
   }
 }
 
