@@ -1,5 +1,9 @@
 import TempOrder from "../models/TempOrder.js";
-import { DeliveryFee, HardPlacePolicy } from "../models/DeliveryFee.js";
+import {
+  DeliveryFee,
+  FreeDeliveryPolicy,
+  HardPlacePolicy,
+} from "../models/DeliveryFee.js";
 import {
   AmountDiscountCoupon,
   BonusCoupon,
@@ -106,6 +110,20 @@ describe("TempOrder Tests", () => {
       delivery_price: 3000,
       total_price: 25000,
     });
+  });
+
+  test("총 가격금액보다 할인 금액이 더 클 경우 할인 금액은 총 가격금액이 된다.", () => {
+    const coupon = new AmountDiscountCoupon({
+      conditions: [],
+      discountPrice: 100000,
+    });
+
+    const order = new TempOrder(
+      items,
+      new DeliveryFee(3000, [new FreeDeliveryPolicy(0)]),
+      [coupon],
+    );
+    expect(order.toObject().price_summary["total_price"]).toBe(0);
   });
 
   test("총 할인금액을 반환한다.", () => {

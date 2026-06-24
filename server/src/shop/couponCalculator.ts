@@ -19,7 +19,7 @@ export function calculateDiscount(order: TempOrder, coupons: Coupon[]): number {
         orderPrice - fixedDiscount,
       );
   }
-  return fixedDiscount + rateDiscount;
+  return Math.min(orderPrice, fixedDiscount + rateDiscount);
 }
 
 export function findBestCouponCombination(
