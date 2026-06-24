@@ -1,7 +1,7 @@
-import TempOrder from "./TempOrder.js";
+import { OrderContext } from "../types.js";
 
 export interface DiscountCondition {
-  isAvailable: (tempOrder: TempOrder) => boolean;
+  isAvailable: (orderContext: OrderContext) => boolean;
   description: () => string | null;
 }
 
@@ -20,8 +20,8 @@ export class ExpireDateDiscountCondition implements DiscountCondition {
 export class MinimumOrderPriceDiscountCondition implements DiscountCondition {
   constructor(private readonly threshold: number) {}
 
-  isAvailable(tempOrder: TempOrder) {
-    return this.threshold <= tempOrder.calculateOrderPrice();
+  isAvailable(orderContext: OrderContext) {
+    return this.threshold <= orderContext.calculateOrderPrice();
   }
 
   description() {
@@ -32,8 +32,10 @@ export class MinimumOrderPriceDiscountCondition implements DiscountCondition {
 export class MinimumItemQuantityDiscountCondition implements DiscountCondition {
   constructor(private readonly minQuantity: number) {}
 
-  isAvailable(tempOrder: TempOrder) {
-    return tempOrder.findMostExpensiveItemPrice(this.minQuantity) !== undefined;
+  isAvailable(orderContext: OrderContext) {
+    return (
+      orderContext.findMostExpensiveItemPrice(this.minQuantity) !== undefined
+    );
   }
 
   description() {

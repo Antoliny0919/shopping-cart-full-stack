@@ -2,6 +2,7 @@ import { ProductType } from "./Product.js";
 import { DeliveryFee } from "./DeliveryFee.js";
 import { Coupon } from "./Coupon.js";
 import { calculateDiscount } from "../couponCalculator.js";
+import { OrderContext } from "../types.js";
 
 type OrderItem = {
   product_id: string;
@@ -9,7 +10,7 @@ type OrderItem = {
   product: Omit<ProductType, "id">;
 };
 
-class TempOrder {
+class TempOrder implements OrderContext {
   constructor(
     private readonly items: OrderItem[],
     private readonly deliveryFee: DeliveryFee,

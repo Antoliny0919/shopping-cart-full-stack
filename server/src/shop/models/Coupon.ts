@@ -3,7 +3,7 @@ import {
   ExpireDateDiscountCondition,
   MinimumItemQuantityDiscountCondition,
 } from "./DiscountCondition.js";
-import TempOrder from "./TempOrder.js";
+import { OrderContext } from "../types.js";
 
 export enum CouponPhase {
   FIXED = 1,
@@ -34,8 +34,8 @@ export abstract class Coupon {
     return this.id;
   }
 
-  public isAvailable(tempOrder: TempOrder) {
-    return this.conditions.every((policy) => policy.isAvailable(tempOrder));
+  public isAvailable(orderContext: OrderContext) {
+    return this.conditions.every((policy) => policy.isAvailable(orderContext));
   }
 
   public isDeliveryDiscount(): boolean {
@@ -43,7 +43,7 @@ export abstract class Coupon {
   }
 
   public abstract getDiscountPrice(
-    tempOrder: TempOrder,
+    orderContext: OrderContext,
     basePrice?: number,
   ): number;
 
@@ -116,8 +116,8 @@ export class BonusCoupon extends Coupon {
     this.bonusCount = bonusCount;
   }
 
-  public getDiscountPrice(tempOrder: TempOrder): number {
-    const price = tempOrder.findMostExpensiveItemPrice(this.minQuantity);
+  public getDiscountPrice(orderContext: OrderContext): number {
+    const price = orderContext.findMostExpensiveItemPrice(this.minQuantity);
     if (!price) return 0;
     return price * this.bonusCount;
   }
@@ -140,8 +140,8 @@ export class FreeDeliveryCoupon extends Coupon {
     return true;
   }
 
-  public getDiscountPrice(tempOrder: TempOrder) {
-    return tempOrder.calculateDeliveryFee();
+  public getDiscountPrice(orderContext: OrderContext) {
+    return orderContext.calculateDeliveryFee();
   }
 }
 
@@ -162,8 +162,8 @@ export class RateDiscountCoupon extends Coupon {
     this.discountRate = discountRate;
   }
 
-  public getDiscountPrice(tempOrder: TempOrder, basePrice?: number) {
-    const price = basePrice ?? tempOrder.calculateOrderPrice();
+  public getDiscountPrice(orderContext: OrderContext, basePrice?: number) {
+    const price = basePrice ?? orderContext.calculateOrderPrice();
     return price * (this.discountRate / 100);
   }
 }
